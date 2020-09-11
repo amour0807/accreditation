@@ -1,0 +1,13 @@
+{
+    "name": "Accreditation",
+    "alias": "accreditation",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\Accreditation\\Providers\\AccreditationServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
