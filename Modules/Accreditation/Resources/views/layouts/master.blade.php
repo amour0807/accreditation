@@ -11,6 +11,11 @@
        <!-- Custom styles for side and top nav template -->
         <link href="{{asset('css/simple-sidebar.css')}}" rel="stylesheet">
 
+        <!-- datatables responsiveness -->
+        <link href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.dataTables.min.css" rel="stylesheet">
+
+        
+
         <link rel="stylesheet" type="text/css" href="{{asset('css/jquery.dataTables.min.css')}}">
 
         <!-- JS, Popper.js, and jQuery -->
@@ -19,15 +24,13 @@
         <script src="{{asset('js/popper.min.js')}}" ></script>
         <script src="{{asset('js/bootstrap.min.js')}}"></script>
         <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
+        <!-- datatables responsiveness -->
+        
+        <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+
        
 
-        <!-- Menu Toggle Script -->
-        <script>
-            $("#menu-toggle").click(function(e) {
-              e.preventDefault();
-              $("#wrapper").toggleClass("toggled");
-            });
-        </script>
+        
 
     </head>
     <body>
@@ -38,12 +41,12 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Quality Assurance</div>
       <div class="list-group list-group-flush">
-        <a href="#" class="list-group-item list-group-item-action bg-light">Accreditation</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Shortcuts</a>
+        <a href='{{ route("accredIndex") }}' class="list-group-item list-group-item-action bg-light">Accreditation</a>
+        <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Shortcuts</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Status</a>
+        <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -95,7 +98,13 @@
   <!-- /#wrapper -->
    
 
-       
+       <!-- Menu Toggle Script -->
+        <script>
+            $("#menu-toggle").click(function(e) {
+              e.preventDefault();
+              $("#wrapper").toggleClass("toggled");
+            });
+        </script>
 
 
 

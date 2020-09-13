@@ -1,64 +1,141 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-	
-    <h2>Accredited Programs</h2>
+<style type="text/css">
+	/* Shadow */
+	.hvr-shadow {
 
-    <div class="row text-center">
+	  -webkit-transform: perspective(1px) translateZ(0);
+	  transform: perspective(1px) translateZ(0);
+	  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+	  -webkit-transition-duration: 0.3s;
+	  transition-duration: 0.3s;
+	  -webkit-transition-property: box-shadow;
+	  transition-property: box-shadow;
+	}
+	.hvr-shadow:hover, .hvr-shadow:focus, .hvr-shadow:active {
+	  box-shadow: 0 12px 10px -10px rgba(0, 0, 0, 0.5);
+	}
+}
+</style>
+
+    <h4 class="float-left">Accredited Programs</h4>
+   	<a class="btn btn-success  float-right mr-4" href="{{route('add_accred_form')}}">
+   		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+		  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+		</svg>
+   		Add an accreditation
+   	</a>
+	
+	<br>
+
+    <div class="row text-center mt-4 " style=" margin: auto;">
     	
-    	<div class="col-md-3 p-2">
-    		<div class="card">
-			  <div class="card-body">
-			    <h1 class="card-title">35</h1>
-			    <a href="#" class="stretched-link">Lvl IV</a>
-			  </div>
+    	<div class="col-md-3 p-2 pr-4">
+    		<div class="card p-2 pb-3 hvr-shadow" style="border-left: 4px solid #0275d8;">
+			    <h1 class="card-title">{{$count4}}</h1>
+			    <a href="#" class="stretched-link ">Lvl IV</a>
 			</div>
     	</div>
-    	<div class="col-md-3 p-2">
-    		<div class="card">
-			  <div class="card-body">
-			    <h1 class="card-title">35</h1>
+    	<div class="col-md-3 p-2 pr-4">
+    		<div class="card p-2 pb-3 hvr-shadow" style="border-left: 4px solid #f0ad4e;">
+
+			    <h1 class="card-title">{{$count3}}</h1>
 			    <a href="#" class="stretched-link">Lvl III</a>
-			  </div>
+
 			</div>
     	</div>
-    	<div class="col-md-3 p-2">
-    		<div class="card">
-			  <div class="card-body">
-			    <h1 class="card-title">35</h1>
+    	<div class="col-md-3 p-2 pr-4">
+    		<div class="card  p-2 pb-3 hvr-shadow" style="border-left: 4px solid #d9534f;">
+
+			    <h1 class="card-title">{{$count2}}</h1>
 			    <a href="#" class="stretched-link">Lvl II</a>
-			  </div>
+
 			</div>
     	</div>
-    	<div class="col-md-3 p-2">
-    		<div class="card">
-			  <div class="card-body">
-			    <h1 class="card-title">35</h1>
+    	<div class="col-md-3 p-2 pr-4">
+    		<div class="card  p-2 pb-3 hvr-shadow" style="border-left: 4px solid #5cb85c;">
+
+			    <h1 class="card-title">{{$count1}}</h1>
 			    <a href="#" class="stretched-link">Lvl I</a>
-			  </div>
+
 			</div>
     	</div>
  
     </div>
+    <br>
+<hr>
+    <div class="mt-3 mb-3" >
+    	<h4 class="float-left ">Schools</h4>
+	   	<a class="btn btn-success  float-right mr-4" href="#" data-toggle="modal" data-target="#addSchoolModal">
+	   		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+			</svg>
+	   		Add School
+	   	</a>		
+    </div>
+    <br>
     
-    <h3 class="mt-3">Schools</h3>
-
     <!-- Table showing school details -->
-    <table id="school_table" class="table table-bordered">
-	    <thead class="thead">
-            <tr>
-            	<th>School code</th>
-            	<th>Accredited Programs</th>
-            	<th>Lvl IV</th>
-            	<th>Lvl III</th>
-            	<th>Lvl II</th>
-            	<th>Lvl I</th>
-            	<th>Orientation</th>
-            	<th>Candidate Status</th>
-            </tr>
-	    </thead>   
-	</table>
+    <div class="mr-3 pt-5">
+    	<table id="school_table" class="table table-bordered responsive ">
+		    <thead class="thead">
+	            <tr>
+	            	<th>School code</th>
+	            	<th>Accredited Programs</th>
+	            	<th>Lvl IV</th>
+	            	<th>Lvl III</th>
+	            	<th>Lvl II</th>
+	            	<th>Lvl I</th>
+	            	<th>Orientation</th>
+	            	<th>Candidate Status</th>
+	            	<th>Actions</th>
+	            </tr>
+		    </thead>   
+		</table>
+    </div>
+    
 	<!-- end table -->
+
+
+
+
+<!-- Modal for adding schools -->
+
+	
+
+	<!-- Modal -->
+	<div class="modal fade" id="addSchoolModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Add a School</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form id="addSchoolForm" method="POST">
+         	@csrf
+		      <div class="modal-body">
+		        <div class="form-group">
+		        	<label>School Name</label>
+		        	<input type="text" class="form-control" name="school_name" placeholder="ex: School of Information Technology" required>
+		        </div>
+		        <div class="form-group">
+		        	<label>School Code</label>
+		        	<input type="text" class="form-control" name="school_code" placeholder="ex: SIT" required>
+		        </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-primary">Add School</button>
+	      	  </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<script type="text/javascript">
 
@@ -76,6 +153,7 @@
    // school table
 
         var dataTable= $('#school_table').DataTable( {
+        	responsive: true,
 	        "ajax": "{{route('school_dtb')}}",
 	        "columns": [
 	            { "data": "school" },
@@ -86,8 +164,27 @@
 	            { "data": "lvl1" },
 	            { "data": "orientation" },
 	            { "data": "candidate_stat" },
+	            { "data": "actions" },
+
 	        ],
+
         	});
 
+    //Adding
+    $( "#addSchoolForm" ).submit(function( event ) {
+        event.preventDefault();
+
+        $.ajax({
+          url:"{{route('addSchoolForm')}}",
+          method:"POST",
+          data: $("#addSchoolForm").serialize(),
+          success:function(data){
+            $('#addSchoolModal').modal('hide');
+            dataTable.ajax.reload();
+           
+          }
+              
+        }); 
+    });   
     </script>
 @endsection

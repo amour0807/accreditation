@@ -16,8 +16,8 @@ class CreatePrgrmAccredsTable extends Migration
 
         Schema::create('prgrm_accreds', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('accred_status_id')->unsigned();
-            $table->foreign('accred_status_id')->references('id')->on('accred_stats');
+            $table->bigInteger('accred_stat_id')->unsigned();
+            $table->foreign('accred_stat_id')->references('id')->on('accred_stats');
             $table->bigInteger('acad_prgrm_id')->unsigned();
             $table->foreign('acad_prgrm_id')->references('id')->on('acad_prgrms');
             $table->date('visit_date');
