@@ -42,8 +42,8 @@
       <div class="sidebar-heading">Quality Assurance</div>
       <div class="list-group list-group-flush">
         <a href='{{ route("accredIndex") }}' class="list-group-item list-group-item-action bg-light">Accreditation</a>
-        <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Shortcuts</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
+        <a href="{{ route('accredReport')}}" class="list-group-item list-group-item-action bg-light">Accreditation report</a>
+        <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->

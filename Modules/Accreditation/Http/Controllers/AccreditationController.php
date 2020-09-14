@@ -251,6 +251,41 @@ class AccreditationController extends Controller
         return view('accreditation::accredited-programs', compact('school'));
     }
 
+
+    //View report
+    public function accredReport(){
+        return view('accreditation::accreditation-report');
+        
+    }
+
+    //report datatables
+
+    //Program Datatables
+    public function program_report_dtb(){
+
+   
+        $programs = PrgrmAccred::join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        ->join('schools', 'acad_prgrms.school_id', 'schools.id')
+
+        ->get();    
+
+
+          
+         return DataTables::of($programs)
+            ->addColumn('school', function($programs) {
+                return $programs->acadPrgrm->school->school_code;
+            })
+            ->addColumn('program', function($programs) {
+                return $programs->acadPrgrm->acad_prog_code;
+            })
+            ->addColumn('accred_stat', function($programs) {
+                    return $programs->accredStat->accred_status;
+            })
+            
+            
+            ->rawColumns(["program", "accred_stat", "school"])
+            ->make(true);
+    }
     /**
      * Show the form for creating a new resource.
      * @return Renderable
