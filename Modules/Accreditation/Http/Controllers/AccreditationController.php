@@ -23,6 +23,16 @@ class AccreditationController extends Controller
     {
 
         //Lvl 4
+        $count6 = DB::table('prgrm_accreds')
+                ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                ->where('prgrm_accreds.accred_stat_id', 2)
+                ->count();
+        $count5 = DB::table('prgrm_accreds')
+                ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                ->where('prgrm_accreds.accred_stat_id', 1)
+                ->count();
         $count4 = DB::table('prgrm_accreds')
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
@@ -47,7 +57,7 @@ class AccreditationController extends Controller
                 ->where('prgrm_accreds.accred_stat_id', 3)
                 ->count();
       
-        return view('accreditation::index', compact('count1', 'count2', 'count3' ,'count4'));
+        return view('accreditation::index', compact('count1', 'count2', 'count3' ,'count4', 'count5', 'count6'));
     }
 
     // School datatable

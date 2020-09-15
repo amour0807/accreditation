@@ -69,7 +69,7 @@
     	<div class="col-md-2 p-2 pr-4">
     		<div class="card hvr-shadow">
 
-			    <h1 class="card-title">{{$count1}}</h1>
+			    <h1 class="card-title">{{$count6}}</h1>
 			    <a href="#" class="bg-ub-grey stretched-link">Candidate Status</a>
 
 			</div>
@@ -78,7 +78,7 @@
     	<div class="col-md-2 p-2 pr-4">
     		<div class="card hvr-shadow">
 
-			    <h1 class="card-title">{{$count1}}</h1>
+			    <h1 class="card-title">{{$count5}}</h1>
 			    <a href="#" class="bg-ub-grey stretched-link">Orientation</a>
 
 			</div>

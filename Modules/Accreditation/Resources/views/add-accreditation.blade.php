@@ -83,7 +83,25 @@
 		<a class="btn btn-secondary  m-2" href='{{ route("accredIndex") }}'>Back</a>
 	
 	</form>
-	<hr>
+
+
+<!-- Modal -->
+<div class="modal fade " data-backdrop="static" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+      </div>
+      <div class="modal-body">
+        Record saved. Add another record?
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-secondary" href="{{route('accredIndex')}}">Proceed to Dashboard</a>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Add Another Record</button>
+      </div>
+    </div>
+  </div>
+</div>
 	
 	
 
@@ -128,6 +146,7 @@
 		          data: $("#addAccredForm").serialize(),
 		          success:function(data){
 		            $("#addAccredForm")[0].reset();
+		            $('#success-modal').modal('show');
 		            
 		          }
 		              
