@@ -33,7 +33,7 @@
 		<div class="form-row my-2 mb-4">
 			<div class="form-group col-md-4">
 			    <label><span class="req">*</span>Date of Visit</label>
-			    <input class="form-control form-control-sm" type="date" name="visit_date" required>
+			    <input class="form-control form-control-sm" type="month" name="visit_date" required>
 			</div>
 			<div class="form-group col-md-5">
 			    <label><span class="req">*</span>Accreditation Status</label>

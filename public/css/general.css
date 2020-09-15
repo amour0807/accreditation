@@ -1,0 +1,24 @@
+.bg-ub-grey{
+	background-color: #404041;
+	color: white;
+}
+
+.bg-ub-red{
+	background-color: #c3151c;
+	color: white;
+}
+
+.bg-ub-black{
+	background-color: #171717;
+	color: white;
+}
+.clear-link{
+/*	color: white;*/
+	border-style: hidden;
+}
+
+
+/*for datepicker*/
+  .ui-datepicker-calendar {
+    display: none;
+    }

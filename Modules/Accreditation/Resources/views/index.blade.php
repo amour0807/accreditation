@@ -12,15 +12,19 @@
 	  transition-duration: 0.3s;
 	  -webkit-transition-property: box-shadow;
 	  transition-property: box-shadow;
+
 	}
 	.hvr-shadow:hover, .hvr-shadow:focus, .hvr-shadow:active {
 	  box-shadow: 0 12px 10px -10px rgba(0, 0, 0, 0.5);
 	}
+	.stretcged-link, a:hover{
+		  color: white;
+	}
 }
 </style>
 
-    <h4 class="float-left">Accredited Programs</h4>
-   	<a class="btn btn-success  float-right mr-4" href="{{route('add_accred_form')}}">
+    <h2 class="float-left">Accredited Programs</h2>
+   	<a class="btn bg-ub-red float-right mr-4" href="{{route('add_accred_form')}}">
    		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 		</svg>
@@ -31,33 +35,51 @@
 
     <div class="row text-center mt-4 " style=" margin: auto;">
     	
-    	<div class="col-md-3 p-2 pr-4">
-    		<div class="card p-2 pb-3 hvr-shadow" style="border-left: 4px solid #0275d8;">
+    	<div class="col-md-2 p-2 pr-4">
+    		<div class="card hvr-shadow">
 			    <h1 class="card-title">{{$count4}}</h1>
-			    <a href="#" class="stretched-link ">Lvl IV</a>
+			    <a href="#" class="bg-ub-grey stretched-link ">Level IV</a>
 			</div>
     	</div>
-    	<div class="col-md-3 p-2 pr-4">
-    		<div class="card p-2 pb-3 hvr-shadow" style="border-left: 4px solid #f0ad4e;">
+    	<div class="col-md-2 p-2 pr-4">
+    		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count3}}</h1>
-			    <a href="#" class="stretched-link">Lvl III</a>
+			    <a href="#" class="bg-ub-grey stretched-link">Level III</a>
 
 			</div>
     	</div>
-    	<div class="col-md-3 p-2 pr-4">
-    		<div class="card  p-2 pb-3 hvr-shadow" style="border-left: 4px solid #d9534f;">
+    	<div class="col-md-2 p-2 pr-4">
+    		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count2}}</h1>
-			    <a href="#" class="stretched-link">Lvl II</a>
+			    <a href="#" class="bg-ub-grey stretched-link">Level II</a>
 
 			</div>
     	</div>
-    	<div class="col-md-3 p-2 pr-4">
-    		<div class="card  p-2 pb-3 hvr-shadow" style="border-left: 4px solid #5cb85c;">
+    	<div class="col-md-2 p-2 pr-4">
+    		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count1}}</h1>
-			    <a href="#" class="stretched-link">Lvl I</a>
+			    <a href="#" class="bg-ub-grey stretched-link">Level I</a>
+
+			</div>
+    	</div>
+
+    	<div class="col-md-2 p-2 pr-4">
+    		<div class="card hvr-shadow">
+
+			    <h1 class="card-title">{{$count1}}</h1>
+			    <a href="#" class="bg-ub-grey stretched-link">Candidate Status</a>
+
+			</div>
+    	</div>
+
+    	<div class="col-md-2 p-2 pr-4">
+    		<div class="card hvr-shadow">
+
+			    <h1 class="card-title">{{$count1}}</h1>
+			    <a href="#" class="bg-ub-grey stretched-link">Orientation</a>
 
 			</div>
     	</div>
@@ -66,13 +88,13 @@
     <br>
 <hr>
     <div class="mt-3 mb-3" >
-    	<h4 class="float-left ">Schools</h4>
-	   	<a class="btn btn-success  float-right mr-4" href="#" data-toggle="modal" data-target="#addSchoolModal">
+    	<h2 class="float-left ">Schools</h2>
+	   	<!-- <a class="btn btn-success  float-right mr-4" href="#" data-toggle="modal" data-target="#addSchoolModal">
 	   		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 			</svg>
 	   		Add School
-	   	</a>		
+	   	</a> -->		
     </div>
     <br>
     
@@ -83,12 +105,12 @@
 	            <tr>
 	            	<th>School code</th>
 	            	<th>Accredited Programs</th>
-	            	<th>Lvl IV</th>
-	            	<th>Lvl III</th>
-	            	<th>Lvl II</th>
-	            	<th>Lvl I</th>
-	            	<th>Orientation</th>
+	            	<th>Level IV</th>
+	            	<th>Level III</th>
+	            	<th>Level II</th>
+	            	<th>Level I</th>
 	            	<th>Candidate Status</th>
+	            	<th>Orientation</th>
 	            	<th>Actions</th>
 	            </tr>
 		    </thead>   
@@ -162,8 +184,8 @@
 	            { "data": "lvl3" },
 	            { "data": "lvl2" },
 	            { "data": "lvl1" },
-	            { "data": "orientation" },
 	            { "data": "candidate_stat" },
+	            { "data": "orientation" },
 	            { "data": "actions" },
 
 	        ],

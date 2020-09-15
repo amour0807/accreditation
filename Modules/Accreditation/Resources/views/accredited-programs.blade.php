@@ -13,13 +13,21 @@
 	            	<th>From</th>
 	            	<th>To</th>
 
-	            	<th>Remarks</th>
+	            	<th>PACUCUA Certificate</th>
+	            	<th>FAAP Certificate</th>
+
 	            	<th>Actions</th>
 
 	            </tr>
 		    </thead>   
 		</table>
     </div>
+
+
+
+
+
+
 
 
 
@@ -48,7 +56,9 @@
 	            { "data": "visit_date" },
 	            { "data": "from" },
 	            { "data": "to" },
-	            { "data": "remarks" },
+	            { "data": "cert1" },
+	            { "data": "cert2" },
+
 	            { "data": "actions" },
 
 	        ],

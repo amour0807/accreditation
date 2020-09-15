@@ -11,6 +11,10 @@
        <!-- Custom styles for side and top nav template -->
         <link href="{{asset('css/simple-sidebar.css')}}" rel="stylesheet">
 
+        <!-- Custom general css -->
+        <link href="{{asset('css/general.css')}}" rel="stylesheet">
+
+
         <!-- datatables responsiveness -->
         <link href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.dataTables.min.css" rel="stylesheet">
 
@@ -24,6 +28,12 @@
         <script src="{{asset('js/popper.min.js')}}" ></script>
         <script src="{{asset('js/bootstrap.min.js')}}"></script>
         <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
+
+        <!-- custom general js -->
+        <script src="{{asset('js/general.js')}}"></script>
+
+
+
         <!-- datatables responsiveness -->
         
         <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
@@ -38,15 +48,33 @@
   <div class="d-flex" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="bg-ub-grey border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Quality Assurance</div>
       <div class="list-group list-group-flush">
-        <a href='{{ route("accredIndex") }}' class="list-group-item list-group-item-action bg-light">Accreditation</a>
-        <a href="{{ route('accredReport')}}" class="list-group-item list-group-item-action bg-light">Accreditation report</a>
-        <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->
+        <a href='#pageSubmenu' data-toggle="collapse" class="dropdown-toggle list-group-item list-group-item-action bg-ub-grey">Accreditation</a>
+
+        <ul class="collapse list-unstyled bg-ub-grey" id="pageSubmenu">
+            <li>
+                <a href="{{route('accredIndex')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accredited Programs</a>
+            </li>
+
+            <li>
+                <a href="#" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Status</a>
+            </li>
+            
+            <li>
+                <a href="{{ route('accredReport')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Reports</a>
+            </li>
+        </ul>
+
+
+        
+        <a href="#" class="list-group-item list-group-item-action bg-ub-grey">Schools</a>
+       <!--  <a href="#" class="list-group-item list-group-item-action bg-ub-grey">Events</a>
+        <a href="#" class="list-group-item list-group-item-action bg-ub-grey">Profile</a>
+        <a href="#" class="list-group-item list-group-item-action bg-ub-grey">Status</a> -->
+
+        
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -54,8 +82,8 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
-      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <button class="btn" id="menu-toggle"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-layout-sidebar" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-ub-grey border-bottom">
+        <button class="btn text-light" id="menu-toggle"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-layout-sidebar" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
   <path fill-rule="evenodd" d="M4 14V2h1v12H4z"/>
 </svg></button>
