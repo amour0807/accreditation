@@ -21,7 +21,7 @@ class CreatePrgrmAccredsTable extends Migration
             $table->bigInteger('acad_prgrm_id')->unsigned();
             $table->foreign('acad_prgrm_id')->references('id')->on('acad_prgrms');
             $table->date('visit_date_from');
-            $table->date('visit_date_to');
+            $table->date('visit_date_to')->nullable();
             $table->date('from');
             $table->date('to');
             $table->string('pacucoa_cert')->nullable();

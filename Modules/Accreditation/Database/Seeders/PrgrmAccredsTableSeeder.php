@@ -18,7 +18,7 @@ class PrgrmAccredsTableSeeder extends Seeder
         DB::table('prgrm_accreds')->insert([
             'accred_stat_id' => '3',
             'acad_prgrm_id' => '1',
-            'visit_date' => '2020-2-2',
+            'visit_date_from' => '2020-2-2',
             'from' => '2020-3-3',
             'to' => '2025-3-3',
 
@@ -27,7 +27,7 @@ class PrgrmAccredsTableSeeder extends Seeder
         DB::table('prgrm_accreds')->insert([
             'accred_stat_id' => '6',
             'acad_prgrm_id' => '2',
-            'visit_date' => '2020-2-2',
+            'visit_date_from' => '2020-2-2',
             'from' => '2020-3-3',
             'to' => '2025-3-3',
 
@@ -36,7 +36,7 @@ class PrgrmAccredsTableSeeder extends Seeder
         DB::table('prgrm_accreds')->insert([
             'accred_stat_id' => '4',
             'acad_prgrm_id' => '3',
-            'visit_date' => '2020-2-2',
+            'visit_date_from' => '2020-2-2',
             'from' => '2020-3-3',
             'to' => '2025-3-3',
         ]);

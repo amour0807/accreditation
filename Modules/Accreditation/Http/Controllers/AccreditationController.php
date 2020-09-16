@@ -190,7 +190,7 @@ class AccreditationController extends Controller
                 }
             })
             ->addColumn('visit_date', function($programs) {
-                $dateValue = $programs->visit_date;
+                $dateValue = $programs->visit_date_from;
 
                 //display in words
                 $time=strtotime($dateValue);
@@ -259,7 +259,7 @@ class AccreditationController extends Controller
             [
             'accred_stat_id' => $request->accredStat, 
             'acad_prgrm_id' => $request->program,
-            'visit_date' => $request->visit_date.'-01',
+            'visit_date_from' => $request->visit_date.'-01',
             'from' => $request->from,
             'to' => $request->to,
             'remarks' => $request->remarks
