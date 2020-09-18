@@ -85,7 +85,7 @@
 	            { "data": "program" },
 
 	            { "data": "accred_stat" },
-	            { "data": "visit_date" },
+	            { "data": "visit_date_from" },
 	            { "data": "from" },
 	            { "data": "to" },
 	            { "data": "remarks" },
