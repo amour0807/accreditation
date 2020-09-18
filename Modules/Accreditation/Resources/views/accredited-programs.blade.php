@@ -15,6 +15,8 @@
 
 	            	<th>PACUCUA Certificate</th>
 	            	<th>FAAP Certificate</th>
+	            	<th>PACUCUA Report</th>
+
 
 	            	<th>Actions</th>
 
@@ -58,6 +60,8 @@
 	            { "data": "to" },
 	            { "data": "cert1" },
 	            { "data": "cert2" },
+	            { "data": "cert3" },
+
 
 	            { "data": "actions" },
 
