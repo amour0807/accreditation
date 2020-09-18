@@ -1,17 +1,19 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-	<h4 class="my-3 mb-5">{{$school->school_name}}</h4>
 
-	<div class="mr-3">
-    	<table id="program_table" class="table table-bordered">
+
+	<h4 class="mb-5">{{$school->school_name}}</h4>
+
+
+    	<table id="program_table"  class="display compact table-bordered" style="width:100%">
 		    <thead class="thead">
 	            <tr>
 	            	<th>Program</th>
 	            	<th>Accreditation Status</th>
 	            	<th>Visit Date</th>
-	            	<th>From</th>
-	            	<th>To</th>
+	            	<th>Valid From</th>
+	            	<th>Valid To</th>
 
 	            	<th>PACUCUA Certificate</th>
 	            	<th>FAAP Certificate</th>
@@ -23,15 +25,6 @@
 	            </tr>
 		    </thead>   
 		</table>
-    </div>
-
-
-
-
-
-
-
-
 
 
 
@@ -52,6 +45,8 @@
 
         var dataTable= $('#program_table').DataTable( {
 	        "ajax": "{{route('program_dtb', $school->id)}}",
+	        responsive: true,
+
 	        "columns": [
 	            { "data": "program" },
 	            { "data": "accred_stat" },
@@ -62,10 +57,12 @@
 	            { "data": "cert2" },
 	            { "data": "cert3" },
 
-
 	            { "data": "actions" },
 
 	        ],
+	        "columnDefs": [
+			    { "width": '50pt', "targets": 8 }
+			  ]
         	});
 
     </script>

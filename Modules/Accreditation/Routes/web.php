@@ -15,6 +15,10 @@ Route::prefix('accreditation')->group(function() {
     Route::get('/', 'AccreditationController@index')->name('accredIndex');
     Route::get('/accredReport', 'AccreditationController@accredReport')->name('accredReport');
     Route::get('/accredDetails/{id}', 'AccreditationController@accredDetails')->name('accredDetails');
+    Route::get('/accredEdit/{id}', 'AccreditationController@accredEdit')->name('accredEdit');
+    Route::get('/accredHistory/{id}', 'AccreditationController@accredHistory')->name('accredHistory');
+
+
 
 
     //datatables

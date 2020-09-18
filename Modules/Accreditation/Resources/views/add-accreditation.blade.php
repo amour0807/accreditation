@@ -8,82 +8,104 @@
 </style>
 	<h4 class="mb-4">Add an Accreditation</h4>
 
-	<form  id="addAccredForm" method="POST">
-         @csrf
-		<div class="form-row my-2">
-			<div class="form-group col-md-4">
-			    <label> <span class="req">*</span>School</label>
-			    <select class="form-control form-control-sm" id="school" name="school" required>
-			    	<option disabled selected value> </option>
+
+
+<form  id="addAccredForm" method="POST">
+    @csrf
+	<div class="form-group row">
+		<label class="col-md-2 col-form-label"> <span class="req">*</span>School</label>
+		<div class="col-md-4">
+      		<select class="form-control form-control-sm" id="school" name="school" required>
+		    	<option disabled selected value> </option>
 			    @foreach ($schools as $school)
 			      <option value="{{$school->id}}">{{ $school->school_name }}</option>
 			    @endforeach
-			    </select>
-			</div>
-			<div class="form-group col-md-5">
-			    <label><span class="req">*</span>Academic Programs</label>
-				 <div id='program_choice'>
-				 	<select class="form-control form-control-sm " disabled name="program" required> 
-				 		<option>--Select school first--</option>
-				 	</select>
-				 </div>
-			</div>
-		</div>
+		    </select>
+    	</div>
 
-		<div class="form-row my-2 mb-4">
-			<div class="form-group col-md-4">
-			    <label><span class="req">*</span>Date of Visit</label>
-			    <input class="form-control form-control-sm" type="month" name="visit_date" required>
-			</div>
-			<div class="form-group col-md-5">
-			    <label><span class="req">*</span>Accreditation Status</label>
+    	<label class="col-md-2 col-form-label"> <span class="req">*</span>Academic Programs</label>
+		<div class="col-md-4">
+      		<div id='program_choice'>
+			 	<select class="form-control form-control-sm " disabled name="program" required> 
+			 		<option>--Select school first--</option>
+			 	</select>
+			 </div>
+    	</div>
+	    
+	</div>
+
+	<div class="form-group row">
+
+		    <label class="col-md-2 col-form-label"><span class="req">*</span>Accreditation Status</label>
+		    <div class="col-md-4">
 			    <select class="form-control form-control-sm" name="accredStat" required>
+			    	<option disabled selected value> </option>
 			    @foreach ($accredStats as $accredStat)
 			      <option value="{{$accredStat->id}}">{{ $accredStat->accred_status }}</option>
 			    @endforeach
 			    </select>
 			</div>
-		</div>
-
-
-		<div class="form-row my-6">
-		    <label class="col-sm-2 ">Accreditation valid from</label>
-		    <div class="col-sm-3">
-		    	<input class="form-control form-control-sm" type="date" name="from" required>
-			</div>
 		
-		
-		    <label class="col-sm-1 text-center">to</label>
-		    <div class="col-sm-3">
-		    	<input class="form-control form-control-sm" type="date" name="to" required>
-		    </div>
-		</div>
+	</div>
 
-		<div class="form-row my-2 mb-4">
-			<div class="form-group col-md-4">
+  <div class="form-group row">
+    <label class="col-md-2 col-form-label"><span class="req">*</span>Visit Date From</label>
+    <div class="col-md-4">
+      <input class="form-control form-control-sm" type="month" name="visit_date" required>
+    </div>
+
+    <label class="col-md-2 col-form-label">Visit Date To</label>
+    <div class="col-md-4">
+      <input class="form-control form-control-sm" type="month" name="visit_date_to">
+    </div>
+  </div>
+
+   <div class="form-group row mb-4">
+    <label class="col-md-2 col-form-label"><span class="req">*</span>Valid From</label>
+    <div class="col-md-4">
+      <input class="form-control form-control-sm" type="date" name="from" required>
+    </div>
+
+    <label class="col-md-2 col-form-label"><span class="req">*</span>Valid To</label>
+    <div class="col-md-4">
+      <input class="form-control form-control-sm" type="date" name="to" required>
+    </div>
+  </div>
+
+  <div class="form-row my-2 mb-4">
+			<div class="form-group col-md-6">
 			    <label>Remarks</label>
 			    <textarea class="form-control form-control-sm" id="remarks" rows="4" name="remarks"></textarea>
 			</div>
 			
 		</div>
 
-		<div class="my-3">
-			<div class="form-group col-md-6 ">
-				<label for="exampleFormControlFile1">Upload PACUCOA Certification</label>
-			    <input type="file" class="form-control-sm form-control-file" name="pacucoaCert">
-			</div>
-			<div class="form-group col-md-6 my-4">
-				<label for="exampleFormControlFile1">Upload FAAP Certification</label>
-			    <input type="file" class="form-control-sm form-control-file" name="faapCert">
-			</div>
-		</div>
-		
-		<hr>
-		<button class="btn btn-primary  m-2" type="submit">Add Accreditation</button>
+	<hr>
+   <div class="form-group row mt-4">
+   		<label class="col-md-2 col-form-label">FAAP Certificate</label>
+	    <div class="col-md-4">
+	      <input type="file" name="" class="form-control">
+	    </div>
+   </div>
+   <div class="form-group row">
+   		<label class="col-md-2 col-form-label">PACOCUA Certificate</label>
+	    <div class="col-md-4">
+	      <input type="file" name="" class="form-control">
+	    </div>
+   </div><div class="form-group row">
+   		<label class="col-md-2 col-form-label">PACOCUA Report</label>
+	    <div class="col-md-4">
+	      <input type="file" name="" class="form-control">
+	    </div>
+   </div>
+ 
+  <div class="form-group row mt-4">
+    <div class="col-md-10">
+      <button class="btn bg-ub-red m-2" type="submit">Add Accreditation</button>
 		<a class="btn btn-secondary  m-2" href='{{ route("accredIndex") }}'>Back</a>
-	
-	</form>
-
+    </div>
+  </div>
+</form>
 
 <!-- Modal -->
 <div class="modal fade " data-backdrop="static" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

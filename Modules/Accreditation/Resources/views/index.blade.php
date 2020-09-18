@@ -24,7 +24,7 @@
 </style>
 
     <h2 class="float-left">Accredited Programs</h2>
-   	<a class="btn bg-ub-red float-right mr-4" href="{{route('add_accred_form')}}">
+   	<a class="btn bg-ub-red float-right " href="{{route('add_accred_form')}}">
    		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 		</svg>
@@ -33,15 +33,15 @@
 	
 	<br>
 
-    <div class="row text-center mt-4 " style=" margin: auto;">
+    <div class="row text-center mt-4 py-3" >
     	
-    	<div class="col-md-2 p-2 pr-4">
+    	<div class="col-md-2 ">
     		<div class="card hvr-shadow">
 			    <h1 class="card-title">{{$count4}}</h1>
 			    <a href="#" class="bg-ub-grey stretched-link ">Level IV</a>
 			</div>
     	</div>
-    	<div class="col-md-2 p-2 pr-4">
+    	<div class="col-md-2 ">
     		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count3}}</h1>
@@ -49,7 +49,7 @@
 
 			</div>
     	</div>
-    	<div class="col-md-2 p-2 pr-4">
+    	<div class="col-md-2 ">
     		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count2}}</h1>
@@ -57,7 +57,7 @@
 
 			</div>
     	</div>
-    	<div class="col-md-2 p-2 pr-4">
+    	<div class="col-md-2">
     		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count1}}</h1>
@@ -66,7 +66,7 @@
 			</div>
     	</div>
 
-    	<div class="col-md-2 p-2 pr-4">
+    	<div class="col-md-2 ">
     		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count6}}</h1>
@@ -75,7 +75,7 @@
 			</div>
     	</div>
 
-    	<div class="col-md-2 p-2 pr-4">
+    	<div class="col-md-2  ">
     		<div class="card hvr-shadow">
 
 			    <h1 class="card-title">{{$count5}}</h1>
@@ -99,8 +99,8 @@
     <br>
     
     <!-- Table showing school details -->
-    <div class="mr-3 pt-5">
-    	<table id="school_table" class="table table-bordered responsive ">
+    <div class=" pt-5">
+    	<table id="school_table" class="display compact table-bordered" style="width:100%">
 		    <thead class="thead">
 	            <tr>
 	            	<th>School code</th>

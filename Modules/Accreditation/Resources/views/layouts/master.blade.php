@@ -15,10 +15,9 @@
         <link href="{{asset('css/general.css')}}" rel="stylesheet">
 
 
-        <!-- datatables responsiveness -->
-        <link href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.dataTables.min.css" rel="stylesheet">
-
-        
+        <!-- font awesom -->
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+  
 
         <link rel="stylesheet" type="text/css" href="{{asset('css/jquery.dataTables.min.css')}}">
 
@@ -35,8 +34,7 @@
 
 
         <!-- datatables responsiveness -->
-        
-        <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+       
 
        
 
@@ -83,10 +81,17 @@
     <div id="page-content-wrapper">
 
       <nav class="navbar navbar-expand-lg navbar-dark bg-ub-grey border-bottom">
-        <button class="btn text-light" id="menu-toggle"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-layout-sidebar" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
-  <path fill-rule="evenodd" d="M4 14V2h1v12H4z"/>
-</svg></button>
+        
+
+
+          <a class="btn text-light" id="menu-toggle" style=""><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-layout-sidebar" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
+              <path fill-rule="evenodd" d="M4 14V2h1v12H4z"/>
+            </svg>
+          </a>
+
+      
+        
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -116,7 +121,7 @@
         </div>
       </nav>
 
-      <div class="container-fluid  my-2">
+      <div class="container-fluid  my-2 px-4">
         @yield('content')
       </div>
     </div>

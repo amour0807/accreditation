@@ -44,7 +44,7 @@
       </div>
 
 <div class="mr-3">
-    	<table id="program_report_table" class="table table-bordered">
+    	<table id="program_report_table" class="display compact table-bordered" style="width:100%">
 		    <thead class="thead">
 	            <tr>
 	            	<th>School</th>
