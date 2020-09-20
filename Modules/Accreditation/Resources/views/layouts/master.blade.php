@@ -36,7 +36,17 @@
         <!-- datatables responsiveness -->
        
 
-       
+       <style type="text/css">
+           .alert {
+              position: fixed;
+              margin: auto;
+              top: 0%;
+              left: 0;
+              right: 0;
+              width: 50%;
+              z-index: 9;
+            }
+       </style>
 
         
 
@@ -57,7 +67,7 @@
             </li>
 
             <li>
-                <a href="#" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Status</a>
+                <a href="{{route('accred_status')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Status</a>
             </li>
             
             <li>

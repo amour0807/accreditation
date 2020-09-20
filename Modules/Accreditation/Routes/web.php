@@ -27,6 +27,8 @@ Route::prefix('accreditation')->group(function() {
     Route::get('/school_dtb', 'AccreditationController@school_dtb')->name('school_dtb');
     Route::get('/program_dtb/{id}', 'AccreditationController@program_dtb')->name('program_dtb');
     Route::get('/program_report_dtb', 'AccreditationController@program_report_dtb')->name('program_report_dtb');
+    Route::get('/history_dtb/{id}', 'AccreditationController@history_dtb')->name('history_dtb');
+    Route::get('/accred_stat_dtb', 'AccreditationController@accred_stat_dtb')->name('accred_stat_dtb');
 
 
 
@@ -39,6 +41,19 @@ Route::prefix('accreditation')->group(function() {
     Route::post('/addAccred', 'AccreditationController@addAccred')->name('addAccred');
     
     Route::get('/accredited_programs/{id}', 'AccreditationController@accredited_programs')->name('accredited_programs');
+
+
+
+    //Accred status
+    Route::get('/accred_status', 'AccreditationController@accred_status')->name('accred_status');
+    //add
+    Route::post('/addStatus', 'AccreditationController@addStatus')->name('addStatus');
+    Route::post('/deleteStatus', 'AccreditationController@deleteStatus')->name('deleteStatus');
+    Route::post('/editStatus', 'AccreditationController@editStatus')->name('editStatus');
+    Route::post('/updateStatus', 'AccreditationController@updateStatus')->name('updateStatus');
+
+
+
 
 
 

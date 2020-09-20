@@ -1,47 +1,75 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-<h2>Reports here</h2>
+<h2 class="mb-4">Accreditation Reports</h2>
+
+<form method="post" class="mb-4">
+@csrf 
+	<strong>Sort by:</strong>
+	<div class="form-group row">
+		<div class="col-md-3 ">
+			<label>School</label>
+			<select class="form-control">
+				<option>asdasd</option>
+			</select>
+		</div>
+		<div class="col-md-3 ">
+			<label>Accreditation Level</label>
+			<select class="form-control">
+				<option>asdasd</option>
+			</select>
+		</div>
+		<div class="col-md-3 ">
+			<label>Accreditation Status</label>
+			<select class="form-control">
+				<option>asdasd</option>
+			</select>
+		</div>
+		<div class="col-md-3 ">
+			<label>School</label>
+			<select class="form-control">
+				<option>asdasd</option>
+			</select>
+		</div>
+	</div>
 
 
-<strong>Sort by: </strong><br>
-      <div class="mb-3 p-3">
-        <!-- <div class=" d-flex justify-content-center">
-          <div class="col-md-8">
-            <input type="text" id="searchbox" placeholder="search" class="form-control">
-          </div>
-        </div> -->
-        <div class="row d-flex justify-content-center">
-          <!-- <div class="col-md-2">
-            <label>Date From</label>
-          </div>
-          <div class="col-md-2">
-            <label>Date To</label>
-          </div> -->
-          <div class="col-md-4">
-            <label>School</label>
-          </div>
-          <div class="col-md-4">
-            <label>Accred Status</label>
-          </div>
-          
-        </div>
-        <div class="row d-flex justify-content-center" id="filters">
-          
-<!-- 
-          <div class="col-md-4">
-            <input type="date" name="min" id="min" class="form-control" required>
-          </div>
-          <div class="col-md-4">
-            <input type="date" name="max" id="max" class="form-control" required>
-          </div> -->
-        </div>
-        <div class="row d-flex justify-content-center mt-2">
-          <div class="col-md-8">
-             <button type="submit" class="btn btn-outline-danger col-md-12 " id="addBtn" data-target="#addModal" data-toggle="modal" >Export as PDF</button>
-          </div>
-        </div>
-      </div>
+	<div class="form-group row">
+		
+				
+				<label class="col-3">Range of Visitation: </label>
+				<div class="col-3">
+					<input type="date" name="" class="form-control">
+				</div>
+				<div class="col-3 ">
+					<input type="date" name="" class="form-control">
+				</div>
+
+
+			
+		
+	</div>
+
+	<div class="form-group row">
+				<label class="col-3">Range of Validity: </label>
+				<div class="col-3">
+					<input type="date" name="" class="form-control">
+				</div>
+				<div class="col-3 ">
+					<input type="date" name="" class="form-control">
+				</div>
+	</div>
+
+
+
+	<div class="form-group row">
+		<div class="col-md-12">
+			<button class="btn bg-ub-grey float-right btn-sm ">Apply filters</button>
+		</div>
+	</div>
+</form>
+	
+
 
 <div class="mr-3">
     	<table id="program_report_table" class="display compact table-bordered" style="width:100%">
@@ -51,8 +79,8 @@
 	            	<th>Program</th>
 	            	<th>Accreditation Status</th>
 	            	<th>Visit Date</th>
-	            	<th>From</th>
-	            	<th>To</th>
+	            	<th>Validity</th>
+
 	            	<th>Remarks</th>
 
 	            </tr>
@@ -85,37 +113,13 @@
 	            { "data": "program" },
 
 	            { "data": "accred_stat" },
-	            { "data": "visit_date_from" },
-	            { "data": "from" },
-	            { "data": "to" },
+	            { "data": "visit_date" },
+	            { "data": "validity" },
+	            
 	            { "data": "remarks" },
 	        ],
 
-	        initComplete: function () {
-	            this.api().columns([0,2]).every( function () {
-	                var column = this;
-	                count++;
-
-	                $('<div class="col-md-4" id="lalagyan'+count+'"></div>')
-	                    .appendTo( "#filters" );
-
-	                var select = $('<select class="mb-2 form-control" name="select'+count+'"><option value> All </option></select>')
-	                    .appendTo( "#lalagyan"+count )
-	                    .on( 'change', function () {
-	                        var val = $.fn.dataTable.util.escapeRegex(
-	                            $(this).val()
-	                        );
-	 
-	                        column
-	                            .search( val ? '^'+val+'$' : '', true, false )
-	                            .draw();
-	                    } );
-	 
-	                column.data().unique().sort().each( function ( d, j ) {
-	                    select.append( '<option value="'+d+'">'+d+'</option>' )
-	                } );
-	            } );
-	        }
+	      
         });
 
     </script>

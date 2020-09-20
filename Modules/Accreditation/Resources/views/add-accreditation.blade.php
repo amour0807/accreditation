@@ -1,11 +1,7 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-<style type="text/css">
-	.req{
-		color: red;
-	}
-</style>
+
 	<h4 class="mb-4">Add an Accreditation</h4>
  @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -29,7 +25,7 @@
 <form  id="addAccredForm" method="POST" enctype="multipart/form-data" action="{{route('addAccred')}}">
     @csrf
 	<div class="form-group row">
-		<label class="col-md-2 col-form-label"> <span class="req">*</span>School</label>
+		<label class="col-md-2 col-form-label"> <span class="text-danger">*</span>School</label>
 		<div class="col-md-4">
       		<select class="form-control form-control-sm" id="school" name="school" required>
 		    	<option disabled selected value> </option>
@@ -39,7 +35,7 @@
 		    </select>
     	</div>
 
-    	<label class="col-md-2 col-form-label"> <span class="req">*</span>Academic Programs</label>
+    	<label class="col-md-2 col-form-label"> <span class='text-danger'>*</span>Academic Programs</label>
 		<div class="col-md-4">
       		<div id='program_choice'>
 			 	<select class="form-control form-control-sm " disabled name="program" required> 
@@ -52,7 +48,7 @@
 
 	<div class="form-group row">
 
-		    <label class="col-md-2 col-form-label"><span class="req">*</span>Accreditation Status</label>
+		    <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Accreditation Status</label>
 		    <div class="col-md-4">
 			    <select class="form-control form-control-sm" name="accredStat" required>
 			    	<option disabled selected value> </option>
@@ -65,7 +61,7 @@
 	</div>
 
   <div class="form-group row">
-    <label class="col-md-2 col-form-label"><span class="req">*</span>Visit Date From</label>
+    <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Visit Date From</label>
     <div class="col-md-4">
       <input class="form-control form-control-sm" type="date" name="visit_date" required>
     </div>
@@ -77,12 +73,12 @@
   </div>
 
    <div class="form-group row mb-4">
-    <label class="col-md-2 col-form-label"><span class="req">*</span>Valid From</label>
+    <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Valid From</label>
     <div class="col-md-4">
       <input class="form-control form-control-sm" type="month" name="from" required>
     </div>
 
-    <label class="col-md-2 col-form-label"><span class="req">*</span>Valid To</label>
+    <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Valid To</label>
     <div class="col-md-4">
       <input class="form-control form-control-sm" type="month" name="to" required>
     </div>
