@@ -123,6 +123,7 @@
     <div class="alert alert-danger">{{ $message }}</div>
 @enderror
    </div>
+
  
   <div class="form-group row mt-4">
     <div class="col-md-10">
@@ -165,6 +166,7 @@
 
 		   $('#school').on('change',function(){
 		   		var id = $(this).val();
+		   		
 
 		   		$.ajax({
 		            url:"{{route('school_select')}}",

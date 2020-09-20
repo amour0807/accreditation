@@ -346,9 +346,13 @@ class AccreditationController extends Controller
         
 
         //remove current status
-        $remove = PrgrmAccred::where('current', 'yes')->first();
-        $remove->current= '';
-        $remove->save();
+        $remove = PrgrmAccred::where('current', 'yes')
+        ->where('acad_prgrm_id', $request->acad_prgrm_id)->first();
+        if($remove){
+           $remove->current= '';
+            $remove->save(); 
+        }
+        
 
         if($request->visit_date_to){
             DB::table('prgrm_accreds')->insert(
