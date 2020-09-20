@@ -12,8 +12,9 @@
 	            	<th>Program</th>
 	            	<th>Accreditation Status</th>
 	            	<th>Visit Date</th>
+
+
 	            	<th>Valid From</th>
-	            	<th>Valid To</th>
 
 	            	<th>PACUCUA Certificate</th>
 	            	<th>FAAP Certificate</th>
@@ -51,8 +52,10 @@
 	            { "data": "program" },
 	            { "data": "accred_stat" },
 	            { "data": "visit_date" },
+
+
 	            { "data": "from" },
-	            { "data": "to" },
+
 	            { "data": "cert1" },
 	            { "data": "cert2" },
 	            { "data": "cert3" },
@@ -61,7 +64,7 @@
 
 	        ],
 	        "columnDefs": [
-			    { "width": '50pt', "targets": 8 }
+			    { "width": '50pt', "targets": 7 }
 			  ]
         	});
 

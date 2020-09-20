@@ -21,7 +21,7 @@ class PrgrmAccredsTableSeeder extends Seeder
             'visit_date_from' => '2020-2-2',
             'from' => '2020-3-3',
             'to' => '2025-3-3',
-
+            'current' => 'yes',
         ]);
 
         DB::table('prgrm_accreds')->insert([
@@ -30,6 +30,7 @@ class PrgrmAccredsTableSeeder extends Seeder
             'visit_date_from' => '2020-2-2',
             'from' => '2020-3-3',
             'to' => '2025-3-3',
+            'current' => 'yes',
 
         ]);
 
@@ -39,6 +40,8 @@ class PrgrmAccredsTableSeeder extends Seeder
             'visit_date_from' => '2020-2-2',
             'from' => '2020-3-3',
             'to' => '2025-3-3',
+            'current' => 'yes',
+            
         ]);
     }
 }

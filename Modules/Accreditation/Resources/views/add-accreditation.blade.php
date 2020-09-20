@@ -7,10 +7,26 @@
 	}
 </style>
 	<h4 class="mb-4">Add an Accreditation</h4>
+ @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
+@if(!empty(Session::get('error_code')) && Session::get('error_code') == 5)
+	<script>
+	$(function() {
+	    $('#success-modal').modal('show');
+	});
+	</script>
+@endif
 
-
-<form  id="addAccredForm" method="POST">
+<form  id="addAccredForm" method="POST" enctype="multipart/form-data" action="{{route('addAccred')}}">
     @csrf
 	<div class="form-group row">
 		<label class="col-md-2 col-form-label"> <span class="req">*</span>School</label>
@@ -51,24 +67,24 @@
   <div class="form-group row">
     <label class="col-md-2 col-form-label"><span class="req">*</span>Visit Date From</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="month" name="visit_date" required>
+      <input class="form-control form-control-sm" type="date" name="visit_date" required>
     </div>
 
     <label class="col-md-2 col-form-label">Visit Date To</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="month" name="visit_date_to">
+      <input class="form-control form-control-sm" type="date" name="visit_date_to">
     </div>
   </div>
 
    <div class="form-group row mb-4">
     <label class="col-md-2 col-form-label"><span class="req">*</span>Valid From</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="date" name="from" required>
+      <input class="form-control form-control-sm" type="month" name="from" required>
     </div>
 
     <label class="col-md-2 col-form-label"><span class="req">*</span>Valid To</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="date" name="to" required>
+      <input class="form-control form-control-sm" type="month" name="to" required>
     </div>
   </div>
 
@@ -84,19 +100,28 @@
    <div class="form-group row mt-4">
    		<label class="col-md-2 col-form-label">FAAP Certificate</label>
 	    <div class="col-md-4">
-	      <input type="file" name="" class="form-control">
+	      <input type="file" name="faap_cert" class="form-control">
 	    </div>
+	    @error('faap_cert')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
    </div>
    <div class="form-group row">
    		<label class="col-md-2 col-form-label">PACOCUA Certificate</label>
 	    <div class="col-md-4">
-	      <input type="file" name="" class="form-control">
+	      <input type="file" name="pacucoa_cert" class="form-control">
 	    </div>
+	    @error('pacocua_cert')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
    </div><div class="form-group row">
    		<label class="col-md-2 col-form-label">PACOCUA Report</label>
 	    <div class="col-md-4">
-	      <input type="file" name="" class="form-control">
+	      <input type="file" name="pacucoa_report" class="form-control">
 	    </div>
+	    @error('pacocua_report')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
    </div>
  
   <div class="form-group row mt-4">
@@ -159,21 +184,30 @@
 
 
 		     //Adding
-		    $( "#addAccredForm" ).submit(function( event ) {
-		        event.preventDefault();
+		    // $( "#addAccredForm" ).submit(function( event ) {
+		    //     event.preventDefault();
+		    //     var formData = new FormData($(this)[0]);
+		    //     $.ajax({
+		    //       url:"{{route('addAccred')}}",
+		    //       method:"POST",
+		    //       data:new FormData(this),
 
-		        $.ajax({
-		          url:"{{route('addAccred')}}",
-		          method:"POST",
-		          data: $("#addAccredForm").serialize(),
-		          success:function(data){
-		            $("#addAccredForm")[0].reset();
-		            $('#success-modal').modal('show');
+				  //  contentType: false,
+				  //  cache: false,
+				  //  processData: false,
+		    //       success:function(data){
+		    //         $("#addAccredForm")[0].reset();
+		    //         $('#success-modal').modal('show');
 		            
-		          }
+		    //       },
+		    //       error: function(xhr, status, error){
+			   //       var errorMessage = xhr.error + ': ' + xhr.statusText
+			   //       alert('You might have uploaded an invalid file. Please re-check your inputs and take note of the following: \n FAAP Certificate: accepts .pdf and .xls files only \n PACOCUA Certificate: accepts .pdf and .xls files only \n FAAP Report: accepts .PNG and .JPEG files only');
+			   //   }
+
 		              
-		        }); 
-		    });  
+		    //     }); 
+		    // });  
 		});
 	</script>
 @endsection

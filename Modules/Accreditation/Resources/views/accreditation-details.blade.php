@@ -39,28 +39,33 @@
     <label class="col-sm-2 col-form-label">Valid To</label>
   </div> -->
 	<hr>
+  @if($program->faap_cert)
    <div class=" row mt-3">
    		<label class="col-sm-5 col-form-label">FAAP Certificate</label>
    		<label class="col-sm-7 col-form-label">
-   			<a href="">View Certificate</a>
+   			<a href="{{asset('uploads/'.$program->faap_cert)}}">View Certificate</a>
    		</label>
 	    
    </div>
+   @endif
+   @if($program->pacucoa_cert)
    <div class=" row">
    		<label class="col-sm-5 col-form-label">PACOCUA Certificate</label>
    		<label class="col-sm-7 col-form-label">
-   			<a href="">View Certificate</a>
+   			<a href="{{asset('uploads/'.$program->pacucoa_cert)}}">View Certificate</a>
    		</label>
 	    
    </div>
+   @endif
+   @if($program->pacucoa_report)
    <div class=" row">
-   		<label class="col-sm-5 col-form-label">PACOCUA Report</label>
+   		<label class="col-sm-5 col-form-label">PACUCOA Report</label>
    		<label class="col-sm-7 col-form-label">
-   			<a href="">View Report</a>
+   			<a href="{{asset('uploads/'.$program->pacucoa_report)}}">View Report</a>
    		</label>
 	    
    </div>
-
+   @endif
    <div class=" row mt-4">
     <div class="col-sm-12">
       <a class="btn bg-ub-red mr-2" href="{{ route('accredEdit', $program->id)}}">Edit</a>

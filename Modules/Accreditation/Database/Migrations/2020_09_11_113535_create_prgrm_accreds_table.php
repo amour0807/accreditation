@@ -26,6 +26,8 @@ class CreatePrgrmAccredsTable extends Migration
             $table->date('to');
             $table->string('pacucoa_cert')->nullable();
             $table->string('pacucoa_report')->nullable();
+            $table->string('current')->nullable();
+
 
             $table->string('faap_cert')->nullable();
             $table->string('remarks')->nullable();

@@ -12,6 +12,9 @@ use Modules\Accreditation\Entities\PrgrmAccred;
 use Modules\Accreditation\Entities\School;
 use Yajra\Datatables\Datatables;
 use DB;
+use Illuminate\Support\Facades\Storage;
+
+use App\Models\File;
 
 class AccreditationController extends Controller
 {
@@ -27,34 +30,46 @@ class AccreditationController extends Controller
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
                 ->where('prgrm_accreds.accred_stat_id', 2)
+                ->where('current', 'yes')
                 ->count();
         $count5 = DB::table('prgrm_accreds')
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
                 ->where('prgrm_accreds.accred_stat_id', 1)
+                ->where('current', 'yes')
+
                 ->count();
         $count4 = DB::table('prgrm_accreds')
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
                 ->where('prgrm_accreds.accred_stat_id', 8)
+                ->where('current', 'yes')
+
                 ->count();
         $count3 = DB::table('prgrm_accreds')
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
                 ->where('prgrm_accreds.accred_stat_id', 7)
+                ->where('current', 'yes')
+
                 ->count();
         $count2 = DB::table('prgrm_accreds')
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-                ->where('prgrm_accreds.accred_stat_id', 6)
-                ->orwhere('prgrm_accreds.accred_stat_id', 5)
-                ->orwhere('prgrm_accreds.accred_stat_id', 4)
+                ->where(function ($query) {
+                $query->where('prgrm_accreds.accred_stat_id', 4)
+                    ->orWhere('prgrm_accreds.accred_stat_id', 5)
+                    ->orWhere('prgrm_accreds.accred_stat_id', 6);
+            })
+                ->where('current', 'yes')
                 ->count();
 
         $count1 = DB::table('prgrm_accreds')
                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
                 ->where('prgrm_accreds.accred_stat_id', 3)
+                ->where('current', 'yes')
+
                 ->count();
       
         return view('accreditation::index', compact('count1', 'count2', 'count3' ,'count4', 'count5', 'count6'));
@@ -80,6 +95,8 @@ class AccreditationController extends Controller
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('prgrm_accreds.accred_stat_id', 8)
             ->where('schools.id', $school->id)
+            ->where('current', 'yes')
+
             ->count();
                 return $count;
         })
@@ -89,6 +106,7 @@ class AccreditationController extends Controller
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('prgrm_accreds.accred_stat_id', 7)
             ->where('schools.id',$school->id)
+            ->where('current', 'yes')
             ->count();
             return $count;
         })
@@ -99,6 +117,7 @@ class AccreditationController extends Controller
             ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('schools.id',$school->id)
+            ->where('current', 'yes')
             ->where(function ($query) {
                 $query->where('prgrm_accreds.accred_stat_id', 4)
                     ->orWhere('prgrm_accreds.accred_stat_id', 5)
@@ -114,6 +133,7 @@ class AccreditationController extends Controller
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('prgrm_accreds.accred_stat_id', 3)
             ->where('schools.id',$school->id)
+            ->where('current', 'yes')
             ->count();
             return $count;
         })
@@ -123,6 +143,7 @@ class AccreditationController extends Controller
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('prgrm_accreds.accred_stat_id', 1)
             ->where('schools.id',$school->id)
+            ->where('current', 'yes')
             ->count();
             return $count;
         })
@@ -132,6 +153,7 @@ class AccreditationController extends Controller
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('prgrm_accreds.accred_stat_id', 2)
             ->where('schools.id',$school->id)
+            ->where('current', 'yes')
             ->count();
             return $count;
         })
@@ -164,12 +186,15 @@ class AccreditationController extends Controller
    
         $programs = PrgrmAccred::join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
         ->where('acad_prgrms.school_id', $id)
+        ->where('current', 'yes')
+        ->select('*','prgrm_accreds.id as a_id')
         ->get();    
 
 
           
          return DataTables::of($programs)
             ->addColumn('program', function($programs) {
+
                 return $programs->acadPrgrm->acad_prog_code;
             })
             ->addColumn('accred_stat', function($programs) {
@@ -202,31 +227,44 @@ class AccreditationController extends Controller
 </svg>';
                 }
             })
-            ->addColumn('visit_date', function($programs) {
-                $dateValue = $programs->visit_date_from;
+            ->addColumn('from', function($programs) {
+                $dateValue_from = $programs->from;
+                $dateValue = $programs->to;
+                //display in words
+                $time_from=strtotime($dateValue_from);
+                $month_from=date("M",$time_from);
+                $year_from=date("Y",$time_from);
 
                 //display in words
                 $time=strtotime($dateValue);
                 $month=date("M",$time);
                 $year=date("Y",$time);
 
-                return $month.' '.$year;
+                return $month_from.' '.$year_from.' - '.$month.' '.$year;
             })
+            ->addColumn('visit_date', function($programs) {
+                if($programs->visit_date_to){
+                    return $programs->visit_date_from.' - '.$programs->visit_date_to;
+                }else{
+                    return $programs->visit_date_from;
+                }
+            })
+           
             ->addColumn('actions', function($programs) {
-                    return '<a class="btn bg-ub-red btn-sm" href="'.route("accredDetails", $programs->acadPrgrm->id).'">
+                    return '<a class="btn bg-ub-red btn-sm" href="'.route("accredDetails", $programs->a_id).'">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
-                        <a class="btn btn-secondary btn-sm" href="'.route("accredHistory", $programs->acadPrgrm->id).'"><i class="fa fa-history" aria-hidden="true"></i>
+                        <a class="btn btn-secondary btn-sm" href="'.route("accredHistory", $programs->a_id).'"><i class="fa fa-history" aria-hidden="true"></i>
                         </a>
                         ';
             })
             
-            ->rawColumns(["program", "accred_stat", "actions", 'cert1', 'cert2', 'cert3'])
+            ->rawColumns(['from', 'to',"program", "accred_stat", "actions", 'cert1', 'cert2', 'cert3','visit_date'])
             ->make(true);
     }
 
     public function accredDetails($id){
-        $program = PrgrmAccred::where('acad_prgrm_id', $id)->first();
+        $program = PrgrmAccred::where('id', $id)->first();
 
         return view('accreditation::accreditation-details', compact('program'));
 
@@ -276,18 +314,77 @@ class AccreditationController extends Controller
 
     // add Accreditation
     public function addAccred(Request $request){
-   
-        DB::table('prgrm_accreds')->insert(
-            [
-            'accred_stat_id' => $request->accredStat, 
-            'acad_prgrm_id' => $request->program,
-            'visit_date_from' => $request->visit_date.'-01',
-            'visit_date_to' => $request->visit_date.'-01',
-            'from' => $request->from,
-            'to' => $request->to,
-            'remarks' => $request->remarks
-            ]
-        );
+        $faap_cert_fileName='';
+        $pacucoa_cert_fileName='';
+
+        $pacucoa_report_fileName='';
+            $request->validate([
+            'faap_cert' => 'nullable|mimes:pdf,xlx,csv|max:2048',
+            'pacucoa_cert' => 'nullable|mimes:pdf,xlx,csv|max:2048',
+            'pacucoa_report' => 'nullable|mimes:jpeg,png',
+
+            ]);
+      
+        if($request->hasFile('faap_cert')){
+            
+            $faap_cert_fileName = 'faap_cert_'.time().'.'.request()->faap_cert->getClientOriginalExtension();  
+       
+            request()->faap_cert->move(public_path('uploads'), $faap_cert_fileName);
+        }
+        if($request->hasFile('pacucoa_report')){
+            
+            $pacucoa_report_fileName = 'pacucoa_report_'.time().'.'.request()->pacucoa_report->getClientOriginalExtension();  
+       
+            request()->pacucoa_report->move(public_path('uploads'), $pacucoa_report_fileName);
+        }
+        if($request->hasFile('pacucoa_cert')){
+            
+            $pacucoa_cert_fileName = 'pacucoa_cert_'.time().'.'.request()->pacucoa_cert->getClientOriginalExtension();  
+       
+            request()->pacucoa_cert->move(public_path('uploads'), $pacucoa_cert_fileName);
+        }
+        
+
+        //remove current status
+        $remove = PrgrmAccred::where('current', 'yes')->first();
+        $remove->current= '';
+        $remove->save();
+
+        if($request->visit_date_to){
+            DB::table('prgrm_accreds')->insert(
+                [
+                'accred_stat_id' => $request->accredStat, 
+                'acad_prgrm_id' => $request->program,
+                'from' => $request->from.'-01',
+                'to' => $request->to.'-01',
+                'visit_date_from' => $request->visit_date,
+                'visit_date_to' => $request->visit_date_to,
+                'faap_cert' => $faap_cert_fileName,
+                'pacucoa_report' => $pacucoa_report_fileName,
+                'pacucoa_cert' => $pacucoa_cert_fileName,
+                'current' => 'yes',
+                'remarks' => $request->remarks
+                ]
+            );
+        }else{
+            DB::table('prgrm_accreds')->insert(
+                [
+                'accred_stat_id' => $request->accredStat, 
+                'acad_prgrm_id' => $request->program,
+                'from' => $request->visit_date.'-01',
+                'visit_date_from' => $request->visit_date,
+                'visit_date_to' => $request->visit_date_to,
+                'faap_cert' => $faap_cert_fileName,
+                'pacucoa_report' => $pacucoa_report_fileName,
+                'pacucoa_cert' => $pacucoa_cert_fileName,
+                'current' => 'yes',
+
+                'remarks' => $request->remarks
+                ]
+            );
+        }
+
+        return back()->with('error_code', 5);
     }
 
     //view accredited programs per school
@@ -311,7 +408,7 @@ class AccreditationController extends Controller
    
         $programs = PrgrmAccred::join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
         ->join('schools', 'acad_prgrms.school_id', 'schools.id')
-
+        ->where('current', 'yes')
         ->get();    
 
 
@@ -331,63 +428,14 @@ class AccreditationController extends Controller
             ->rawColumns(["program", "accred_stat", "school"])
             ->make(true);
     }
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('accreditation::create');
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('accreditation::show');
-    }
+    public function viewPacucoaReport($id){
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('accreditation::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        $file = PrgrmAccred::where('id', $id)->first(); 
+        $file_path = public_path('uploads/'.$file->pacucoa_cert);
+ 
+ 
+        return response()->file($file_path);
     }
 }
