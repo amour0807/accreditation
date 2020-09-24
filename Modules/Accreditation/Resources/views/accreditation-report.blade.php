@@ -1,40 +1,48 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <h2 class="mb-4">Accreditation Reports</h2>
 
-<form method="post" class="mb-4">
+<form class="mb-4" action="{{route('filterReport')}}" method="POST">
 @csrf 
 	<strong>Sort by:</strong>
 	<div class="form-group row">
 		<div class="col-md-3 ">
-			<label>School</label>
-			<select class="form-control">
-				<option>asdasd</option>
-			</select>
+			<label >School</label>
+			<div id="filters1">
+				
+			</div>
+			
 		</div>
 		<div class="col-md-3 ">
 			<label>Accreditation Level</label>
-			<select class="form-control">
-				<option>asdasd</option>
-			</select>
+			<div id="filters2">
+				
+			</div>
 		</div>
 		<div class="col-md-3 ">
 			<label>Accreditation Status</label>
-			<select class="form-control">
-				<option>asdasd</option>
+			<select class="form-control" id="accredStat" name="accredStat">
+				<option>All</option>
+				<option value="Active">Active</option>
+				<option value="Expired">Expired</option>
 			</select>
 		</div>
 		<div class="col-md-3 ">
-			<label>School</label>
-			<select class="form-control">
+			<label>Visitation year</label>
+			<div id="filters3">
+				
+			</div>
+			<!-- <select class="form-control">
 				<option>asdasd</option>
-			</select>
+			</select> -->
 		</div>
 	</div>
 
 
-	<div class="form-group row">
+<!-- 	<div class="form-group row">
 		
 				
 				<label class="col-3">Range of Visitation: </label>
@@ -48,27 +56,35 @@
 
 			
 		
-	</div>
+	</div> -->
 
 	<div class="form-group row">
 				<label class="col-3">Range of Validity: </label>
 				<div class="col-3">
-					<input type="date" name="" class="form-control">
+					<input type="date" name="from" class="form-control" id="min">
 				</div>
 				<div class="col-3 ">
-					<input type="date" name="" class="form-control">
+					<input type="date" name="to" class="form-control" id="max">
 				</div>
 	</div>
 
 
 
-	<div class="form-group row">
-		<div class="col-md-12">
-			<button class="btn bg-ub-grey float-right btn-sm ">Apply filters</button>
-		</div>
-	</div>
+	<div class="row d-flex justify-content-center mt-2">
+      <div class="col-md-8">
+         <button type="submit" class="btn btn-outline-danger col-md-12 " id="addBtn"  >Export as PDF</button>
+      </div>
+    </div>
 </form>
-	
+
+
+                      
+                            
+                        
+
+<!-- end test -->
+
+
 
 
 <div class="mr-3">
@@ -79,7 +95,9 @@
 	            	<th>Program</th>
 	            	<th>Accreditation Status</th>
 	            	<th>Visit Date</th>
-	            	<th>Validity</th>
+	            	<th>Validity From</th>
+	            	<th>Validity To</th>
+
 
 	            	<th>Remarks</th>
 
@@ -103,6 +121,86 @@
 
    var count = 0;
 
+   //Date
+        var date = new Date();
+
+          var newd      = date.toLocaleDateString();
+          var month     = date.getMonth()+1;
+          var date1     = date.getDate();
+          var year      = date.getFullYear();
+          
+          if(month <10){
+            month = '0'+month;
+
+          }if(date1 <10){
+            date1 = '0'+date1;
+          }
+  
+        var newDate = year+'-'+month+'-'+date1;
+                var count = 0;
+
+
+//Datatable
+
+
+
+
+
+/* Custom filtering function which will search data in column four between two values */
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+    	//get selected status from the dropdown
+        var status = $('#accredStat').val();
+        //parse current date from above
+        var ahem = Date.parse( newDate );
+        //parse data from the to column
+        var due = Date.parse( data[5] ) || 0; 
+
+        if ( status == 'Active' )
+        {
+        	if(due > ahem){
+            	return true;
+        	}
+        	else{
+        		return false;
+        	}
+        }else if( status =='Expired'){
+        	if(due <= ahem){
+            	return true;
+        	}
+        	else{
+        		return false;
+        	}
+        }
+        else{
+        		return true;
+
+        }
+        
+    }
+);
+
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var min = Date.parse($('#min').val());
+        var max = Date.parse($('#max').val());
+        var age = Date.parse( data[5] ) || 0; // use data for the age column
+ 
+        if ( ( isNaN( min ) && isNaN( max ) ) ||
+             ( isNaN( min ) && age <= max ) ||
+             ( min <= age   && isNaN( max ) ) ||
+             ( min <= age   && age <= max ) )
+        {
+            return true;
+        }else{
+        	return false;
+        }
+        
+    }
+);
+
+
+
 
    // program table
 
@@ -111,16 +209,96 @@
 	        "columns": [
 	            { "data": "school" },
 	            { "data": "program" },
-
 	            { "data": "accred_stat" },
 	            { "data": "visit_date" },
-	            { "data": "validity" },
+	            { "data": "from" },
+	            { "data": "to" },
+
 	            
 	            { "data": "remarks" },
 	        ],
 
+
+       
+
+
+	        initComplete: function () {
+	            this.api().columns([0,2]).every( function () {
+	                var column = this;
+	                count++;
+	                $('<div id="lalagyan'+count+'"></div>')
+	                    .appendTo( "#filters"+count );
+
+	                var select = $('<select class="form-control" name="select'+count+'"><option value="">All</option></select>')
+	                    .appendTo( "#lalagyan"+count )
+	                    .on( 'change', function () {
+	                        var val = $.fn.dataTable.util.escapeRegex(
+	                            $(this).val()
+	                        );
+	 
+	                        column
+	                            .search( val ? '^'+val+'$' : '', true, false )
+	                            .draw();
+	                    } );
+	 
+	                column.data().unique().sort().each( function ( d, j ) {
+	                    select.append( '<option value="'+d+'">'+d+'</option>' )
+	                } );
+	            } );
+	        },
+
+	        // initComplete: function () {
+	        //     this.api().columns([5]).every( function () {
+	        //         var column = this;
+	        //         count++;
+	      
+	        //         $('<div id="lalagyan3"></div>')
+	        //             .appendTo( "#filters3" );
+
+	        //         var select = $('<select class="form-control" name="select3"><option value="">All</option></select>')
+	        //             .appendTo( "#lalagyan3" )
+	        //             .on( 'change', function () {
+	        //                 var val = $.fn.dataTable.util.escapeRegex(
+	        //                     $(this).val()
+	        //                 );
+	 
+	        //                 column
+	        //                     .search( val ? '^'+val+'$' : '', true, false )
+	        //                     .draw();
+	        //             } );
+	 
+	        //         column.data().unique().sort().each( function ( d, j ) {
+	        //             select.append( '<option value="'+d+'">'+d+'</option>' )
+	        //         } );
+	        //     } );
+	        // },
+
+
+
+
 	      
         });
+
+  // Event listener to the two range filtering inputs AND THE status to redraw on input
+            $('#min, #max, #accredStat').change(function () {
+                dataTable.draw();
+            });
+
+ 
+        //Adding
+    $( "#addSchoolForm" ).submit(function( event ) {
+        event.preventDefault();
+
+        $.ajax({
+          url:"{{ route('filterReport') }}",
+          method:"POST",
+          data: $("#addSchoolForm").serialize(),
+          success:function(data){
+            dataTable.ajax.reload();
+          }
+              
+        }); 
+    });   
 
     </script>
 @endsection

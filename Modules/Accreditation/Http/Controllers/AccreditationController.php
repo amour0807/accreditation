@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Models\File;
 
+use PDF;
+use PdfReport;
+use \Carbon\Carbon;
+
 class AccreditationController extends Controller
 {
     /**
@@ -467,62 +471,7 @@ class AccreditationController extends Controller
     }
 
 
-    //View report
-    public function accredReport(){
-        return view('accreditation::accreditation-report');
-        
-    }
-
-    //report datatables
-
-    //Program Datatables
-    public function program_report_dtb(){
-
-   
-        $programs = PrgrmAccred::join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
-        ->join('schools', 'acad_prgrms.school_id', 'schools.id')
-        ->where('current', 'yes')
-        ->get();    
-
-
-          
-         return DataTables::of($programs)
-            ->addColumn('school', function($programs) {
-                return $programs->acadPrgrm->school->school_code;
-            })
-            ->addColumn('program', function($programs) {
-                return $programs->acadPrgrm->acad_prog_code;
-            })
-            ->addColumn('accred_stat', function($programs) {
-                    return $programs->accredStat->accred_status;
-            })
-            ->addColumn('validity', function($programs) {
-                $dateValue_from = $programs->from;
-                $dateValue = $programs->to;
-                //display in words
-                $time_from=strtotime($dateValue_from);
-                $month_from=date("M",$time_from);
-                $year_from=date("Y",$time_from);
-
-                //display in words
-                $time=strtotime($dateValue);
-                $month=date("M",$time);
-                $year=date("Y",$time);
-
-                return $month_from.' '.$year_from.' - '.$month.' '.$year;
-            })
-            ->addColumn('visit_date', function($programs) {
-                if($programs->visit_date_to){
-                    return $programs->visit_date_from.' - '.$programs->visit_date_to;
-                }else{
-                    return $programs->visit_date_from;
-                }
-            })
-            
-            
-            ->rawColumns(["program", "accred_stat", "school", 'validity', 'visit_date'])
-            ->make(true);
-    }
+    
 
 
     public function viewPacucoaReport($id){
@@ -597,4 +546,161 @@ class AccreditationController extends Controller
         
     }
 
+
+//reports
+
+    //View report
+    public function accredReport(){
+        $accreditations = PrgrmAccred::all();
+        $programs = AcadPrgrm::all();
+        $schools = School::all();
+        $accredStats = AccredStat::all();
+
+
+        return view('accreditation::accreditation-report', compact('accreditations', 'schools', 'accredStats', 'programs'));
+        
+    }
+
+
+    //report datatables
+
+    //Program Datatables
+    public function program_report_dtb(){
+
+   
+        $programs = PrgrmAccred::join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        ->join('schools', 'acad_prgrms.school_id', 'schools.id')
+        ->where('current', 'yes')
+        ->get();    
+
+
+          
+         return DataTables::of($programs)
+            ->addColumn('school', function($programs) {
+                return $programs->acadPrgrm->school->school_code;
+            })
+            ->addColumn('program', function($programs) {
+                return $programs->acadPrgrm->acad_prog_code;
+            })
+            ->addColumn('accred_stat', function($programs) {
+                    return $programs->accredStat->accred_status;
+            })
+            ->addColumn('validity', function($programs) {
+                $dateValue_from = $programs->from;
+                $dateValue = $programs->to;
+                //display in words
+                $time_from=strtotime($dateValue_from);
+                $month_from=date("M",$time_from);
+                $year_from=date("Y",$time_from);
+
+                //display in words
+                $time=strtotime($dateValue);
+                $month=date("M",$time);
+                $year=date("Y",$time);
+
+                return $month_from.' '.$year_from.' - '.$month.' '.$year;
+            })
+            ->addColumn('visit_date', function($programs) {
+                if($programs->visit_date_to){
+                    return $programs->visit_date_from.' - '.$programs->visit_date_to;
+                }else{
+                    return $programs->visit_date_from;
+                }
+            })
+            
+            
+            ->rawColumns(["program", "accred_stat", "school", 'validity', 'visit_date'])
+            ->make(true);
+    }
+
+    
+    public function filterReport(Request $request)
+    {
+        $school = $request->select1;
+        $accredStatus = $request->accredStatus;
+
+        $expiry = $request->select2;
+        $min = $request->min;
+        $max = $request->max;
+
+         $title = 'Accreditation Report';
+        $meta = [ // For displaying filters description on header
+                'School' => $school,
+                'Sort By' => $accredStatus
+            ];
+
+         //get the details of the proj first to get the id
+
+        //use id from previous query
+        if($school && $accredStatus && $expiry && $min && $max){
+            $queryBuilder = DB::table('prgrm_accreds')
+                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                        ->where('schools.school_name', $school)
+                        ->where('accred_stats.accred_status', $accredStatus)
+                        ->where('current', 'yes')
+                        ->whereBetween('to', [$min, $max])
+                        ->get();
+        }else if(!$school  && $accredStatus && $expiry && $min && $max){
+            $queryBuilder  = DB::table('prgrm_accreds')
+                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                        ->where('accred_stats.accred_status', $accredStatus)
+                        ->where('current', 'yes')
+                        ->whereBetween('to', [$min, $max])
+                        ->get();
+        }else if(!$school  && !$accredStatus && $expiry && $min && $max){
+            $queryBuilder = DB::table('prgrm_accreds')
+                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                        ->where('current', 'yes')
+                        ->whereBetween('to', [$min, $max])
+                        ->get();
+        }else{
+            $queryBuilder = DB::table('prgrm_accreds')
+                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                        ->where('current', 'yes')
+                        ->get();
+        }
+
+        $columns = [ // Set Column to be displayed
+            'school' => 'school_name',
+            'Accreditation Level' => 'accred_status'
+
+            // 'Total Balance' => 'balance',
+            // 'Status' => function($result) { // You can do if statement or any action do you want inside this closure
+            //     return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
+            // }
+        ];
+        // $month = date('M Y', strtotime('first day of last month'));
+        // $start = date('M d, Y', strtotime($min));
+        // $end = date('M d, Y', strtotime($max));
+        // $projects = Project::whereMonth(
+        //     'created_at', '=', Carbon::now()->subMonth()->month)->get();
+      
+
+        // $pdf = PDF::loadView('accreditation::reports.accreditation-report', compact('query'));
+
+        // $pdf->save(storage_path().'_filename.pdf');
+
+        // return $pdf->stream('project_'.time().'.pdf');
+
+         return PdfReport::of($title, $meta, $queryBuilder, $columns)
+                    // ->editColumn('Registered At', [ // Change column class or manipulate its data for displaying to report
+                    //     'displayAs' => function($result) {
+                    //         return $result->registered_at->format('d M Y');
+                    //     },
+                    //     'class' => 'left'
+                    // ])
+                    // ->editColumns(['Total Balance', 'Status'], [ // Mass edit column
+                    //     'class' => 'right bold'
+                    // ])
+                    // ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
+                    //     'Total Balance' => 'point' // if you want to show dollar sign ($) then use 'Total Balance' => '$'
+                    // ])
+                    ->limit(20) // Limit record to be showed
+                    ->stream(); // other available method: download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+
+    }
 }
