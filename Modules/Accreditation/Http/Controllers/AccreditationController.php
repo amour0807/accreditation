@@ -449,8 +449,8 @@ class AccreditationController extends Controller
                 'accred_stat_id' => $request->accredStat, 
                 'acad_prgrm_id' => $request->program,
                 'from' => $request->visit_date.'-01',
+                'to' => $request->to.'-01',
                 'visit_date_from' => $request->visit_date,
-                'visit_date_to' => $request->visit_date_to,
                 'faap_cert' => $faap_cert_fileName,
                 'pacucoa_report' => $pacucoa_report_fileName,
                 'pacucoa_cert' => $pacucoa_cert_fileName,
@@ -617,62 +617,99 @@ class AccreditationController extends Controller
     public function filterReport(Request $request)
     {
         $school = $request->select1;
-        $accredStatus = $request->accredStatus;
+        //level
+        $accredStatus = $request->select2;
 
-        $expiry = $request->select2;
+        $expiry = $request->accredStat;
         $min = $request->min;
         $max = $request->max;
 
-         $title = 'Accreditation Report';
-        $meta = [ // For displaying filters description on header
-                'School' => $school,
-                'Sort By' => $accredStatus
-            ];
+        // $title = 'Accreditation Report';
+        // $meta = [ // For displaying filters description on header
+        //         'School' => $school,
+        //         'Sort By' => $accredStatus
+        //     ];
 
          //get the details of the proj first to get the id
 
         //use id from previous query
-        if($school && $accredStatus && $expiry && $min && $max){
-            $queryBuilder = DB::table('prgrm_accreds')
-                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
-                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-                        ->where('schools.school_name', $school)
-                        ->where('accred_stats.accred_status', $accredStatus)
-                        ->where('current', 'yes')
-                        ->whereBetween('to', [$min, $max])
-                        ->get();
-        }else if(!$school  && $accredStatus && $expiry && $min && $max){
-            $queryBuilder  = DB::table('prgrm_accreds')
-                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
-                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-                        ->where('accred_stats.accred_status', $accredStatus)
-                        ->where('current', 'yes')
-                        ->whereBetween('to', [$min, $max])
-                        ->get();
-        }else if(!$school  && !$accredStatus && $expiry && $min && $max){
-            $queryBuilder = DB::table('prgrm_accreds')
-                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
-                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-                        ->where('current', 'yes')
-                        ->whereBetween('to', [$min, $max])
-                        ->get();
-        }else{
-            $queryBuilder = DB::table('prgrm_accreds')
-                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
-                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-                        ->where('current', 'yes')
-                        ->get();
-        }
+        // if($school && $accredStatus && $expiry && $min && $max){
+        //     $queryBuilder = DB::table('prgrm_accreds')
+        //                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        //                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+        //                 ->join('accred_stats', 'accred_stats.id', 'prgrm_accreds.accred_stat_id')
+        //                 ->where('schools.school_code', $school)
+        //                 ->where('accred_stats.accred_status', $accredStatus)
+        //                 ->where('current', 'yes')
+        //                 ->whereBetween('to', [$min, $max])
+        //                 ->get();
+                       
+        // }else if(!$school  && $accredStatus && $expiry && $min && $max){
+        //     $queryBuilder  = DB::table('prgrm_accreds')
+        //                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        //                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+        //                 ->join('accred_stats', 'accred_stats.id', 'prgrm_accreds.accred_stat_id')
 
-        $columns = [ // Set Column to be displayed
-            'school' => 'school_name',
-            'Accreditation Level' => 'accred_status'
+        //                 ->where('accred_stats.accred_status', $accredStatus)
+        //                 ->where('current', 'yes')
+        //                 ->whereBetween('to', [$min, $max])
+        //                 ->get();
+        // }else if(!$school  && !$accredStatus && $expiry && $min && $max){
+        //     $queryBuilder = DB::table('prgrm_accreds')
+        //                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        //                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+        //                 ->where('current', 'yes')
+        //                 ->whereBetween('to', [$min, $max])
+        //                 ->get();
+        // }else{
+        //     $queryBuilder = DB::table('prgrm_accreds')
+        //                 ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        //                 ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+        //                 ->where('current', 'yes')
+        //                 ->get();
 
-            // 'Total Balance' => 'balance',
-            // 'Status' => function($result) { // You can do if statement or any action do you want inside this closure
-            //     return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
-            // }
-        ];
+        // }
+        
+$queryBuilder = DB::table('prgrm_accreds')
+                        ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+                        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+                        ->join('accred_stats', 'accred_stats.id', 'prgrm_accreds.accred_stat_id')
+                        ->where('current', 'yes')
+                        ;
+
+                        if($school){
+                            $queryBuilder =$queryBuilder->where('schools.school_code', $school);
+                        }
+                        if($accredStatus){
+                            $queryBuilder =$queryBuilder->where('accred_stats.accred_status', $accredStatus);
+                        }
+                        
+                        if($min && $max){
+                            $queryBuilder = $queryBuilder->whereBetween('to', [$min, $max]);
+                        }
+
+                        if($expiry == 'Active'){
+                            $queryBuilder = $queryBuilder->where('to','>=', date('Y-m-d'));
+
+                        }
+                        if($expiry == 'Expired'){
+                            $queryBuilder = $queryBuilder->where('to','<=', date('Y-m-d'));
+
+                        }
+
+                        $queryBuilder = $queryBuilder->get();
+                       
+        // $columns = [ // Set Column to be displayed
+        //     'school' => 'school_name',
+        //     'Accreditation Level' => 'accred_status'
+
+        //     // 'Total Balance' => 'balance',
+        //     // 'Status' => function($result) { // You can do if statement or any action do you want inside this closure
+        //     //     return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
+        //     // }
+        // ];
+
+
         // $month = date('M Y', strtotime('first day of last month'));
         // $start = date('M d, Y', strtotime($min));
         // $end = date('M d, Y', strtotime($max));
@@ -680,27 +717,15 @@ class AccreditationController extends Controller
         //     'created_at', '=', Carbon::now()->subMonth()->month)->get();
       
 
-        // $pdf = PDF::loadView('accreditation::reports.accreditation-report', compact('query'));
+        $pdf = PDF::loadView('accreditation::reports.accreditation-report', compact('queryBuilder', 'accredStatus', 'expiry', 'min', 'max', 'school'));
 
-        // $pdf->save(storage_path().'_filename.pdf');
+        $pdf->save(storage_path().'_filename.pdf');
 
-        // return $pdf->stream('project_'.time().'.pdf');
+        return $pdf->stream('project_'.time().'.pdf');
 
-         return PdfReport::of($title, $meta, $queryBuilder, $columns)
-                    // ->editColumn('Registered At', [ // Change column class or manipulate its data for displaying to report
-                    //     'displayAs' => function($result) {
-                    //         return $result->registered_at->format('d M Y');
-                    //     },
-                    //     'class' => 'left'
-                    // ])
-                    // ->editColumns(['Total Balance', 'Status'], [ // Mass edit column
-                    //     'class' => 'right bold'
-                    // ])
-                    // ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
-                    //     'Total Balance' => 'point' // if you want to show dollar sign ($) then use 'Total Balance' => '$'
-                    // ])
-                    ->limit(20) // Limit record to be showed
-                    ->stream(); // other available method: download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
-
+         // return PdfReport::of($title, $meta, $queryBuilder, $columns)
+                    
+         //            ->limit(20) // Limit record to be showed
+         //            ->stream(); 
     }
 }

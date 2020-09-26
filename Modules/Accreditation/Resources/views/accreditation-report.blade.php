@@ -25,7 +25,7 @@
 		<div class="col-md-3 ">
 			<label>Accreditation Status</label>
 			<select class="form-control" id="accredStat" name="accredStat">
-				<option>All</option>
+				<option value="">All</option>
 				<option value="Active">Active</option>
 				<option value="Expired">Expired</option>
 			</select>
@@ -61,10 +61,10 @@
 	<div class="form-group row">
 				<label class="col-3">Range of Validity: </label>
 				<div class="col-3">
-					<input type="date" name="from" class="form-control" id="min">
+					<input type="date" name="min" class="form-control" id="min">
 				</div>
 				<div class="col-3 ">
-					<input type="date" name="to" class="form-control" id="max">
+					<input type="date" name="max" class="form-control" id="max">
 				</div>
 	</div>
 
