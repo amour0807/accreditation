@@ -647,6 +647,8 @@ class AccreditationController extends Controller
         $expiry = $request->accredStat;
         $min = $request->min;
         $max = $request->max;
+        $visitYear = $request->visitYear;
+
 
         // $title = 'Accreditation Report';
         // $meta = [ // For displaying filters description on header
@@ -720,6 +722,11 @@ $queryBuilder = DB::table('prgrm_accreds')
                             $queryBuilder = $queryBuilder->where('to','<=', date('Y-m-d'));
 
                         }
+                        if($visitYear){
+                            $queryBuilder = $queryBuilder->whereBetween('visit_date_from', 
+                                                [$visitYear.'-01-01', $visitYear.'-12-31']);
+
+                        }
 
                         $queryBuilder = $queryBuilder->get();
                        
@@ -741,7 +748,7 @@ $queryBuilder = DB::table('prgrm_accreds')
         //     'created_at', '=', Carbon::now()->subMonth()->month)->get();
       
 
-        $pdf = PDF::loadView('accreditation::reports.accreditation-report', compact('queryBuilder', 'accredStatus', 'expiry', 'min', 'max', 'school'));
+        $pdf = PDF::loadView('accreditation::reports.accreditation-report', compact('queryBuilder', 'accredStatus', 'expiry', 'min', 'max', 'school', 'visitYear'));
 
         $pdf->save(storage_path().'_filename.pdf');
 

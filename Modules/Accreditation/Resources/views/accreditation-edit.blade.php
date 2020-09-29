@@ -66,49 +66,59 @@
 	<hr>
     @if(!$program->faap_cert)
      <div class="form-group row mt-4">
-     		<label class="col-sm-2 col-form-label">FAAP Certificate</label>
+     		<label class="col-sm-2 col-form-label">FAAP Certificate:</label>
   	    <div class="col-sm-4">
   	      <input type="file" name="" class="form-control">
   	    </div>
      </div>
    @else
       <div class="form-group row mt-4">
-        <label class="col-sm-2 col-form-label">FAAP Certificate</label>
-        <div class="col-sm-4">
-          <a href="{{asset('uploads/'.$program->faap_cert)}}">View Certificate</a>
-          <a class="btn bg-ub-red" href="">Delete Certificate</a>
-        </div>
+        <label class="col-sm-2 col-form-label">FAAP Certificate:</label>
+        
+          <div class="col-sm-1 px-1">
+              <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->faap_cert)}}">View </a>
+            
+          </div>
+          <div class="col-sm-1 px-1">
+              <a class="btn bg-ub-grey btn-block" href="">Delete</a>
+            
+          </div>
+    
      </div>
    @endif
    @if(!$program->pacucoa_cert)
      <div class="form-group row">
-     		<label class="col-sm-2 col-form-label">PACOCUA Certificate</label>
+     		<label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
   	    <div class="col-sm-4">
   	      <input type="file" name="" class="form-control">
   	    </div>
      </div>
    @else
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">PACOCUA Certificate</label>
-        <div class="col-sm-4">
-          <a href="{{asset('uploads/'.$program->pacucoa_cert)}}">View Certificate</a>
-          <a class="btn bg-ub-red" href="">Delete Certificate</a>
+        <label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
+        <div class="col-sm-1 px-1">
+          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_cert)}}">View</a>
+        </div>
+        <div class="col-sm-1 px-1">
+          <a class="btn bg-ub-grey btn-block" href="">Delete</a>
         </div>
      </div>
    @endif
    @if(!$program->pacucoa_cert)
    <div class="form-group row">
-   		<label class="col-sm-2 col-form-label">PACOCUA Report</label>
+   		<label class="col-sm-2 col-form-label">PACOCUA Report:</label>
 	    <div class="col-sm-4">
 	      <input type="file" name="" class="form-control">
 	    </div>
    </div>
    @else
    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">PACOCUA Report</label>
-      <div class="col-sm-4">
-          <a href="{{asset('uploads/'.$program->pacucoa_report)}}">View Report</a>
-          <a class="btn bg-ub-red" href="">Delete Report</a>
+      <label class="col-sm-2 col-form-label">PACOCUA Report:</label>
+      <div class="col-sm-1 px-1">
+          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_report)}}">View</a>
+      </div>
+      <div class="col-sm-1 px-1">
+          <a class="btn bg-ub-grey btn-block" href="">Delete</a>
       </div>
    </div>
 

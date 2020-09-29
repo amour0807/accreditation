@@ -26,6 +26,7 @@
         }
         .sans{
         	font-family: Arial, Helvetica, sans-serif;
+
         }
 
 	</style>
@@ -43,11 +44,21 @@
 		else if($expiry == 'Expired')
 			echo '<span class="filters"><strong>Status:</strong> Expired</span>';
 
+		echo "<p>";
+
 		if($min && $max)
-			echo '<p class="filters"><strong>From:</strong> '.date('M, d Y', strtotime($min)).' <strong>To:</strong> '.date('M, d Y', strtotime($max)).'</p>';
+			echo '<label class="filters" style="float: left;"><strong>From:</strong> '.date('M, d Y', strtotime($min)).' <strong>To:</strong> '.date('M, d Y', strtotime($max)).'</label>';
+
+
+		if($visitYear && $min && $max )
+			echo '<label class="filters" style="float: right;"><strong>Visitation Year:</strong> '.$visitYear.'</label>';
+		else
+			echo '<label class="filters"><strong>Visitation Year:</strong> '.$visitYear.'</label>';
+
+		echo "</p>";
 	 ?>
 </div>
-
+<br>	
 	<table>
 		<tr>
 			<th style="width: 30px;"></th>
@@ -60,11 +71,12 @@
 			<th>Program</th>
 			<?php 
 				if(!$accredStatus){
-					echo "<th> Accreditation Status";
+					echo "<th> Accreditation Status</th>";
 				}
 			 ?>
 			<th style="width: 90px;">Valid from</th>
 			<th style="width: 90px;">Valid to</th>
+			
 
 
 

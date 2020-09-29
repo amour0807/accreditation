@@ -5,6 +5,8 @@
 
 <h2 class="mb-4">Accreditation Reports</h2>
 
+
+
 <form class="mb-4" action="{{route('filterReport')}}" method="POST">
 @csrf 
 	<strong>Sort by:</strong>
@@ -32,9 +34,9 @@
 		</div>
 		<div class="col-md-3 ">
 			<label>Visitation year</label>
-			<div id="filters3">
-				
-			</div>
+			<select  class="form-control" id="dropdownYear" name="visitYear">
+				<option value="">All</option>
+			</select>
 			<!-- <select class="form-control">
 				<option>asdasd</option>
 			</select> -->
@@ -94,7 +96,9 @@
 	            	<th>School</th>
 	            	<th>Program</th>
 	            	<th>Accreditation Status</th>
-	            	<th>Visit Date</th>
+	            	<th>Visit From</th>
+	            	<th>Visit to</th>
+
 	            	<th>Validity From</th>
 	            	<th>Validity To</th>
 
@@ -141,7 +145,17 @@
 
 
 //Datatable
+$('#dropdownYear').each(function() {
 
+  var year = (new Date()).getFullYear();
+  var current = year;
+  year -= 30;
+  for (var i = 30; i > 0; i--) {
+    
+      $(this).append('<option value="' + (year + i) + '">' + (year + i) + '</option>');
+  }
+
+})
 
 
 
@@ -154,7 +168,7 @@ $.fn.dataTable.ext.search.push(
         //parse current date from above
         var ahem = Date.parse( newDate );
         //parse data from the to column
-        var due = Date.parse( data[5] ) || 0; 
+        var due = Date.parse( data[6] ) || 0; 
 
         if ( status == 'Active' )
         {
@@ -184,7 +198,7 @@ $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
         var min = Date.parse($('#min').val());
         var max = Date.parse($('#max').val());
-        var age = Date.parse( data[5] ) || 0; // use data for the age column
+        var age = Date.parse( data[6] ) || 0; // use data for the age column
  
         if ( ( isNaN( min ) && isNaN( max ) ) ||
              ( isNaN( min ) && age <= max ) ||
@@ -199,7 +213,39 @@ $.fn.dataTable.ext.search.push(
     }
 );
 
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var yearSelect = $('#dropdownYear').val();
 
+        var years = data[3] || 0; // use data for the age column
+        var d = new Date( years );
+
+        var yearVisit = d.getFullYear();
+
+
+        if ( yearSelect == yearVisit )
+        {
+         // alert('equal year')
+
+            return true;
+
+        }else if(yearSelect && yearSelect != yearVisit){
+        	 // alert('no year')
+           	return false;
+        }else if(!yearSelect ){
+        	// alert('no year')
+           	return true;
+        }
+
+        else{
+        	// alert('yes year')
+
+        	return false;
+
+        }
+        
+    }
+);
 
 
    // program table
@@ -210,7 +256,9 @@ $.fn.dataTable.ext.search.push(
 	            { "data": "school" },
 	            { "data": "program" },
 	            { "data": "accred_stat" },
-	            { "data": "visit_date" },
+	            { "data": "visit_date_from" },
+	            { "data": "visit_date_to" },
+
 	            { "data": "from" },
 	            { "data": "to" },
 
@@ -280,8 +328,9 @@ $.fn.dataTable.ext.search.push(
         });
 
   // Event listener to the two range filtering inputs AND THE status to redraw on input
-            $('#min, #max, #accredStat').change(function () {
+            $('#min, #max, #accredStat, #dropdownYear').change(function () {
                 dataTable.draw();
+        
             });
 
  
@@ -299,6 +348,8 @@ $.fn.dataTable.ext.search.push(
               
         }); 
     });   
+
+    
 
     </script>
 @endsection
