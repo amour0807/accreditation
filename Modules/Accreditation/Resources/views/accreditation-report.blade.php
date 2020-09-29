@@ -1,7 +1,7 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-	<meta name="csrf-token" content="{{ csrf_token() }}">
+	
 
 <h2 class="mb-4">Accreditation Reports</h2>
 

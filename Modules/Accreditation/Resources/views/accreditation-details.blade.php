@@ -1,6 +1,14 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+        <span aria-hidden="true">&times;</span>
+    </div>
+@endif
+
 <h4  class="mb-3">{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</h4>
 
 

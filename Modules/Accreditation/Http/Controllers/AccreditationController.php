@@ -349,6 +349,30 @@ class AccreditationController extends Controller
         return view('accreditation::accreditation-edit', compact('program', 'accredStats'));
 
     }
+    public function saveEdit(Request $request)
+    {
+        
+        $programs = PrgrmAccred::where('id', $request->id)->first();
+
+        $programs->accred_stat_id  =  $request->accredStat;
+
+        $programs->visit_date_from =  $request->visitFrom;
+        $programs->visit_date_to =  $request->visitTo;
+        $programs->from =  $request->validFrom;
+        $programs->to =  $request->validTo;
+        $programs->remarks =  $request->remarks;
+
+        
+        $programs->save();
+
+        $program = PrgrmAccred::where('id', $request->id)->first();
+       
+
+         return view('accreditation::accreditation-details', compact('program'))
+                    ->with('success', 'Record Updated');
+
+       
+    }
     public function accredHistory($id){
         $program = PrgrmAccred::where('acad_prgrm_id', $id)->first();
 

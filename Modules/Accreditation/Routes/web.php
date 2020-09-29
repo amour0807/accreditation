@@ -22,6 +22,9 @@ Route::prefix('accreditation')->group(function() {
 
     Route::get('/accredDetails/{id}', 'AccreditationController@accredDetails')->name('accredDetails');
     Route::get('/accredEdit/{id}', 'AccreditationController@accredEdit')->name('accredEdit');
+    Route::post('/saveEdit', 'AccreditationController@saveEdit')->name('saveEdit');
+
+    
     Route::get('/accredHistory/{id}', 'AccreditationController@accredHistory')->name('accredHistory');
     Route::get('/viewPacucoaReport/{id}', 'AccreditationController@viewPacucoaReport')->name('viewPacucoaReport');
 

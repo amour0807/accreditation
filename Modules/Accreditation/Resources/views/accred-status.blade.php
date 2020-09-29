@@ -1,7 +1,6 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="alert"></div>
 @if ($message = Session::get('success'))
         <div class="alert alert-success alert-block">
