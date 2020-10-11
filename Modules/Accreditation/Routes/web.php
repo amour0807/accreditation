@@ -24,9 +24,12 @@ Route::prefix('accreditation')->group(function() {
     Route::get('/accredEdit/{id}', 'AccreditationController@accredEdit')->name('accredEdit');
     Route::post('/saveEdit', 'AccreditationController@saveEdit')->name('saveEdit');
 
+    //reports
     
     Route::get('/accredHistory/{id}', 'AccreditationController@accredHistory')->name('accredHistory');
     Route::get('/viewPacucoaReport/{id}', 'AccreditationController@viewPacucoaReport')->name('viewPacucoaReport');
+    Route::get('/viewProgramHistory', 'AccreditationController@viewProgramHistory')->name('viewProgramHistory');
+
 
 
 
@@ -36,6 +39,7 @@ Route::prefix('accreditation')->group(function() {
     Route::get('/school_dtb', 'AccreditationController@school_dtb')->name('school_dtb');
     Route::get('/program_dtb/{id}', 'AccreditationController@program_dtb')->name('program_dtb');
     Route::get('/program_report_dtb', 'AccreditationController@program_report_dtb')->name('program_report_dtb');
+    Route::get('/program_history_report_dtb', 'AccreditationController@program_history_report_dtb')->name('program_history_report_dtb');
     Route::get('/history_dtb/{id}', 'AccreditationController@history_dtb')->name('history_dtb');
     Route::get('/accred_stat_dtb', 'AccreditationController@accred_stat_dtb')->name('accred_stat_dtb');
 
@@ -63,8 +67,13 @@ Route::prefix('accreditation')->group(function() {
 
 
 
+    
+
+    Route::post('/deleteProg', 'AccreditationController@deleteProg')->name('deleteProg');
+    Route::post('/deleteCert', 'AccreditationController@deleteCert')->name('deleteCert');
+    Route::post('/addFile', 'AccreditationController@addFile')->name('addFile');
 
 
-
+    
 
 });

@@ -3,7 +3,8 @@
 @section('content')
 
 
-	<h2 class="mb-5">{{$school->school_name}}</h2>
+	<h2 class="mb-5">{{$accredStatus->accred_status}}</h2>
+	<br>
 
 
     	<table id="program_table"  class="display compact table-bordered" style="width:100%">
@@ -27,6 +28,8 @@
 		    </thead>   
 		</table>
 
+
+
 	<script type="text/javascript">
 
     $.ajaxSetup({
@@ -36,6 +39,8 @@
     });
     
     var token = $("input[name='_token']").val();
+
+   
 
 
    // program table
@@ -63,9 +68,6 @@
 			    { "width": '50pt', "targets": 7 }
 			  ]
         	});
-
-
-
 
     </script>
 @endsection

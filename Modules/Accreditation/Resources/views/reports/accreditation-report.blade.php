@@ -52,7 +52,7 @@
 
 		if($visitYear && $min && $max )
 			echo '<label class="filters" style="float: right;"><strong>Visitation Year:</strong> '.$visitYear.'</label>';
-		else
+		else if ($visitYear)
 			echo '<label class="filters"><strong>Visitation Year:</strong> '.$visitYear.'</label>';
 
 		echo "</p>";

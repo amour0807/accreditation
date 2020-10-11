@@ -38,7 +38,7 @@
         <!-- datatables responsiveness -->
        
 
-       <style type="text/css">
+      <!--  <style type="text/css">
            .alert {
               position: fixed;
               margin: auto;
@@ -48,7 +48,7 @@
               width: 50%;
               z-index: 9;
             }
-       </style>
+       </style> -->
 
         
 
@@ -71,9 +71,19 @@
             <li>
                 <a href="{{route('accred_status')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Status</a>
             </li>
-            
+
             <li>
-                <a href="{{ route('accredReport')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Reports</a>
+              <a href='#page2Submenu' data-toggle="collapse" class="dropdown-toggle  clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Reports</a>
+
+              <ul class="collapse list-unstyled bg-ub-grey" id="page2Submenu">
+                <li>
+                    <a href="{{ route('accredReport')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation Reports</a>
+                </li>
+                <li>
+                    <a href="{{ route('viewProgramHistory')}}" class="clear-link list-group-item list-group-item-action bg-ub-grey pl-5">Accreditation History Reports</a>
+                </li>
+            </ul>
+
             </li>
         </ul>
 

@@ -1,19 +1,11 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-@if ($message = Session::get('success'))
-        <div class="alert alert-success alert-block">
-            <strong>{{ $message }}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-     
-        @endif
 
 
 
-<h4  class="mb-4">{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</h4>
+
+<h2  class="mb-4">{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</h2>
 <hr>
 <form method="POST" action="{{ route('saveEdit') }}">
   @csrf
@@ -64,65 +56,7 @@
     
    </div>
 	<hr>
-    @if(!$program->faap_cert)
-     <div class="form-group row mt-4">
-     		<label class="col-sm-2 col-form-label">FAAP Certificate:</label>
-  	    <div class="col-sm-4">
-  	      <input type="file" name="" class="form-control">
-  	    </div>
-     </div>
-   @else
-      <div class="form-group row mt-4">
-        <label class="col-sm-2 col-form-label">FAAP Certificate:</label>
-        
-          <div class="col-sm-1 px-1">
-              <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->faap_cert)}}">View </a>
-            
-          </div>
-          <div class="col-sm-1 px-1">
-              <a class="btn bg-ub-grey btn-block" href="">Delete</a>
-            
-          </div>
     
-     </div>
-   @endif
-   @if(!$program->pacucoa_cert)
-     <div class="form-group row">
-     		<label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
-  	    <div class="col-sm-4">
-  	      <input type="file" name="" class="form-control">
-  	    </div>
-     </div>
-   @else
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
-        <div class="col-sm-1 px-1">
-          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_cert)}}">View</a>
-        </div>
-        <div class="col-sm-1 px-1">
-          <a class="btn bg-ub-grey btn-block" href="">Delete</a>
-        </div>
-     </div>
-   @endif
-   @if(!$program->pacucoa_cert)
-   <div class="form-group row">
-   		<label class="col-sm-2 col-form-label">PACOCUA Report:</label>
-	    <div class="col-sm-4">
-	      <input type="file" name="" class="form-control">
-	    </div>
-   </div>
-   @else
-   <div class="form-group row">
-      <label class="col-sm-2 col-form-label">PACOCUA Report:</label>
-      <div class="col-sm-1 px-1">
-          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_report)}}">View</a>
-      </div>
-      <div class="col-sm-1 px-1">
-          <a class="btn bg-ub-grey btn-block" href="">Delete</a>
-      </div>
-   </div>
-
-    @endif
   <div class="form-group row mt-4">
     <div class="col-sm-10">
       <button type="submit" class="btn bg-ub-red">Save Changes</button>

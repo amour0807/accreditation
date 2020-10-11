@@ -2,15 +2,37 @@
 
 @section('content')
 
+<div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+  
+</div>  
+
+ @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        @endif
+
 @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-        <span aria-hidden="true">&times;</span>
-    </div>
+     <div class="alert alert-info alert-block">
+            <strong>{{ session('success') }}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+     
 @endif
 
-<h4  class="mb-3">{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</h4>
-
+<h2  class="mb-3">{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</h2>
+<hr>
 
 <div class="col-md-6 card mt-4 p-4 rounded" >
   <div class=" row">
@@ -46,34 +68,8 @@
   	<label class="col-sm-2 col-form-label">Valid To:</label>
     <label class="col-sm-2 col-form-label">Valid To</label>
   </div> -->
-	<hr>
-  @if($program->faap_cert)
-   <div class=" row mt-3">
-   		<label class="col-sm-5 col-form-label">FAAP Certificate</label>
-   		<label class="col-sm-7 col-form-label">
-   			<a href="{{asset('uploads/'.$program->faap_cert)}}">View Certificate</a>
-   		</label>
-	    
-   </div>
-   @endif
-   @if($program->pacucoa_cert)
-   <div class=" row">
-   		<label class="col-sm-5 col-form-label">PACOCUA Certificate</label>
-   		<label class="col-sm-7 col-form-label">
-   			<a href="{{asset('uploads/'.$program->pacucoa_cert)}}">View Certificate</a>
-   		</label>
-	    
-   </div>
-   @endif
-   @if($program->pacucoa_report)
-   <div class=" row">
-   		<label class="col-sm-5 col-form-label">PACUCOA Report</label>
-   		<label class="col-sm-7 col-form-label">
-   			<a href="{{asset('uploads/'.$program->pacucoa_report)}}">View Report</a>
-   		</label>
-	    
-   </div>
-   @endif
+
+  
    <div class=" row mt-4">
     <div class="col-sm-12">
       <a class="btn bg-ub-red mr-2" href="{{ route('accredEdit', $program->id)}}">Edit</a>
@@ -81,6 +77,198 @@
   	</div>
    </div>
 </div>
-  
+  <hr>
+@if(!$program->faap_cert)
+  <form id="fcForm" method="POST" enctype="multipart/form-data" action="{{route('addFile')}}">
+    @csrf
+      <input type="hidden" name="typeForm" value="fc">
+      <input type="hidden" name="id" value="{{$program->id}}">
 
+
+    <div class="form-group row mt-4">
+        <label class="col-sm-2 col-form-label">FAAP Certificate:</label>
+        <div class="col-sm-4">
+          <input type="file" name="faap_cert" class="form-control" required>
+
+        </div>
+        <div class="col-sm-1">
+          <button class="btn bg-ub-red" type="submit">save</button>
+        </div>
+     </div>
+  </form>
+     
+   @else
+      <div class="form-group row mt-4">
+        <label class="col-sm-2 col-form-label">FAAP Certificate:</label>
+        
+          <div class="col-sm-1 px-1">
+              <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->faap_cert)}}">View </a>
+            
+          </div>
+          <div class="col-sm-1 px-1">
+              <button class="btn btn-dark btn-block replace" type ="fc" fileId="{{$program->id}}" >Replace </button>
+            
+          </div>
+          <div class="col-sm-1 px-1">
+          <button class="btn bg-ub-grey btn-block deleteCert" type ="fc" fileId="{{$program->id}}" >Delete</button>
+              
+            
+          </div>
+    
+     </div>
+   @endif
+   @if(!$program->pacucoa_cert)
+    <form id="pcForm" method="POST" enctype="multipart/form-data" action="{{route('addFile')}}">
+      @csrf
+      <input type="hidden" name="id" value="{{$program->id}}">
+      <input type="hidden" name="typeForm" value="pc">
+       <div class="form-group row">
+          <label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
+          <div class="col-sm-4">
+            <input type="file" name="pacucoa_cert" class="form-control" required>
+          </div>  
+          <div class="col-sm-1">
+            <button class="btn bg-ub-red" type="submit">save</button>
+          </div>
+          
+       </div>
+     </form>
+   @else
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
+        <div class="col-sm-1 px-1">
+          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_cert)}}">View</a>
+        </div>
+        <div class="col-sm-1 px-1">
+              <button class="btn btn-dark btn-block replace" type ="pc" fileId="{{$program->id}}">Replace </button>
+            
+          </div>
+        <div class="col-sm-1 px-1">
+          <button class="btn bg-ub-grey btn-block deleteCert" type ="pc" fileId="{{$program->id}}">Delete</button>
+          
+        </div>
+     </div>
+   @endif
+   @if(!$program->pacucoa_report)
+   <form id="prForm" method="POST" enctype="multipart/form-data" action="{{route('addFile')}}">
+    @csrf
+      <input type="hidden" name="id" value="{{$program->id}}">
+      <input type="hidden" name="typeForm" value="pr">
+
+       <div class="form-group row">
+          <label class="col-sm-2 col-form-label">PACOCUA Report:</label>
+          <div class="col-sm-4">
+            <input type="file" name="pacucoa_report" class="form-control" required>
+          </div>
+          <div class="col-sm-1">
+              <button class="btn bg-ub-red">save</button>
+          </div>
+          
+       </div>
+     </form>
+   @else
+   <div class="form-group row">
+      <label class="col-sm-2 col-form-label">PACOCUA Report:</label>
+      <div class="col-sm-1 px-1">
+          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_report)}}">View</a>
+      </div>
+      <div class="col-sm-1 px-1">
+              <button class="btn btn-dark btn-block replace" type ="pr" fileId="{{$program->id}}">Replace </button>
+            
+          </div>
+      <div class="col-sm-1 px-1">
+          <button class="btn bg-ub-grey btn-block deleteCert" type ="pr" fileId="{{$program->id}}">Delete</button>
+      </div>
+   </div>
+
+    @endif
+
+<script type="text/javascript">
+
+
+    $.ajaxSetup({
+      headers: {
+         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    
+    var token = $("input[name='_token']").val();
+
+
+  
+            $(".alert").delay(3000).fadeOut(500);
+            setTimeout(function(){
+              $('#alert').remove();
+            }, 3000);
+
+$('.alertOld').hide();
+  //delete
+  $(document).on('click','.deleteCert',function(){
+      var conf = confirm('Are you sure you want to delete this record?');
+      var fileId = $(this).attr('fileId');
+      var type = $(this).attr('type');
+
+
+      if(conf){
+        $.ajax({
+          url:"{{route('deleteCert')}}",
+          method:"POST",
+          data:{
+            fileId:fileId,
+            type:type,
+            _token:token
+          },
+          success:function(data){
+          
+            location.reload();
+            $('.alertOld').append('<span id="alertMessage">Record deleted!</span>');
+            $('.alertOld').show();
+            $(".alertOld").delay(4000).fadeOut(500);
+            setTimeout(function(){
+              $('#alertMessage').remove();
+            }, 5000);
+          },
+          error: function(jqxhr, status, exception) {
+             alert('this record still has a task. Please delete it all then delete this project.');
+         }
+
+        });  
+      }
+    }); 
+$(document).on('click','.replace',function(){
+      var conf = confirm(' Once you click "OK" this file would be deleted. Are you sure you want to replace this record?');
+      var fileId = $(this).attr('fileId');
+      var type = $(this).attr('type');
+
+
+      if(conf){
+        $.ajax({
+          url:"{{route('deleteCert')}}",
+          method:"POST",
+          data:{
+            fileId:fileId,
+            type:type,
+            _token:token
+          },
+          success:function(data){
+          
+            location.reload();
+            $('.alertOld').append('<span id="alertMessage">Record deleted!</span>');
+            $('.alertOld').show();
+            $(".alertOld").delay(4000).fadeOut(500);
+            setTimeout(function(){
+              $('#alertMessage').remove();
+            }, 5000);
+          },
+          error: function(jqxhr, status, exception) {
+             alert('this record still has a task. Please delete it all then delete this project.');
+         }
+
+        });  
+      }
+    }); 
+
+
+
+</script>
 @endsection

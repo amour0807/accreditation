@@ -2,7 +2,8 @@
 
 @section('content')
 
-	<h4 class="mb-4">Add an Accreditation</h4>
+	<h2 class="mb-4">Add an Accreditation</h2>
+	<hr>
  @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.
@@ -11,6 +12,9 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
         @endif
 
@@ -99,7 +103,7 @@
 	      <input type="file" name="faap_cert" class="form-control">
 	    </div>
 	    @error('faap_cert')
-    <div class="alert alert-danger">{{ $message }}</div>
+    <div class=" alert-danger">{{ $message }}</div>
 @enderror
    </div>
    <div class="form-group row">
@@ -108,7 +112,7 @@
 	      <input type="file" name="pacucoa_cert" class="form-control">
 	    </div>
 	    @error('pacocua_cert')
-    <div class="alert alert-danger">{{ $message }}</div>
+    <div class=" alert-danger">{{ $message }}</div>
 @enderror
    </div><div class="form-group row">
    		<label class="col-md-2 col-form-label">PACOCUA Report</label>
@@ -116,7 +120,7 @@
 	      <input type="file" name="pacucoa_report" class="form-control">
 	    </div>
 	    @error('pacocua_report')
-    <div class="alert alert-danger">{{ $message }}</div>
+    <div class="alert-danger">{{ $message }}</div>
 @enderror
    </div>
 

@@ -9,6 +9,9 @@
 
 <form class="mb-4" action="{{route('filterReport')}}" method="POST">
 @csrf 
+<!-- checking for the controller if to include current->yes -->
+<input type="hidden" name="reportType" value="notHistory">
+
 	<strong>Sort by:</strong>
 	<div class="form-group row">
 		<div class="col-md-3 ">
