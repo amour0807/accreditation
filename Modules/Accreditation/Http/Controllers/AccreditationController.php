@@ -774,7 +774,9 @@ class AccreditationController extends Controller
     }
 
     public function deleteProg(Request $request){
-        $accred = PrgrmAccred::where('id',$request->id);
+        $accred = PrgrmAccred::where('id',$request->id)
+                    ->where('current', '!=', 'yes')
+                    ->first();
         $accred->delete();
         
         return redirect()->back();
@@ -807,7 +809,7 @@ class AccreditationController extends Controller
         }
         
         $programs->save();
-
+        Session::flash('red', 'Record Deleted!'); 
       
     }
 
@@ -852,8 +854,9 @@ class AccreditationController extends Controller
         }
 
         $programs->save();
+        Session::flash('message', 'File Added!'); 
 
-        return back()->with('error_code', 5);
+        return back();
     }
 
 }

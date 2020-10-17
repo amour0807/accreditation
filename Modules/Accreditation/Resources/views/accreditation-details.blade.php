@@ -2,10 +2,21 @@
 
 @section('content')
 
+@if(Session::has('message'))
 <div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
+  {{ Session::get('message') }}
             <button type="button" class="close" data-dismiss="alert">×</button>
+</div> 
+@endif
+@if(Session::has('red'))
   
-</div>  
+<div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
+  {{ Session::get('red') }}
+            <button type="button" class="close" data-dismiss="alert">×</button>
+</div> 
+
+@endif
+
 
  @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -101,15 +112,15 @@
       <div class="form-group row mt-4">
         <label class="col-sm-2 col-form-label">FAAP Certificate:</label>
         
-          <div class="col-sm-1 px-1">
+          <div class="col-sm-2  ">
               <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->faap_cert)}}">View </a>
             
           </div>
-          <div class="col-sm-1 px-1">
+          <!-- <div class="col-sm-1 px-1">
               <button class="btn btn-dark btn-block replace" type ="fc" fileId="{{$program->id}}" >Replace </button>
             
-          </div>
-          <div class="col-sm-1 px-1">
+          </div> -->
+          <div class="col-sm-2">
           <button class="btn bg-ub-grey btn-block deleteCert" type ="fc" fileId="{{$program->id}}" >Delete</button>
               
             
@@ -139,10 +150,10 @@
         <div class="col-sm-1 px-1">
           <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_cert)}}">View</a>
         </div>
-        <div class="col-sm-1 px-1">
+      <!--   <div class="col-sm-1 px-1">
               <button class="btn btn-dark btn-block replace" type ="pc" fileId="{{$program->id}}">Replace </button>
             
-          </div>
+          </div> -->
         <div class="col-sm-1 px-1">
           <button class="btn bg-ub-grey btn-block deleteCert" type ="pc" fileId="{{$program->id}}">Delete</button>
           
@@ -172,10 +183,10 @@
       <div class="col-sm-1 px-1">
           <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_report)}}">View</a>
       </div>
-      <div class="col-sm-1 px-1">
+      <!-- <div class="col-sm-1 px-1">
               <button class="btn btn-dark btn-block replace" type ="pr" fileId="{{$program->id}}">Replace </button>
             
-          </div>
+          </div> -->
       <div class="col-sm-1 px-1">
           <button class="btn bg-ub-grey btn-block deleteCert" type ="pr" fileId="{{$program->id}}">Delete</button>
       </div>
@@ -196,12 +207,12 @@
 
 
   
-            $(".alert").delay(3000).fadeOut(500);
-            setTimeout(function(){
-              $('#alert').remove();
-            }, 3000);
 
-$('.alertOld').hide();
+            $('.alertOld').show();
+            $(".alertOld").delay(4000).fadeOut(500);
+            setTimeout(function(){
+              $('#alertMessage').remove();
+            }, 5000);
   //delete
   $(document).on('click','.deleteCert',function(){
       var conf = confirm('Are you sure you want to delete this record?');
@@ -221,12 +232,8 @@ $('.alertOld').hide();
           success:function(data){
           
             location.reload();
-            $('.alertOld').append('<span id="alertMessage">Record deleted!</span>');
-            $('.alertOld').show();
-            $(".alertOld").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
+            $('.deleteAlert').append('<span id="alertMessage">Record deleted!</span>');
+            
           },
           error: function(jqxhr, status, exception) {
              alert('this record still has a task. Please delete it all then delete this project.');
@@ -235,38 +242,38 @@ $('.alertOld').hide();
         });  
       }
     }); 
-$(document).on('click','.replace',function(){
-      var conf = confirm(' Once you click "OK" this file would be deleted. Are you sure you want to replace this record?');
-      var fileId = $(this).attr('fileId');
-      var type = $(this).attr('type');
+// $(document).on('click','.replace',function(){
+//       var conf = confirm(' Once you click "OK" this file would be deleted. Are you sure you want to replace this record?');
+//       var fileId = $(this).attr('fileId');
+//       var type = $(this).attr('type');
 
 
-      if(conf){
-        $.ajax({
-          url:"{{route('deleteCert')}}",
-          method:"POST",
-          data:{
-            fileId:fileId,
-            type:type,
-            _token:token
-          },
-          success:function(data){
+//       if(conf){
+//         $.ajax({
+//           url:"{{route('deleteCert')}}",
+//           method:"POST",
+//           data:{
+//             fileId:fileId,
+//             type:type,
+//             _token:token
+//           },
+//           success:function(data){
           
-            location.reload();
-            $('.alertOld').append('<span id="alertMessage">Record deleted!</span>');
-            $('.alertOld').show();
-            $(".alertOld").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
-          },
-          error: function(jqxhr, status, exception) {
-             alert('this record still has a task. Please delete it all then delete this project.');
-         }
+//             location.reload();
+//             $('.alertOld').append('<span id="alertMessage">Record deleted!</span>');
+//             $('.alertOld').show();
+//             $(".alertOld").delay(4000).fadeOut(500);
+//             setTimeout(function(){
+//               $('#alertMessage').remove();
+//             }, 5000);
+//           },
+//           error: function(jqxhr, status, exception) {
+//              alert('this record still has a task. Please delete it all then delete this project.');
+//          }
 
-        });  
-      }
-    }); 
+//         });  
+//       }
+//     }); 
 
 
 

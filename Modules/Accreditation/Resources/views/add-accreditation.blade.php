@@ -6,15 +6,16 @@
 	<hr>
  @if (count($errors) > 0)
             <div class="alert alert-danger">
+            	 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
                 <strong>Whoops!</strong> There were some problems with your input.
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+               
             </div>
         @endif
 
@@ -67,31 +68,31 @@
   <div class="form-group row">
     <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Visit Date From</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="date" name="visit_date" required>
+      <input class="form-control form-control-sm" type="date" name="visit_date" required value="{{Request::old('visit_date')}}">
     </div>
 
     <label class="col-md-2 col-form-label">Visit Date To</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="date" name="visit_date_to">
+      <input class="form-control form-control-sm" type="date" name="visit_date_to" value="{{Request::old('visit_date_to')}}">
     </div>
   </div>
 
    <div class="form-group row mb-4">
     <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Valid From</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="month" name="from" required>
+      <input class="form-control form-control-sm" type="month" name="from" required value="{{Request::old('from')}}">
     </div>
 
     <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Valid To</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="month" name="to" required>
+      <input class="form-control form-control-sm" type="month" name="to" required value="{{Request::old('to')}}">
     </div>
   </div>
 
   <div class="form-row my-2 mb-4">
 			<div class="form-group col-md-6">
 			    <label>Remarks</label>
-			    <textarea class="form-control form-control-sm" id="remarks" rows="4" name="remarks"></textarea>
+			    <textarea class="form-control form-control-sm" id="remarks" rows="4" name="remarks">{{Request::old('remarks')}}</textarea>
 			</div>
 			
 		</div>

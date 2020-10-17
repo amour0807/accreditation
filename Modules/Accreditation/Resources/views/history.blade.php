@@ -1,7 +1,7 @@
 @extends('accreditation::layouts.master')
 
 @section('content')
-<div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
+<div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
             <button type="button" class="close" data-dismiss="alert">×</button>
   
 </div>  
