@@ -15,11 +15,8 @@ class AccreditationDatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            SeedSchoolsTableSeeder::class,
             AccredStatsTableSeeder::class,
             UsersTableSeeder::class,
-            AcadPrgrmsTableSeeder::class,
-            PrgrmAccredsTableSeeder::class,
         ]);
     }
 }

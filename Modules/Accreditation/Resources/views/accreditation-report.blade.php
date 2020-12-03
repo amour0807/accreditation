@@ -1,11 +1,32 @@
-@extends('accreditation::layouts.master')
-
+@extends('layouts.app')
 @section('content')
-	
-
-<h2 class="mb-4">Accreditation Reports</h2>
-
-
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">Users</li>
+<li class="nav-item dropdown ml-auto">
+    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
+</li>
+@endsection
+    <hr style="margin: 0 0 0 0;">
+    <div class="block full"  style="margin-bottom: 10px;" >
+    <div class="block-title" style="padding: 1px 3px 1px 3px;">
+       <h2><strong>Accreditation Reports<span></strong></h2>
+    </div>
+  <div class="alert"></div>
+  @if ($message = Session::get('success'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+  @if ($message = Session::get('error'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
 
 <form class="mb-4" action="{{route('filterReport')}}" method="POST">
 @csrf 
@@ -28,7 +49,7 @@
 			</div>
 		</div>
 		<div class="col-md-3 ">
-			<label>Accreditation Status</label>
+			<label>Accreditation Category</label>
 			<select class="form-control" id="accredStat" name="accredStat">
 				<option value="">All</option>
 				<option value="Active">Active</option>
@@ -93,7 +114,7 @@
 
 
 <div class="mr-3">
-    	<table id="program_report_table" class="display compact table-bordered" style="width:100%">
+    	<table id="program_report_table" class="display compact cell-border" style="width:100%">
 		    <thead class="thead">
 	            <tr>
 	            	<th>School</th>
@@ -254,6 +275,7 @@ $.fn.dataTable.ext.search.push(
    // program table
 
         var dataTable= $('#program_report_table').DataTable( {
+        	"scrollX": true,
 	        "ajax": "{{route('program_report_dtb')}}",
 	        "columns": [
 	            { "data": "school" },
@@ -268,10 +290,6 @@ $.fn.dataTable.ext.search.push(
 	            
 	            { "data": "remarks" },
 	        ],
-
-
-       
-
 
 	        initComplete: function () {
 	            this.api().columns([0,2]).every( function () {
@@ -323,36 +341,15 @@ $.fn.dataTable.ext.search.push(
 	        //         } );
 	        //     } );
 	        // },
-
-
-
-
 	      
         });
 
   // Event listener to the two range filtering inputs AND THE status to redraw on input
-            $('#min, #max, #accredStat, #dropdownYear').change(function () {
+            $('#min, #max').change(function () {
                 dataTable.draw();
         
             });
 
- 
-        //Adding
-    $( "#addSchoolForm" ).submit(function( event ) {
-        event.preventDefault();
-
-        $.ajax({
-          url:"{{ route('filterReport') }}",
-          method:"POST",
-          data: $("#addSchoolForm").serialize(),
-          success:function(data){
-            dataTable.ajax.reload();
-          }
-              
-        }); 
-    });   
-
-    
 
     </script>
 @endsection

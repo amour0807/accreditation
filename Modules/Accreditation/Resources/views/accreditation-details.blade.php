@@ -1,24 +1,26 @@
-@extends('accreditation::layouts.master')
-
+@extends('layouts.app')
 @section('content')
-
-@if(Session::has('message'))
-<div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
-  {{ Session::get('message') }}
-            <button type="button" class="close" data-dismiss="alert">×</button>
-</div> 
-@endif
-@if(Session::has('red'))
-  
-<div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
-  {{ Session::get('red') }}
-            <button type="button" class="close" data-dismiss="alert">×</button>
-</div> 
-
-@endif
-
-
- @if (count($errors) > 0)
+    <hr style="margin: 0 0 0 0; ">
+    <div class="block full"  style="margin-bottom: 10px;" >
+    <div class="block-title" style="padding: 1px 3px 1px 3px;">
+       <h2><strong>{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</strong>
+       </h2>
+    </div>
+  <div class="alert"></div>
+  @if(Session::has('message'))
+    <div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
+      {{ Session::get('message') }}
+                <button type="button" class="close" data-dismiss="alert">×</button>
+    </div> 
+    @endif
+    @if(Session::has('red'))
+      
+    <div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
+      {{ Session::get('red') }}
+                <button type="button" class="close" data-dismiss="alert">×</button>
+    </div> 
+  @endif
+  @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.
                 <ul>
@@ -41,53 +43,30 @@
         </div>
      
 @endif
-
-<h2  class="mb-3">{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}</h2>
-<hr>
-
-<div class="col-md-6 card mt-4 p-4 rounded" >
+    <br>
   <div class=" row">
-    <label  class="col-sm-5 col-form-label">Accreditation Status:</label>
-    <label  class="col-sm-7 col-form-label">{{$program->AccredStat->accred_status}}</label>
-    
+    <label class="col-sm-2 col-form-label">Visit Date From:</label>
+    <label class="col-sm-10 col-form-label">{{$program->visit_date_from.' - '.$program->visit_date_to}}</label>
   </div>
-  <div class=" row">
-    <label class="col-sm-5 col-form-label">Visit Date From:</label>
-    <label class="col-sm-7 col-form-label">{{$program->visit_date_from.' - '.$program->visit_date_to}}</label>
-  </div>
-<!--   <div class="row"> 
-  	
-    <label class="col-sm-2 col-form-label">Visit Date To:</label>
-    <label class="col-sm-2 col-form-label">Visit Date to</label>
-  </div> -->
 
    <div class=" row ">
-    <label class="col-sm-5 col-form-label">Valid From:</label>
-    <label class="col-sm-7 col-form-label">{{$program->from.' - '.$program->to}}</label>
-   
+    <label class="col-sm-2 col-form-label">Valid From:</label>
+    <label class="col-sm-10 col-form-label">{{$program->from.' - '.$program->to}}</label>
    </div>
 
    <div class=" row ">
-    <label class="col-sm-5 col-form-label">Remarks:</label>
-    <div class="col-sm-7">
+    <label class="col-sm-2 col-form-label">Remarks:</label>
+    <div class="col-sm-10">
       <textarea class="form-control form-control-sm" id="remarks" rows="4" name="remarks" disabled="">{{$program->remarks}}</textarea>
     </div>
-    
    </div>
-    
-<!--   <div class="row mb-4">
-  	<label class="col-sm-2 col-form-label">Valid To:</label>
-    <label class="col-sm-2 col-form-label">Valid To</label>
-  </div> -->
 
-  
    <div class=" row mt-4">
     <div class="col-sm-12">
-      <a class="btn bg-ub-red mr-2" href="{{ route('accredEdit', $program->id)}}">Edit</a>
-      <a class="btn btn-secondary" href="{{ route('accredited_programs', $program->AcadPrgrm->school_id) }}"> Back</a>
+      <a class="btn btn-info mr-2" href="{{ route('accredEdit', $program->id)}}">Edit</a>
+      <a class="btn btn-danger" href="{{ route('accredited_programs', $program->AcadPrgrm->school_id) }}"> Back</a>
   	</div>
    </div>
-</div>
   <hr>
 @if(!$program->faap_cert)
   <form id="fcForm" method="POST" enctype="multipart/form-data" action="{{route('addFile')}}">
@@ -103,7 +82,7 @@
 
         </div>
         <div class="col-sm-1">
-          <button class="btn bg-ub-red" type="submit">save</button>
+          <button class="btn btn-success" type="submit">save</button>
         </div>
      </div>
   </form>
@@ -113,17 +92,12 @@
         <label class="col-sm-2 col-form-label">FAAP Certificate:</label>
         
           <div class="col-sm-2  ">
-              <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->faap_cert)}}">View </a>
+              <a class="btn btn-info btn-block" href="{{asset('uploads/'.$program->faap_cert)}}">View </a>
             
           </div>
-          <!-- <div class="col-sm-1 px-1">
-              <button class="btn btn-dark btn-block replace" type ="fc" fileId="{{$program->id}}" >Replace </button>
-            
-          </div> -->
           <div class="col-sm-2">
-          <button class="btn bg-ub-grey btn-block deleteCert" type ="fc" fileId="{{$program->id}}" >Delete</button>
+          <button class="btn btn-danger btn-block deleteCert" type ="fc" fileId="{{$program->id}}" >Remove</button>
               
-            
           </div>
     
      </div>
@@ -139,7 +113,7 @@
             <input type="file" name="pacucoa_cert" class="form-control" required>
           </div>  
           <div class="col-sm-1">
-            <button class="btn bg-ub-red" type="submit">save</button>
+            <button class="btn btn-success" type="submit">save</button>
           </div>
           
        </div>
@@ -147,16 +121,11 @@
    @else
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">PACOCUA Certificate:</label>
-        <div class="col-sm-1 px-1">
-          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_cert)}}">View</a>
+        <div class="col-sm-2 px-1">
+          <a class="btn btn-info btn-block" href="{{asset('uploads/'.$program->pacucoa_cert)}}">View</a>
         </div>
-      <!--   <div class="col-sm-1 px-1">
-              <button class="btn btn-dark btn-block replace" type ="pc" fileId="{{$program->id}}">Replace </button>
-            
-          </div> -->
-        <div class="col-sm-1 px-1">
-          <button class="btn bg-ub-grey btn-block deleteCert" type ="pc" fileId="{{$program->id}}">Delete</button>
-          
+        <div class="col-sm-2 px-1">
+          <button class="btn btn-danger btn-block deleteCert" type ="pc" fileId="{{$program->id}}">Remove</button>
         </div>
      </div>
    @endif
@@ -167,28 +136,24 @@
       <input type="hidden" name="typeForm" value="pr">
 
        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">PACOCUA Report:</label>
+          <label class="col-sm-2 col-form-label">Chairman's Report:</label>
           <div class="col-sm-4">
             <input type="file" name="pacucoa_report" class="form-control" required>
           </div>
           <div class="col-sm-1">
-              <button class="btn bg-ub-red">save</button>
+              <button class="btn btn-success">save</button>
           </div>
           
        </div>
      </form>
    @else
    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">PACOCUA Report:</label>
-      <div class="col-sm-1 px-1">
-          <a class="btn bg-ub-red btn-block" href="{{asset('uploads/'.$program->pacucoa_report)}}">View</a>
+      <label class="col-sm-2 col-form-label">Chairman's Report:</label>
+      <div class="col-sm-2 px-1">
+          <a class="btn btn-info btn-block" href="{{asset('uploads/'.$program->pacucoa_report)}}">View</a>
       </div>
-      <!-- <div class="col-sm-1 px-1">
-              <button class="btn btn-dark btn-block replace" type ="pr" fileId="{{$program->id}}">Replace </button>
-            
-          </div> -->
-      <div class="col-sm-1 px-1">
-          <button class="btn bg-ub-grey btn-block deleteCert" type ="pr" fileId="{{$program->id}}">Delete</button>
+      <div class="col-sm-2 px-1">
+          <button class="btn btn-danger btn-block deleteCert" type ="pr" fileId="{{$program->id}}">Remove</button>
       </div>
    </div>
 

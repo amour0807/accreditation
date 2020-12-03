@@ -1,0 +1,13 @@
+{
+    "name": "Award",
+    "alias": "award",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\Award\\Providers\\AwardServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,3 +1,6 @@
 {
-    "Accreditation": true
+    "Accreditation": true,
+    "Award": true,
+    "User": true,
+    "Auth": true
 }

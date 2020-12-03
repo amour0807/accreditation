@@ -1,13 +1,13 @@
-@extends('accreditation::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
 
-	<h2 class="mb-5">{{$accredStatus->accred_status}}</h2>
+	<h1 class="mb-5">{{$accredStatus->accred_status}}</h1>
 	<br>
 
 
-    	<table id="program_table"  class="display compact table-bordered" style="width:100%">
+    	<table id="program_table"  class="display compact cell-border" style="width:100%">
 		    <thead class="thead">
 	            <tr>
 	            	<th>Program</th>
@@ -48,6 +48,8 @@
         var dataTable= $('#program_table').DataTable( {
 	        "ajax": "{{route('program_dtb', $school->id)}}",
 	        responsive: true,
+        	"scrollX": true,
+	        
 
 	        "columns": [
 	            { "data": "program" },

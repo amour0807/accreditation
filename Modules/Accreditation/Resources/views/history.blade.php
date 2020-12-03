@@ -1,16 +1,27 @@
-@extends('accreditation::layouts.master')
-
+@extends('layouts.app')
 @section('content')
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">Users</li>
+<li class="nav-item dropdown ml-auto">
+    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
+</li>
+@endsection
+    <hr style="margin: 0 0 0 0;">
+    <div class="block full"  style="margin-bottom: 10px;" >
+    <div class="block-title" style="padding: 1px 3px 1px 3px;">
+       <h2><strong>{{ $program->AcadPrgrm->acad_prog }}<br>
+Accreditation History<span></strong></h2>
+    </div>
 <div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
             <button type="button" class="close" data-dismiss="alert">×</button>
-  
-</div>  
-<h2 >{{ $program->AcadPrgrm->acad_prog }}</h2>
-<h4  class="mb-3">Accreditation History</h4>
+</div> 
+    <br>
 
-  <hr>
-      <table id="history_table" class="display compact table-bordered" style="width:100%">
-          <thead class="thead">
+      <table id="history_table" class="display compact cell-border" style="width:100%">
+          <thead>
             <tr>
 
                   <th>Accreditation Status</th>
@@ -20,7 +31,7 @@
 
                   <th>PACUCUA Certificate</th>
                   <th>FAAP Certificate</th>
-                  <th>PACUCUA Report</th>
+                  <th>Chairman's Report</th>
 
                   <th>Remarks</th>
 
@@ -47,7 +58,7 @@ $('.alertOld').hide();
         var dataTable= $('#history_table').DataTable( {
           "ajax": "{{route('history_dtb', $program->AcadPrgrm->id)}}",
           responsive: true,
-
+          "scrollX": true,
           "columns": [
               { "data": "accred_stat" },
               

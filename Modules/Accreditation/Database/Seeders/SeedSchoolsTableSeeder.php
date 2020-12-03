@@ -16,6 +16,10 @@ class SeedSchoolsTableSeeder extends Seeder
     public function run()
     {
         DB::table('schools')->insert([
+            'school_name' => 'Quality Assurance Office',
+            'school_code' => 'QAO',
+        ]);
+        DB::table('schools')->insert([
             'school_name' => 'School of Information Technology',
             'school_code' => 'SIT',
         ]);

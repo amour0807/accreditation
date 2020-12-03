@@ -17,11 +17,14 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->bigInteger('school_id')->unsigned()->nullable();
             $table->foreign('school_id')->references('id')->on('schools');
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('last_name');
+            $table->string('middle_initial')->nullable();
+            $table->string('first_name');
+            $table->string('user_role');
+            $table->string('username')->unique();
             $table->boolean('is_admin')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('status');
             $table->rememberToken();
             $table->timestamps();
         });

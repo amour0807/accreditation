@@ -14,10 +14,7 @@ use Yajra\Datatables\Datatables;
 use DB;
 use Illuminate\Support\Facades\Storage;
 
-// use App\Models\File;
-
 use Illuminate\Support\Facades\File;
-
 
 use PDF;
 use PdfReport;
@@ -26,12 +23,15 @@ use Session;
 
 class AccreditationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+ 
+    public function adminAcred_prog()
     {
+        Session::flash('message', 'This is a message!'); 
+        
+        return view('accreditation::index');
+    }
+
+    public function index(){
         Session::flash('message', 'This is a message!'); 
         //check date
         $expiring = PrgrmAccred::where('to', '<',DB::raw('DATE_ADD(NOW(), INTERVAL 1 YEAR)'))
@@ -88,19 +88,28 @@ class AccreditationController extends Controller
                 ->where('current', 'yes')
 
                 ->count();
+                $no = 0;
+                $no++;
       
-        return view('accreditation::index', compact('count1', 'count2', 'count3' ,'count4', 'count5', 'count6', 'expiring'));
+        return view('accreditation::dashboard', compact('count1', 'count2', 'count3' ,'count4', 'count5', 'count6', 'expiring'));
+
     }
 
     // School datatable
     public function school_dtb(){
-        $school = School::all();
-             
-        return DataTables::of($school)
-        ->addColumn('school', function($school) {
-            return $school->school_code;
-        })
-        ->addColumn('accred_prgrms', function($school) {
+
+        $programs = PrgrmAccred::join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
+        ->join('schools','schools.id','acad_prgrms.school_id')
+        ->where('current', 'yes')
+        ->select('*','prgrm_accreds.id as a_id')
+        ->get();    
+
+         return DataTables::of($programs)
+            ->addColumn('program', function($programs) {
+
+                return $programs->acadPrgrm->acad_prog_code;
+            })
+            ->addColumn('accred_prgrms', function($school) {
             $countAccredprgrams = AcadPrgrm::
             where('school_id', $school->id)->
             count();
@@ -174,16 +183,70 @@ class AccreditationController extends Controller
             ->count();
             return $count;
         })
-        ->addColumn('actions', function($school) {
-                return '<a class="btn bg-ub-red btn-sm" href="'.route("accredited_programs" , $school->id).'">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.134 13.134 0 0 0 1.66 2.043C4.12 11.332 5.88 12.5 8 12.5c2.12 0 3.879-1.168 5.168-2.457A13.134 13.134 0 0 0 14.828 8a13.133 13.133 0 0 0-1.66-2.043C11.879 4.668 10.119 3.5 8 3.5c-2.12 0-3.879 1.168-5.168 2.457A13.133 13.133 0 0 0 1.172 8z"/>
-                              <path fill-rule="evenodd" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-                            </svg>
-                        </a>';
-        })
-        ->rawColumns(["school", "accred_prgrms","lvl4","lvl3","lvl2","lvl1","orientation","candidate_stat", "actions"])
-        ->make(true);
+            ->addColumn('accred_stat', function($programs) {
+                    return $programs->accredStat->accred_status;
+            })
+            ->addColumn('cert1', function($programs) {
+                if(empty($programs->faap_cert)){
+                    return ' ';
+                }else{
+                    return '<i class="fas fa-check "></i>';
+                }
+            })
+            ->addColumn('cert2', function($programs) {
+                if(empty($programs->pacucoa_cert)){
+                    return ' ';
+                }else{
+                    return '<i class="fas fa-check"></i>';
+                }
+            })
+            ->addColumn('cert3', function($programs) {
+                if(empty($programs->pacucoa_report)){
+                    return ' ';
+                }else{
+                    return '<i class="fas fa-check"></i>';
+                }
+            })
+            ->addColumn('from', function($programs) {
+                $dateValue_from = $programs->from;
+                $dateValue = $programs->to;
+                //display in words
+                $time_from=strtotime($dateValue_from);
+                $month_from=date("M",$time_from);
+                $year_from=date("Y",$time_from);
+
+                //display in words
+                $time=strtotime($dateValue);
+                $month=date("M",$time);
+                $year=date("Y",$time);
+
+                return $month_from.' '.$year_from.' - '.$month.' '.$year;
+            })
+            ->addColumn('visit_date', function($programs) {
+                if($programs->visit_date_to){
+                    $vdfrome = strtotime($programs->visit_date_from);
+                    $vdto = strtotime($programs->visit_date_to);
+                    $vdf = date("M d, yy", $vdfrome);
+                    $vdt = date("M d, yy", $vdto);
+                    return $vdf.' - '.$vdt;
+                }else{
+                    return $programs->visit_date_from;
+                }
+            })
+           
+            ->addColumn('actions', function($programs) {
+                    return '<a class="btn btn-secondary btn-sm" href="'.route("accredDetails", $programs->a_id).'">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        
+                        <a class="btn btn-secondary btn-sm" href="'.route("accredHistory", $programs->AcadPrgrm->id).'"><i class="fa fa-history" aria-hidden="true"></i>
+                        </a>
+                        ';
+                        
+            })
+            
+            ->rawColumns(["accred_prgrms","lvl4","lvl3","lvl2","lvl1","orientation","candidate_stat",'from', 'to',"program", "accred_stat", "actions", 'cert1', 'cert2', 'cert3','visit_date'])
+            ->make(true);
     }
 
 
@@ -250,7 +313,7 @@ class AccreditationController extends Controller
             })
            
             ->addColumn('actions', function($programs) {
-                    return '<a class="btn bg-ub-red btn-sm" href="'.route("accredDetails", $programs->a_id).'">
+                    return '<a class="btn-secondary btn-sm" href="'.route("accredDetails", $programs->a_id).'">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
                         <button class="btn btn-secondary btn-sm delete" progid="'.$programs->a_id.'"><i class="far fa-trash-alt"></i>
@@ -264,7 +327,12 @@ class AccreditationController extends Controller
 
     //Add school
     public function addSchoolForm(Request $request){
-
+        $school = School::all();
+        foreach($school as $sc){
+            if($sc->school_code == $request->school_code){
+                return redirect()->back()->with('error', 'Duplicate Entry');
+            }
+        }
         DB::table('schools')->insert(
             [
             'school_name' => $request->school_name, 
@@ -273,6 +341,72 @@ class AccreditationController extends Controller
         );
     }
 
+    public function deleteSchoolDept(Request $request)
+    {
+        $school = School::find($request->id);
+        $school->delete();
+
+        
+    }
+    public function editSchoolDept(Request $request)
+    {
+        $school = School::find($request->id);
+        echo '<label>School Code</label> <input type="text" class="form-control" name="school_code" required value="'.$school->school_code.'"></input>
+            <label>School Name</label> <input type="text" class="form-control" name="school_name" required value="'.$school->school_name.'"></input>
+
+            <input type="hidden" name="sid" value="'.$request->id.'"></input>';      
+    }
+    public function updateSchoolDept(Request $request)
+    {
+        $school = School::find($request->sid);
+        $school->school_code = $request->school_code;
+        $school->school_name = $request->school_name;
+        $school->save();
+
+    }
+
+    //Academic Program
+     public function addAcadProg(Request $request){
+        $acad_code = AcadPrgrm::all();
+        foreach($acad_code as $ac){
+            if($ac->acad_prog_code == $request->acad_prog_code){
+                
+                 return redirect()->route('academic_programs')->with('error', 'Duplicate Entry');
+            }
+        }
+        DB::table('acad_prgrms')->insert(
+            [
+            'school_id' => $request->school_id,
+            'acad_prog_code' => $request->acad_prog_code, 
+            'acad_prog' => $request->acad_prog,
+            ]
+        );
+    }
+     public function editAcadProg(Request $request)
+    {
+        $programs = AcadPrgrm::find($request->id);
+        echo '<label>Academic Code</label> <input type="text" class="form-control" name="acad_prog_code" required value="'.$programs->acad_prog_code.'"></input>
+            <label>Program</label> <input type="text" class="form-control" name="acad_prog" required value="'.$programs->acad_prog.'"></input>
+
+            <input type="hidden" name="sid" value="'.$request->id.'"></input>';      
+    }
+
+    public function updateAcadProg(Request $request)
+    {
+        $programs = AcadPrgrm::find($request->sid);
+        $programs->acad_prog_code = $request->acad_prog_code;
+        $programs->acad_prog = $request->acad_prog;
+        $programs->save();
+
+    }
+
+     public function deleteAcadProg(Request $request)
+    {
+        $programs = AcadPrgrm::find($request->id);
+        $programs->delete();
+
+        
+    }
     //Program Datatables
     public function program_dtb($id){
 
@@ -283,8 +417,6 @@ class AccreditationController extends Controller
         ->select('*','prgrm_accreds.id as a_id')
         ->get();    
 
-
-          
          return DataTables::of($programs)
             ->addColumn('program', function($programs) {
 
@@ -294,7 +426,7 @@ class AccreditationController extends Controller
                     return $programs->accredStat->accred_status;
             })
             ->addColumn('cert1', function($programs) {
-                if(empty($programs->pacucoa_cert)){
+                if(empty($programs->faap_cert)){
                     return ' ';
                 }else{
                     return '<i class="fas fa-check "></i>';
@@ -338,7 +470,7 @@ class AccreditationController extends Controller
             })
            
             ->addColumn('actions', function($programs) {
-                    return '<a class="btn bg-ub-red btn-sm" href="'.route("accredDetails", $programs->a_id).'">
+                    return '<a class="btn btn-secondary btn-sm" href="'.route("accredDetails", $programs->a_id).'">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
                         
@@ -351,12 +483,41 @@ class AccreditationController extends Controller
             ->make(true);
     }
 
+     public function acadprogram_dtb(){
+      
+          $programs = School::join('acad_prgrms', 'acad_prgrms.school_id', 'schools.id')
+        ->get(); 
+          
+
+         return DataTables::of($programs)
+            ->addColumn('actions', function($programs) {
+                    return '
+                        <button class="btn btn-secondary btn-sm edit" programid="'.$programs->id.'"><i class="far fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm destroy" programid="'.$programs->id.'"><i class="far fa-trash-alt"></i>
+                        </button>
+                        ';
+            })
+            
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+
     public function accredDetails($id){
         $program = PrgrmAccred::where('id', $id)->first();
 
         return view('accreditation::accreditation-details', compact('program'));
 
     }
+
+    public function acadProgDetails($id){
+        $acad_prgrms = AcadPrgrm::where('school_id', $id)->first();
+
+        return view('accreditation::acadprog-details', compact('acad_prgrms'));
+
+    }
+
     public function accredEdit($id){
         $program = PrgrmAccred::where('id', $id)->first();
         $accredStats = AccredStat::all();
@@ -401,23 +562,21 @@ class AccreditationController extends Controller
 
     }
 
+
     public function school_select(Request $request){
         $programs = AcadPrgrm::where('school_id', $request->id)->get();
 
-        echo '<select class="form-control-sm form-control" name="program" required>
-                <option disabled selected value> </option>';
+        echo '<select class="form-control-sm form-control" name="program" required>';
 
         if ($programs->count() != 0){
             foreach ($programs as $program) {
-                echo "<option value='".$program->id."' >".$program->acad_prog."</option>";
+                echo "<option value='".$program->id."'>".$program->acad_prog."</option>";
             } 
         }else{
-            echo "<option vlaue=''>No Academic Program Added yet</option>";
+            echo "<option disabled selected value >No Academic Program Added yet</option>";
         }
         
         echo "</select>";
-
-
     }
 
 
@@ -428,9 +587,9 @@ class AccreditationController extends Controller
 
         $pacucoa_report_fileName='';
             $request->validate([
-            'faap_cert' => 'nullable|mimes:pdf,xlx,csv|max:2048',
-            'pacucoa_cert' => 'nullable|mimes:pdf,xlx,csv|max:2048',
-            'pacucoa_report' => 'nullable|mimes:jpeg,png',
+            'faap_cert' => 'nullable|mimes:jpeg,png,pdf,xlx,csv|max:2048',
+            'pacucoa_cert' => 'nullable|mimes:jpeg,png,pdf,xlx,csv|max:2048',
+            'pacucoa_report' => 'nullable|mimes:jpeg,png,pdf,xlx,csv|max:2048',
             ]);
       
         if($request->hasFile('faap_cert')){
@@ -496,7 +655,7 @@ class AccreditationController extends Controller
             );
         }
 
-        return back()->with('error_code', 5);
+        return back()->with('success_modal', 5);
     }
 
     //view accredited programs per school
@@ -544,7 +703,12 @@ class AccreditationController extends Controller
 
     // add Accreditation
     public function addStatus(Request $request){
-        
+          $accred = AccredStat::all();
+        foreach($accred as $ac){
+            if($ac->accred_status == $request->accredStatus){
+                return redirect()->back()->with('error', 'Duplicate Entry');
+            }
+        }
             DB::table('accred_stats')->insert(
                 [
                 'accred_status' => $request->accredStatus, 
@@ -654,9 +818,39 @@ class AccreditationController extends Controller
                     return $programs->visit_date_from;
                 }
             })
+            ->addColumn('visit_date_from', function($programs) {
+                if($programs->visit_date_from){
+                     $from = date('M. d, Y', strtotime($programs->visit_date_from));
+                    return $from;
+                }
+            })
+            ->addColumn('visit_date_to', function($programs) {
+                if($programs->visit_date_from){
+                     $to = date('M. d, Y', strtotime($programs->visit_date_from));
+                    return $to;
+                }
+            })
+            ->addColumn('visit_date_to', function($programs) {
+                if($programs->visit_date_from){
+                     $to = date('M. d, Y', strtotime($programs->visit_date_from));
+                    return $to;
+                }
+            })
+            ->addColumn('from', function($programs) {
+                if($programs->from){
+                     $from = date('M. d, Y', strtotime($programs->from));
+                    return $from;
+                }
+            })
+            ->addColumn('to', function($programs) {
+                if($programs->to){
+                     $to = date('M. d, Y', strtotime($programs->to));
+                    return $to;
+                }
+            })
             
             
-            ->rawColumns(["program", "accred_stat", "school", 'validity', 'visit_date'])
+            ->rawColumns(["program", "accred_stat", "school", 'validity', 'visit_date', 'visit_date_from', 'visit_date_to', 'from', 'to'])
             ->make(true);
     }
 //Program Datatables
@@ -701,9 +895,39 @@ class AccreditationController extends Controller
                     return $programs->visit_date_from;
                 }
             })
+             ->addColumn('visit_date_from', function($programs) {
+                if($programs->visit_date_from){
+                     $from = date('M. d, Y', strtotime($programs->visit_date_from));
+                    return $from;
+                }
+            })
+            ->addColumn('visit_date_from', function($programs) {
+                if($programs->visit_date_from){
+                     $from = date('M. d, Y', strtotime($programs->visit_date_from));
+                    return $from;
+                }
+            })
+            ->addColumn('visit_date_to', function($programs) {
+                if($programs->visit_date_from){
+                     $to = date('M. d, Y', strtotime($programs->visit_date_from));
+                    return $to;
+                }
+            })
+            ->addColumn('from', function($programs) {
+                if($programs->from){
+                     $from = date('M. d, Y', strtotime($programs->from));
+                    return $from;
+                }
+            })
+            ->addColumn('to', function($programs) {
+                if($programs->to){
+                     $to = date('M. d, Y', strtotime($programs->to));
+                    return $to;
+                }
+            })
             
             
-            ->rawColumns(["program", "accred_stat", "school", 'validity', 'visit_date'])
+            ->rawColumns(["program", "accred_stat", "school", 'validity', 'visit_date', 'visit_date_from','visit_date_to','from','to'])
             ->make(true);
     }
 
@@ -718,9 +942,6 @@ class AccreditationController extends Controller
         $min = $request->min;
         $max = $request->max;
         $visitYear = $request->visitYear;
-
-
-
 
         $queryBuilder = DB::table('prgrm_accreds')
             ->join('acad_prgrms', 'acad_prgrms.id', 'prgrm_accreds.acad_prgrm_id')
@@ -823,9 +1044,9 @@ class AccreditationController extends Controller
         $pacucoa_report_fileName='';
 
             $request->validate([
-            'faap_cert' => 'nullable|mimes:pdf,xlx,csv|max:2048',
-            'pacucoa_cert' => 'nullable|mimes:pdf,xlx,csv|max:2048',
-            'pacucoa_report' => 'nullable|mimes:jpeg,png',
+            'faap_cert' => 'nullable|mimes:jpeg,png,pdf,xlx,csv|max:2048',
+            'pacucoa_cert' => 'nullable|mimes:jpeg,png,pdf,xlx,csv|max:2048',
+            'pacucoa_report' => 'nullable|mimes:jpeg,png,pdf,xlx,csv|max:2048',
             ]);
       
         if($request->hasFile('faap_cert')){
@@ -858,5 +1079,51 @@ class AccreditationController extends Controller
 
         return back();
     }
+
+    // School
+    public function viewSchool(){
+        return view('accreditation::school-index');
+
+    }
+    public function academic_programs(){
+        $school = School::where('school_name', 'like', 'School%')
+        ->orWhere('school_name', 'like', '%School')
+        ->get();
+        return view('accreditation::acadprog-details', compact('school'));
+    }
+
+    public function school_dept_dtb(){
+        $school = School::all();   
+       // $filter = Category::where('name', 'like', 'A%')->orderBy('name', 'asc')->get();
+         return DataTables::of($school)
+            ->addColumn('actions', function($school) {
+                    return '
+                        <button class="btn btn-secondary btn-sm edit" title="Edit" schoolid="'.$school->id.'"><i class="far fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm destroy" title="Remove" schoolid="'.$school->id.'"><i class="far fa-trash-alt"></i>
+                        </button>
+                        ';
+            })
+            
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function acad_prog_dtb(){
+        $school = School::where('school_name', 'like', 'School%')
+        ->orWhere('school_name', 'like', '%High School')->get(); 
+         return DataTables::of($school)
+           ->addColumn('actions', function($school) {
+                return '<a class="btn bg-ub-red btn-sm" href="'.route("academic_programs").'">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.134 13.134 0 0 0 1.66 2.043C4.12 11.332 5.88 12.5 8 12.5c2.12 0 3.879-1.168 5.168-2.457A13.134 13.134 0 0 0 14.828 8a13.133 13.133 0 0 0-1.66-2.043C11.879 4.668 10.119 3.5 8 3.5c-2.12 0-3.879 1.168-5.168 2.457A13.133 13.133 0 0 0 1.172 8z"/>
+                              <path fill-rule="evenodd" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                            </svg>
+                        </a>';
+        })
+        ->rawColumns(["actions"])
+        ->make(true);
+    }
+  
 
 }

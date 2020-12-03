@@ -1,10 +1,21 @@
-@extends('accreditation::layouts.master')
-
+@extends('layouts.app')
 @section('content')
-
-	<h2 class="mb-4">Add an Accreditation</h2>
-	<hr>
- @if (count($errors) > 0)
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">Users</li>
+<li class="nav-item dropdown ml-auto">
+    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
+</li>
+@endsection
+    <hr style="margin: 0 0 0 0;">
+    <div class="block full"  style="margin-bottom: 10px;" >
+    <div class="block-title" style="padding: 1px 3px 1px 3px;">
+       <h2><strong>Add an Accreditation<span></strong></h2>
+        
+    </div>
+     		@if (count($errors) > 0)
             <div class="alert alert-danger">
             	 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -19,7 +30,7 @@
             </div>
         @endif
 
-@if(!empty(Session::get('error_code')) && Session::get('error_code') == 5)
+@if(!empty(Session::get('success_modal')) && Session::get('success_modal') == 5)
 	<script>
 	$(function() {
 	    $('#success-modal').modal('show');
@@ -27,13 +38,27 @@
 	</script>
 @endif
 
+  <div class="alert"></div>
+  @if ($message = Session::get('success'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+  @if ($message = Session::get('error'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+    <br>
 <form  id="addAccredForm" method="POST" enctype="multipart/form-data" action="{{route('addAccred')}}">
     @csrf
 	<div class="form-group row">
 		<label class="col-md-2 col-form-label"> <span class="text-danger">*</span>School</label>
 		<div class="col-md-4">
-      		<select class="form-control form-control-sm" id="school" name="school" required>
-		    	<option disabled selected value> </option>
+      		<select class="form-control form-control-sm" id="schoolchange" name="school" required>
+		    	<option disabled selected value> -- -- --</option>
 			    @foreach ($schools as $school)
 			      <option value="{{$school->id}}">{{ $school->school_name }}</option>
 			    @endforeach
@@ -116,7 +141,7 @@
     <div class=" alert-danger">{{ $message }}</div>
 @enderror
    </div><div class="form-group row">
-   		<label class="col-md-2 col-form-label">PACOCUA Report</label>
+   		<label class="col-md-2 col-form-label">Chairman's Report</label>
 	    <div class="col-md-4">
 	      <input type="file" name="pacucoa_report" class="form-control">
 	    </div>
@@ -128,8 +153,8 @@
  
   <div class="form-group row mt-4">
     <div class="col-md-10">
-      <button class="btn bg-ub-red m-2" type="submit">Add Accreditation</button>
-		<a class="btn btn-secondary  m-2" href='{{ route("accredIndex") }}'>Back</a>
+      <button class="btn btn-info m-2" type="submit">Add Accreditation</button>
+		<a class="btn btn-danger  m-2" href='{{ route("accredIndex") }}'>Back</a>
     </div>
   </div>
 </form>
@@ -145,16 +170,13 @@
         Record saved. Add another record?
       </div>
       <div class="modal-footer">
-        <a class="btn btn-secondary" href="{{route('accredIndex')}}">Proceed to Dashboard</a>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Add Another Record</button>
+        <a class="btn btn-danger" href="{{route('accredIndex')}}">Proceed to Dashboard</a>
+        <button type="button" class="btn btn-info" data-dismiss="modal">Add Another Record</button>
       </div>
     </div>
   </div>
 </div>
 	
-	
-
-
 	<script type="text/javascript">
 		$.ajaxSetup({
 		    headers: {
@@ -165,7 +187,7 @@
     	var token = $("input[name='_token']").val();
 		$(document).ready(function(){
 
-		   $('#school').on('change',function(){
+		   $('#schoolchange').on('change',function(){
 		   		var id = $(this).val();
 		   		
 
@@ -177,40 +199,11 @@
 		              _token:token
 		            },
 		            success:function(data){
-		       
 		              $('#program_choice').html(data);
-		             
 		            }   
 		         }); 
 			});
 
-
-
-		     //Adding
-		    // $( "#addAccredForm" ).submit(function( event ) {
-		    //     event.preventDefault();
-		    //     var formData = new FormData($(this)[0]);
-		    //     $.ajax({
-		    //       url:"{{route('addAccred')}}",
-		    //       method:"POST",
-		    //       data:new FormData(this),
-
-				  //  contentType: false,
-				  //  cache: false,
-				  //  processData: false,
-		    //       success:function(data){
-		    //         $("#addAccredForm")[0].reset();
-		    //         $('#success-modal').modal('show');
-		            
-		    //       },
-		    //       error: function(xhr, status, error){
-			   //       var errorMessage = xhr.error + ': ' + xhr.statusText
-			   //       alert('You might have uploaded an invalid file. Please re-check your inputs and take note of the following: \n FAAP Certificate: accepts .pdf and .xls files only \n PACOCUA Certificate: accepts .pdf and .xls files only \n FAAP Report: accepts .PNG and .JPEG files only');
-			   //   }
-
-		              
-		    //     }); 
-		    // });  
 		});
 	</script>
 @endsection

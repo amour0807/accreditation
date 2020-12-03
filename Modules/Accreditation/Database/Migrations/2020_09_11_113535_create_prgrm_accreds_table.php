@@ -13,7 +13,6 @@ class CreatePrgrmAccredsTable extends Migration
      */
     public function up()
     {
-
         Schema::create('prgrm_accreds', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('accred_stat_id')->unsigned();
