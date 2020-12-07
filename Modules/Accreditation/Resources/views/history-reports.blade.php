@@ -118,7 +118,7 @@
       <table id="program_report_table" class="display compact cell-border" style="width:100%">
         <thead class="thead">
               <tr>
-                <th>School</th>
+                <th>Schools</th>
                 <th>Program</th>
                 <th>Accreditation Status</th>
                 <th>Visit From</th>

@@ -19,14 +19,14 @@
 
 </script>
 @endif
-  <form class="mb-4" action="#" method="POST">
+  <form class="mb-4" action="" method="POST">
     @csrf 
      <div class="row">
       <div class="col-md-8">
       </div>
      <div class="col-md-4">
       <div class="float-right">
-        <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
+        <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
           <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
       </div><br><br>
       </div>

@@ -17,4 +17,7 @@ Route::group(['prefix' => 'boardexam', 'middleware' => 'is_admin'], function() {
  	Route::get('/boardexam_dtb', 'BoardExamController@boardexam_dtb')->name('boardexam_dtb');
  	Route::get('/boardDetail/{id}', 'BoardExamController@boardDetail')->name('boardDetail');
  	Route::post('/boardfilterReport', 'BoardExamController@boardfilterReport')->name('boardfilterReport');
+ 	Route::get('/boardHistory/{id}', 'BoardExamController@boardHistory')->name('boardHistory');
+ 	Route::get('/boardHistory_dtb', 'BoardExamController@boardHistory_dtb')->name('boardHistory_dtb');
+ 	Route::post('/bHistoryfilterReport', 'BoardExamController@bHistoryfilterReport')->name('bHistoryfilterReport');
 });

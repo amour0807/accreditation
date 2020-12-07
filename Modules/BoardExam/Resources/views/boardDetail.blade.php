@@ -107,8 +107,6 @@
             <th>UB Overall<br>Passsing<br>Percentage</th>
             <th>National<br>Passsing<br>Percentage</th>
           </tr>
-        </thead>
-        <tbody>
           <tr>
             <th>Passed</th>
             <th>Failed</th>
@@ -122,6 +120,8 @@
             <th></th>
             <th></th>
           </tr>
+        </thead>
+        <tbody>
           <tr>
             <td class="ftaker-me" id="fpassed">{{$board->ftaker_passed}}</td>
             <td class="ftaker-me">{{$board->ftaker_failed}}</td>
