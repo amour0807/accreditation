@@ -178,7 +178,6 @@
 
  var dataTable = $('#instawardtable').DataTable( {
           "processing" : true,
-          "serverSide" : true,
           "ajax": "{{route('instaward_dtb',1)}}",
 
            dom: 'Blfrtip',

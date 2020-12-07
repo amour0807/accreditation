@@ -49,7 +49,7 @@
  <form id="form" action="{{route('updateInstAward')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered">
                                             {{ csrf_field() }}
 <input type="text" class="form-control" name="awardID" value="{{$ia->id}}" hidden>
-<div class="col-md-10" style="float: center;">
+<div class="col-md-12" style="float: center;">
   <div class="row">
     <div class="col-md-5">
       @if($ia->supporting_doc == "")
@@ -71,7 +71,6 @@
             </div>
      </div>
     <div class="col-md-7">
-     <div class=" row">
         <div class="row form-group">
               <label><span class="text-danger">*</span>Title of Award</label>
               <input type="text" class="form-control" name="award" value="{{$ia->award}}" required>
@@ -94,7 +93,6 @@
               <label><span class="text-danger">*</span>Award Giving Body</label>
               <input type="text" class="form-control" name="award_gb"  value="{{$ia->award_giving_body}}" required>
           </div>
-    </div>
    <div class=" row mt-4">
     <div class="col-sm-12">
       <button type="submit" id="save" class="btn btn-primary" >Save Changes</button>

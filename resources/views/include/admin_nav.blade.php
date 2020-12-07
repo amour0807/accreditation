@@ -79,16 +79,24 @@
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="{{route('partners')}}">
               <span class="link-title">Partners</span>
               <i class="mdi mdi-account-multiple link-icon"></i>
             </a>
           </li>
           <li>
-            <a href="#">
-              <span class="link-title">Licensure Examination</span>
-              <i class="mdi mdi-book link-icon"></i>
+            <a href="#le" data-toggle="collapse" aria-expanded="false">
+              <span class="link-title">Licensure<br> Examination</span>
+              <i class="mdi mdi-clipboard link-icon"></i>
             </a>
+            <ul class="collapse navigation-submenu" id="le">
+              <li>
+                <a href="{{route('boardExam')}}">Examination</a>
+              </li>
+              <li>
+                <a href="#">Topnotchers</a>
+              </li>
+            </ul>
           </li>
           <li class="nav-category-divider" style="background: #e9ecef;">Report</li>
           <li>

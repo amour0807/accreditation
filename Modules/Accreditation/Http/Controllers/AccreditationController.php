@@ -90,8 +90,16 @@ class AccreditationController extends Controller
                 ->count();
                 $no = 0;
                 $no++;
+        $topnotcher = DB::table('topnotchers')
+                ->count();
+        $activeP = DB::table('partners')
+                ->where('status', 'Active')
+                ->count();
+        $inactiveP = DB::table('partners')
+                ->where('status', 'Inactive')
+                ->count();
       
-        return view('accreditation::dashboard', compact('count1', 'count2', 'count3' ,'count4', 'count5', 'count6', 'expiring'));
+        return view('accreditation::dashboard', compact('count1', 'count2', 'count3' ,'count4', 'count5', 'count6', 'expiring','topnotcher','activeP','inactiveP'));
 
     }
 
