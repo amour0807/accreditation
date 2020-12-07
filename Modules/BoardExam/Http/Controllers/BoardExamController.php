@@ -22,23 +22,18 @@ use Session;
 
 class BoardExamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
+   
+    public function index(){
         return view('boardexam::index');
     }
-    public function boardDetail($id)
-    {
+   
+    public function boardDetail($id){
         $board = BoardExam::where('id',$id)->first();
         $topnotcher = Topnotcher::where('boardexam_id',$id)->get();
 
         return view('boardexam::boardDetail',compact('board','topnotcher'));
     }
-    public function boardHistory($licensure_exam)
-    {
+    public function boardHistory($licensure_exam){
         $exam = $licensure_exam;
 
         return view('boardexam::boardHistory',compact('exam'));
@@ -231,4 +226,46 @@ class BoardExamController extends Controller
         return $pdf->stream('project_'.time().'.pdf');
     }
 
+    //topnotchers
+     public function topnotchers(){
+        return view('boardexam::topnotcher');
+    }
+     public function topnotcher_dtb(){     $topnotcher = Topnotcher::join('board_exam','board_exam.id','boardexam_id')->get();
+          
+         return DataTables::of($topnotcher)
+         ->addColumn('exam_date', function($programs) {
+                if($programs->exam_date){
+                     $to = date('M. d, Y', strtotime($programs->exam_date));
+                    return $to;
+                }
+            })
+         ->rawColumns(['exam_date'])
+         ->make(true);
+    }
+    public function topfilterReport(Request $request){
+        $department = School::where('id', auth()->user()->school_id)->first();
+        $exam = $request->select1; //min
+        $rank = $request->select2;
+        $from = $request->mindate; //min
+        $to = $request->maxdate; //max
+
+        $queryBuilder = DB::table('topnotchers')->join('board_exam','board_exam.id','boardexam_id');
+            
+            if($from && $to){
+                $queryBuilder = $queryBuilder->whereBetween('exam_date', [$from, $to]);
+            }
+            if($exam){
+                $queryBuilder = $queryBuilder->where('licensure_exam', $exam);
+            }
+            if($rank){
+                $queryBuilder = $queryBuilder->where('rank', $rank);
+            }
+            $queryBuilder = $queryBuilder->get();
+
+      $pdf = PDF::loadView('boardexam::reports.topnotcher-report', compact('queryBuilder','from', 'to','department','exam','rank') );
+        $pdf->setPaper('legal', 'landscape');
+        $pdf->save(storage_path().'_filename.pdf');
+
+        return $pdf->stream('project_'.time().'.pdf');
+    }
 }

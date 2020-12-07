@@ -94,7 +94,7 @@
                 <a href="{{route('boardExam')}}">Examination</a>
               </li>
               <li>
-                <a href="#">Topnotchers</a>
+                <a href="{{route('topnotchers')}}">Topnotchers</a>
               </li>
             </ul>
           </li>

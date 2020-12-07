@@ -20,4 +20,9 @@ Route::group(['prefix' => 'boardexam', 'middleware' => 'is_admin'], function() {
  	Route::get('/boardHistory/{id}', 'BoardExamController@boardHistory')->name('boardHistory');
  	Route::get('/boardHistory_dtb', 'BoardExamController@boardHistory_dtb')->name('boardHistory_dtb');
  	Route::post('/bHistoryfilterReport', 'BoardExamController@bHistoryfilterReport')->name('bHistoryfilterReport');
+
+ 	//topnotchers
+ 	Route::get('/topnotchers', 'BoardExamController@topnotchers')->name('topnotchers');
+ 	Route::get('/topnotcher_dtb', 'BoardExamController@topnotcher_dtb')->name('topnotcher_dtb');
+ 	Route::post('/topfilterReport', 'BoardExamController@topfilterReport')->name('topfilterReport');
 });
