@@ -79,7 +79,7 @@
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="{{route('partners')}}">
               <span class="link-title">Partners</span>
               <i class="mdi mdi-account-multiple link-icon"></i>
             </a>

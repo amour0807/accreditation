@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartnersTable extends Migration
+class CreatePartnerRenewalTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreatePartnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('partners', function (Blueprint $table) {
+        Schema::create('partner_renewal', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name');
-            $table->string('scope');
-            $table->string('classification');
-            $table->string('nature_partnership');
-            $table->string('from');
-            $table->string('to');
-            $table->boolean('status');
+            $table->bigInteger('partner_id')->unsigned();
+            $table->foreign('partner_id')->references('id')->on('partners');
+            $table->integer('from');
+            $table->integer('to');
             $table->string('supporting_doc');
             $table->timestamps();
         });
@@ -34,6 +31,6 @@ class CreatePartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partners');
+        Schema::dropIfExists('partner_renewal');
     }
 }

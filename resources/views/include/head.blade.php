@@ -201,6 +201,18 @@
           .modal {
             overflow-y:auto;
           }
+          fieldset {
+              margin: 8px;
+              border: 1px solid silver;
+              padding: 8px; 
+              margin-top: 0;   
+              border-radius: 4px;
+          }
+
+          legend {
+              padding: 2px;    
+          }
+
 
         </style>
         <script type="text/javascript">

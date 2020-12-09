@@ -96,7 +96,7 @@
           <div class="modal-body">
             <div class="form-group">
             <label><span class="text-danger">*</span>Department:</label>
-              <select id="mydropbox" class="form-control" onchange="copyValue()">
+              <select id="mydropbox" class="form-control" onchange="copyValue()" required>
                 <option disabled selected value> -- --  </option>
             @foreach($school as $sc)
             <option value="{{$sc->id}}">{{$sc->school_name}}</option>

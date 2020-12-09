@@ -1,0 +1,13 @@
+{
+    "name": "BoardExam",
+    "alias": "boardexam",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\BoardExam\\Providers\\BoardExamServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
