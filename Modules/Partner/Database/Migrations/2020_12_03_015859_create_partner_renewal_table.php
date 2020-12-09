@@ -17,8 +17,13 @@ class CreatePartnerRenewalTable extends Migration
             $table->id();
             $table->bigInteger('partner_id')->unsigned();
             $table->foreign('partner_id')->references('id')->on('partners');
+<<<<<<< HEAD
+            $table->integer('from');
+            $table->integer('to');
+=======
             $table->date('from');
             $table->date('to')->nullable();
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
             $table->string('supporting_doc');
             $table->timestamps();
         });

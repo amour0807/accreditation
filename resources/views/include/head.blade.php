@@ -207,6 +207,11 @@
           }
 
           legend {
+<<<<<<< HEAD
+              padding: 2px;    
+          }
+
+=======
               padding: 2px;
               font-size: 13px;    
           }
@@ -648,6 +653,7 @@
     margin-bottom: 0;
     overflow-y: auto;
 }
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 
         </style>
         <script type="text/javascript">

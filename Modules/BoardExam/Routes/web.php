@@ -11,6 +11,10 @@
 |
 */
 
+<<<<<<< HEAD
+Route::prefix('boardexam')->group(function() {
+    Route::get('/', 'BoardExamController@index');
+=======
 Route::group(['prefix' => 'boardexam', 'middleware' => 'is_admin'], function() {
     Route::get('/boardExam', 'BoardExamController@index')->name('boardExam');
     Route::post('/addBoardExam', 'BoardExamController@addBoardExam')->name('addBoardExam');
@@ -25,4 +29,5 @@ Route::group(['prefix' => 'boardexam', 'middleware' => 'is_admin'], function() {
  	Route::get('/topnotchers', 'BoardExamController@topnotchers')->name('topnotchers');
  	Route::get('/topnotcher_dtb', 'BoardExamController@topnotcher_dtb')->name('topnotcher_dtb');
  	Route::post('/topfilterReport', 'BoardExamController@topfilterReport')->name('topfilterReport');
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 });

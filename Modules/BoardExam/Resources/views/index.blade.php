@@ -3,8 +3,13 @@
     <hr style="margin: 0 0 0 0;">
     <div class="block full"  style="margin-bottom: 10px;" >
     <div class="block-title" style="padding: 1px 3px 1px 3px;" id="datatable_wrapper">
+<<<<<<< HEAD
+       <h2><strong>Institutional Awards And Recognition<span></strong></h2>
+       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">Add Award</button>
+=======
        <h2><strong>Licensure Examination<span></strong></h2>
        <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">New Record</button>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
         
     </div>
     @if ($message = Session::get('success'))
@@ -19,14 +24,22 @@
 
 </script>
 @endif
+<<<<<<< HEAD
+  <form class="mb-4" action="{{route('instawardfilterReport')}}" method="POST">
+=======
   <form class="mb-4" action="{{route('boardfilterReport')}}" method="POST">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
     @csrf 
      <div class="row">
       <div class="col-md-8">
       </div>
      <div class="col-md-4">
       <div class="float-right">
+<<<<<<< HEAD
+        <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
+=======
         <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
           <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
       </div><br><br>
       </div>
@@ -36,13 +49,21 @@
          <strong>Sort by:</strong>
       </div>
       <div class="col-md-6">
+<<<<<<< HEAD
+        <strong>Range of Award:</strong>
+=======
         <strong>Examination:</strong>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
       </div>
     </div>
    <div class="form-group row">
      <div class="row col">
     <div class="col-md-4 ">
+<<<<<<< HEAD
+      <label >Award</label>
+=======
       <label >Type:</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
       <div id="filters1">   
       </div>
     </div>
@@ -50,17 +71,52 @@
   <div class="row col">
     <div class="col-md-6 ">
           <label>From </label>
+<<<<<<< HEAD
+          <input type="date" name="from" class="form-control" id="from">
+  </div>
+  <div class="col-md-6">
+     <label>To</label>
+          <input type="date" name="to" class="form-control" id="to">
+=======
           <input type="date" name="mindate" class="form-control" id="mindate">
   </div>
   <div class="col-md-6">
      <label>To</label>
           <input type="date" name="maxdate" class="form-control" id="maxdate">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
    </div>
   </div>
   </div>
 </form>
 <hr>
     <!-- Table showing awards -->
+<<<<<<< HEAD
+    <table id="instawardtable" class="display compact cell-border" style="table-layout: fixed">
+		    <thead>
+	            <tr>
+	            	<th>Award Title</th>
+	            	<th>Valid From</th>
+                <th>Valid To</th>
+	            	<th>Venue</th>
+                <th>Award <br>Giving Body</th>
+	            	<th>Supporting <br>Document</th>
+                    <th>Action</th>
+	            </tr>
+		    </thead>   
+		</table>
+    <!-- Modal -->
+	<div class="modal fade" id="addAwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Add Institutional Awards And Recognitions</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+
+	       <form id="form" action="{{route('addInstAward')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
+=======
     <table id="boardexam_table" class="display compact cell-border" style="table-layout: fixed">
         <thead>
               <tr>
@@ -85,10 +141,48 @@
         </div>
 
          <form id="form" action="{{route('addBoardExam')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                                             {{ csrf_field() }}
 
         <div class="modal-body">
           <div class="row form-group">
+<<<<<<< HEAD
+              <label><span class="text-danger">*</span>Title of Award</label>
+		        	<input type="text" class="form-control" name="award" placeholder="" required>
+          </div>
+          <div class="row form-group">
+            <div class="col-md-6">
+                <label><span class="text-danger"></span>From</label>
+                <input type="date" class="form-control" name="from" placeholder="" >
+            </div>
+            <div class="col-md-6">
+                <label><span class="text-danger"></span>To</label>
+                <input type="date" class="form-control" name="to" placeholder="" >
+            </div>
+          </div>
+          <div class="row form-group">
+              <label><span class="text-danger"></span>Venue</label>
+		        	<input type="text" class="form-control" name="venue" placeholder="" >
+          </div>
+          <div class="row form-group">
+              <label><span class="text-danger">*</span>Award Giving Body</label>
+		        	<input type="text" class="form-control" name="award_gb" placeholder="" required>
+          </div>
+          <div class="row form-group">
+		        	<i class="fas fa-upload">Supporting Document</i>
+		        	<input type="file" name="supporting_doc" class="form-control">
+		        </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-info">Add Award</button>
+            
+	      	<div>
+	      	</div>
+             </form>
+	    </div>
+	  </div>
+	</div>
+=======
               <label><span class="text-danger">*</span>Licensure Examination</label>
               <input type="text" class="form-control" name="exam" placeholder="" required>
           </div>
@@ -202,6 +296,7 @@
       </div>
     </div>
   </div>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 
 <!-- Add Another Modal -->
 <div class="modal fade " data-backdrop="static" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -222,6 +317,17 @@
   </div>
 </div>
 
+<<<<<<< HEAD
+	<script type="text/javascript">
+
+    $.ajaxSetup({
+	    headers: {
+	       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+    });
+
+     
+=======
   <script type="text/javascript">
 
   function calculateSum() {
@@ -265,10 +371,22 @@
       }
     });
 
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
     var token = $("input[name='_token']").val();
 
     var count = 0;
 
+<<<<<<< HEAD
+       $.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var from = Date.parse($('#from').val());
+        var to = Date.parse($('#to').val());
+        var age = Date.parse( data[2] ) || 0; 
+        if ( ( isNaN( from ) && isNaN( to ) ) ||
+             ( isNaN( from ) && age <= to ) ||
+             ( from <= age   && isNaN( to ) ) ||
+             ( from <= age   && age <= to ) )
+=======
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
         var min = Date.parse($('#mindate').val());
@@ -279,6 +397,7 @@ $.fn.dataTable.ext.search.push(
              ( isNaN( min ) && age <= max ) ||
              ( min <= age   && isNaN( max ) ) ||
              ( min <= age   && age <= max ) )
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
         {
             return true;
         }else{
@@ -288,10 +407,17 @@ $.fn.dataTable.ext.search.push(
     }
 );
 
+<<<<<<< HEAD
+ var dataTable = $('#instawardtable').DataTable( {
+          "processing" : true,
+          "serverSide" : true,
+          "ajax": "{{route('instaward_dtb',1)}}",
+=======
 
  var dataTable = $('#boardexam_table').DataTable( {
           "processing" : true,
           "ajax": "{{route('boardexam_dtb')}}",
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 
            dom: 'Blfrtip',
           lengthMenu: [
@@ -306,11 +432,20 @@ $.fn.dataTable.ext.search.push(
           "scrollX": false,
           
           "columns": [
+<<<<<<< HEAD
+              { "data": "award" },
+              { "data": "from" },
+              { "data": "to" },
+              { "data": "venue" },
+              { "data": "award_giving_body" },
+              { "data": "dsupporting_doc" },
+=======
               { "data": "licensure_exam" },
               { "data": "exam_date" },
               { "data": "type" },
               { "data": "supporting_doc" },
               { "data": "topnotcher" },
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
               { "data": "actions" },
           ],
 
@@ -347,6 +482,17 @@ $.fn.dataTable.ext.search.push(
 
         });
 
+<<<<<<< HEAD
+
+     $('#from, #to').change(function () {
+                dataTable.draw();
+                    });
+
+	     //delete
+       $(document).on('click','.destroy',function(){
+	      var conf = confirm('This record will be deleted. Continue?');
+	      var id = $(this).attr('instAwardID');
+=======
  $('#mindate, #maxdate').change(function () {
                 dataTable.draw();
         
@@ -378,6 +524,7 @@ $.fn.dataTable.ext.search.push(
        $(document).on('click','.destroy',function(){
         var conf = confirm('This record will be deleted. Continue?');
         var id = $(this).attr('instAwardID');
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 
       if(conf){
         $.ajax({

@@ -6,7 +6,10 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Partner\Entities\PartnerClassification;
+<<<<<<< HEAD
+=======
 use Modules\Partner\Entities\PartnerRenewal;
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 use Modules\Partner\Entities\Partner;
 use Modules\Accreditation\Entities\AcadPrgrm;
 use Modules\Accreditation\Entities\School;
@@ -34,6 +37,20 @@ class PartnerController extends Controller
         return view('partner::index', compact('school','program'));
     }
 
+<<<<<<< HEAD
+    /**
+     * Show the form for creating a new resource.
+     * @return Renderable
+     */
+    public function partner_dtb(){
+      
+          $partner = Partner::all();
+
+         return DataTables::of($partner)
+            ->addColumn('actions', function($partner) {
+                    return '
+                        <a class="btn btn-secondary btn-sm" href="'.route("partnerEdit", $partner->id).'"><i class="far fa-edit"></i>
+=======
     public function partner_dtb(){
       
           $partner = Partner::orderBy('id','desc')->get();
@@ -49,12 +66,16 @@ class PartnerController extends Controller
             ->addColumn('actions', function($partner) {
                     return '
                         <a class="btn btn-secondary btn-sm" href="'.route("partnerDetail", $partner->id).'"><i class="far fa-eye"></i>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                         </a>
                         <button class="btn btn-danger btn-sm destroy" partnerid="'.$partner->id.'"><i class="far fa-trash-alt"></i>
                         </button>
                         ';
             })
             
+<<<<<<< HEAD
+            ->rawColumns(['actions'])
+=======
             ->rawColumns(['actions','supporting_doc'])
             ->make(true);
     }
@@ -87,6 +108,7 @@ class PartnerController extends Controller
         })
             
             ->rawColumns(['from','to','supporting_doc'])
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
             ->make(true);
     }
     public function addPartner(Request $request){
@@ -113,6 +135,10 @@ class PartnerController extends Controller
          $partner->supporting_doc = $supporting_doc_fileName;
          $partner->save();
 
+<<<<<<< HEAD
+        $id = $partner->id;
+
+=======
          $partner_id = $partner->id;
          // save also to renewal_table
          $renewal = new PartnerRenewal;
@@ -125,6 +151,7 @@ class PartnerController extends Controller
          $rid = $renewal->id;
 
         // save also to partner_classification Table
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
         if($request->classification == "School"){
            $school = $request->schoolc;
 
@@ -133,9 +160,14 @@ class PartnerController extends Controller
             {
                 $partnerC = new PartnerClassification;
                  $var1 = $school[$i];
+<<<<<<< HEAD
+                 $partnerC->partner_id = $id;
+                 $partnerC->school_id = $var1;
+=======
                  $partnerC->partner_id = $partner_id;
                  $partnerC->school_id = $var1;
                  $partnerC->renewal_id = $rid;
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                  $partnerC->save();
             }
         }
@@ -147,15 +179,23 @@ class PartnerController extends Controller
             {
                 $programC = new PartnerClassification;
                  $var1 = $program[$i];
+<<<<<<< HEAD
+                 $programC->partner_id = $id;
+                 $programC->program_id = $var1;
+=======
                  $programC->partner_id = $partner_id;
                  $programC->program_id = $var1;
                  $programC->renewal_id = $rid;
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                  $programC->save();
             }
          }
 
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
          return back()->with('success_modal', 5);
      }
 
@@ -167,6 +207,9 @@ class PartnerController extends Controller
 
         return view('partner::partner-edit', compact('partner','partnerC','school','program'));
     }
+<<<<<<< HEAD
+
+=======
     public function renewPartner(Request $request){
         $request->validate([
              'supporting_doc' => 'nullable|mimes:jpeg,png,pdf|max:2048',
@@ -242,6 +285,7 @@ class PartnerController extends Controller
 
         return redirect()->route('partnerDetail',$id)->with('success', 'Record Updated');
     }
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
       public function deletePartner(Request $request)
     {
         $partner = Partner::find($request->id);
