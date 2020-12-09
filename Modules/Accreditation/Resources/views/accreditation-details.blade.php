@@ -64,7 +64,7 @@
    <div class=" row mt-4">
     <div class="col-sm-12">
       <a class="btn btn-info mr-2" href="{{ route('accredEdit', $program->id)}}">Edit</a>
-      <a class="btn btn-danger" href="{{ route('accredited_programs', $program->AcadPrgrm->school_id) }}"> Back</a>
+      <a class="btn btn-danger" href="{{ route('adminAcred_prog') }}"> Back</a>
   	</div>
    </div>
   <hr>

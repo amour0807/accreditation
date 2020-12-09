@@ -11,6 +11,10 @@ class PartnerClassification extends Model
 
     public function partner()
     {
+<<<<<<< HEAD
         return $this->belongsToMany('Modules\Partner\Entities\Partner','id');
+=======
+        return $this->belongsTo('Modules\Partner\Entities\Partner');
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
     }
 }

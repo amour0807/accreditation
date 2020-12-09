@@ -21,6 +21,15 @@
             <strong>{{ $message }}</strong>
     </div>
   @endif
+  @if(Session::has('message'))
+    @foreach($expiring as $exp)
+        <div class="alert alert-dismissible alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <div>The program <strong>{{$exp->acad_prog}}'s</strong> from the <strong>{{$exp->school_name}}'s</strong> accreditation will expire in less than a year</div>
+          
+        </div>
+    @endforeach
+@endif
         <div class="row text-center mt-4 py-3" >
         
         <div class="col-md-2 ">
@@ -69,6 +78,30 @@
             </div>
         </div>
  
+    </div>
+    <hr>
+    <div class="row text-center mt-4 py-3" >
+        <div class="col-md-2  ">
+            <div class="card hvr-shadow">
+                <h1 class="card-title">{{$topnotcher}}</h1>
+                <a href="#" class="bg-ub-grey stretched-link">Topnotchers</a>
+
+            </div>
+        </div>
+        <div class="col-md-2  ">
+            <div class="card hvr-shadow">
+                <h1 class="card-title">{{$activeP}}</h1>
+                <a href="#" class="bg-ub-grey stretched-link">Active Partners</a>
+
+            </div>
+        </div>
+        <div class="col-md-2  ">
+            <div class="card hvr-shadow">
+                <h1 class="card-title">{{$inactiveP}}</h1>
+                <a href="#" class="bg-ub-grey stretched-link">Inactive Partners</a>
+
+            </div>
+        </div>
     </div>
     <br>
 @endsection

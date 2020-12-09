@@ -19,14 +19,22 @@
 
 </script>
 @endif
+<<<<<<< HEAD
   <form class="mb-4" action="#" method="POST">
+=======
+  <form class="mb-4" action="" method="POST">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
     @csrf 
      <div class="row">
       <div class="col-md-8">
       </div>
      <div class="col-md-4">
       <div class="float-right">
+<<<<<<< HEAD
         <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
+=======
+        <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
           <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
       </div><br><br>
       </div>
@@ -42,12 +50,20 @@
    <div class="form-group row">
      <div class="row col">
     <div class="col-md-6 ">
+<<<<<<< HEAD
       <label >Name of Partners</label>
+=======
+      <label >Scope</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
       <div id="filters1">   
       </div>
     </div>
     <div class="col-md-6 ">
+<<<<<<< HEAD
       <label >Scope</label>
+=======
+      <label >Classification</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
       <div id="filters2">   
       </div>
     </div>
@@ -76,6 +92,10 @@
                 <th>From</th>
 	            	<th>To</th>
                 <th>Status</th>
+<<<<<<< HEAD
+=======
+                <th>Supporting<br>Document</th>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                 <th>Action</th>
 	            </tr>
 		    </thead>   
@@ -132,8 +152,13 @@
                 <div class="row">
                 @foreach($school as $sc)
                 <div class="col-md-<?php echo $bootstrapColWidth; ?>">
+<<<<<<< HEAD
                       <input type="checkbox" id="{{$sc->id}}" name="schoolc[]" value="{{$sc->id}}">
                 <label for="{{$sc->id}}"> {{$sc->school_code}}</label>
+=======
+                      <input type="checkbox"  name="schoolc[]" value="{{$sc->id}}">
+                <label>{{$sc->school_code}}</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                 </div>
                   <?php $rowCount++; ?>
                 @if($rowCount % $numOfCols == 0) 
@@ -147,8 +172,13 @@
                 <div class="row">
                 @foreach($program as $pr)
                 <div class="col-md-<?php echo $bootstrapColWidth; ?>">
+<<<<<<< HEAD
                      <input type="checkbox" id="{{$pr->id}}" name="programc[]" value="{{$pr->id}}">
                     <label for="{{$pr->id}}"> {{$pr->acad_prog_code}}</label>
+=======
+                     <input type="checkbox"  name="programc[]" value="{{$pr->id}}">
+                    <label > {{$pr->acad_prog_code}}</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                 </div>
                   <?php $rowCount++; ?>
                 @if($rowCount % $numOfCols == 0) 
@@ -233,7 +263,11 @@
     function( settings, data, dataIndex ) {
         var from = Date.parse($('#from').val());
         var to = Date.parse($('#to').val());
+<<<<<<< HEAD
         var age = Date.parse( data[2] ) || 0; 
+=======
+        var age = Date.parse( data[5] ) || 0; 
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
         if ( ( isNaN( from ) && isNaN( to ) ) ||
              ( isNaN( from ) && age <= to ) ||
              ( from <= age   && isNaN( to ) ) ||
@@ -264,7 +298,11 @@
 
  var dataTable = $('#partner_table').DataTable( {
           "processing" : true,
+<<<<<<< HEAD
           "serverSide" : true,
+=======
+          "bSort" : false,
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
           "ajax": "{{route('partner_dtb')}}",
 
            dom: 'Blfrtip',
@@ -286,6 +324,10 @@
               { "data": "nature_partnership" },
               { "data": "from" },
               { "data": "to" },
+<<<<<<< HEAD
+=======
+              { "data": "status" },
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
               { "data": "supporting_doc" },
               { "data": "actions" },
           ],
@@ -297,7 +339,11 @@
                 $('.buttons-excel').click(); 
              })
 
+<<<<<<< HEAD
               this.api().columns([0]).every( function () {
+=======
+              this.api().columns([1,2]).every( function () {
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                   var column = this;
                   count++;
                   $('<div id="lalagyan'+count+'"></div>')

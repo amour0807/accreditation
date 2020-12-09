@@ -27,7 +27,7 @@
             
         </div>
     </div>
-    <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
+    <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
       <button class="btn btn-outline-danger btn-sm edit " type="submit"  target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
   </div><br><br>
       </div>
@@ -189,6 +189,7 @@
 );
 
  var dataTable= $('#awardtable').DataTable( {
+          "processing" : true,
           "ajax": "{{route('award_dtb', 1)}}",
           responsive: false,
           "scrollX": false,
