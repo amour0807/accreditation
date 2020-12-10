@@ -17,4 +17,8 @@ class Partner extends Model
     {
         return $this->hasMany('Modules\Partner\Entities\PartnerRenew');
     }
+    public function partner_nature()
+    {
+        return $this->hasMany('Modules\Partner\Entities\PartnerNature');
+    }
 }

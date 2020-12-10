@@ -10,14 +10,8 @@ use Modules\Accreditation\Entities\School;
 use Modules\BoardExam\Entities\Topnotcher;
 use Yajra\Datatables\Datatables;
 use DB;
-use Illuminate\Support\Facades\Storage;
-
-use Illuminate\Support\Facades\File;
 
 use PDF;
-use PdfReport;
-use \Carbon\Carbon;
-use Session;
 
 
 class BoardExamController extends Controller
@@ -63,19 +57,19 @@ class BoardExamController extends Controller
          $board->total_failed = $request->tfailed;
          $board->total_cond = $request->tcon;
          $board->type = $request->exam_type;
+         $board->national_percent = $request->npasser;
          $board->supporting_doc = $supporting_doc_fileName;
          $board->save();
 
          $id = $board->id;
-         $topnotcher = new Topnotcher;
-         if($topnotcher->name != ""){
+         
            $top = $request->top;
            $rank = $request->rank;
 
             $N = count($top);
             for($i=0; $i < $N; $i++)
             {
-                
+                $topnotcher = new Topnotcher;
                  $var1 = $top[$i];
                  $var2 = $rank[$i];
                  $topnotcher->boardexam_id = $id;
@@ -83,18 +77,9 @@ class BoardExamController extends Controller
                  $topnotcher->rank = $var2;
                  $topnotcher->save();
             }
-        }
          return back()->with('success_modal', 5);
      }
 
-     public function partnerEdit($id){
-        $partner = Partner::where('id', $id)->get();
-        $partnerC = PartnerClassification::all();
-        $school = School::all();
-        $program = AcadPrgrm::all();
-
-        return view('partner::partner-edit', compact('partner','partnerC','school','program'));
-    }
     public function boardexam_dtb(){
       
           $board = BoardExam::orderBy('id','desc')->get();
@@ -132,9 +117,8 @@ class BoardExamController extends Controller
             ->rawColumns(['actions','supporting_doc','exam_date'])
             ->make(true);
     }
-    public function boardHistory_dtb(){
-      
-          $board = BoardExam::where('licensure_exam','Architects')->get();
+    public function boardHistory_dtb($exam){
+          $board = BoardExam::where('licensure_exam',$exam)->orderBy('id','desc')->get();
           $topnotcher = Topnotcher::all();
 
          return DataTables::of($board)
@@ -174,45 +158,18 @@ class BoardExamController extends Controller
                     return round($percent, 2).'%';
                
             })
-            ->addColumn('national_percent', function($board) {
-                
-                  $sum = 0;
-                    return round($sum, 2).'%';
-               
-            })
-            ->rawColumns(['exam_date','topnotcher','ftaker_total','total_total','national_percent'])
+            ->rawColumns(['exam_date','topnotcher','ftaker_total','total_total','overall_percentage'])
             ->make(true);
     }
-    public function boardfilterReport(Request $request){
-        $from = $request->from; //min
-        $to = $request->to; //max
-        $type = $request->select1;
 
-        $queryBuilder = DB::table('board_exam');
-            
-            if($from && $to){
-                $queryBuilder = $queryBuilder->whereBetween('exam_date', [$from, $to]);
-            }
-
-            if($type){
-                $queryBuilder =$queryBuilder->where('boar_dexam.type', $type);
-            }
-
-            $queryBuilder = $queryBuilder->get();
-
-      $pdf = PDF::loadView('award::reports.instawards-report', compact('queryBuilder', 'instAward', 'award', 'department', 'from', 'to') );
-        $pdf->setPaper('legal', 'landscape');
-        $pdf->save(storage_path().'_filename.pdf');
-
-        return $pdf->stream('project_'.time().'.pdf');
-    }
     public function bHistoryfilterReport(Request $request){
         $department = School::where('id', auth()->user()->school_id)->first();
         $exam = $request->licensure; //min
         $from = $request->mindate; //min
         $to = $request->maxdate; //max
 
-        $queryBuilder = DB::table('board_exam');
+        $queryBuilder = DB::table('board_exam')
+        ->where('licensure_exam',$exam);
             
             if($from && $to){
                 $queryBuilder = $queryBuilder->whereBetween('exam_date', [$from, $to]);
@@ -220,7 +177,33 @@ class BoardExamController extends Controller
             $queryBuilder = $queryBuilder->get();
 
       $pdf = PDF::loadView('boardexam::reports.history-report', compact('queryBuilder','from', 'to','department','exam') );
-        $pdf->setPaper('legal', 'landscape');
+        $pdf->setPaper('legal', 'portrait');
+        $pdf->save(storage_path().'_filename.pdf');
+
+        return $pdf->stream('project_'.time().'.pdf');
+    }
+    public function boardfilterReport(Request $request){
+        $department = School::where('id', auth()->user()->school_id)->first();
+        $type = $request->select1;
+        $from = $request->mindate; //min
+        $to = $request->maxdate; //max
+
+        $topnotcherQuery = Topnotcher::all();
+        $queryBuilder = DB::table('board_exam');
+            
+            if($type){
+                $queryBuilder = $queryBuilder->where('licensure_exam', $type);
+            }
+            if($from && $to){
+                $queryBuilder = $queryBuilder->whereBetween('exam_date', [$from, $to]);
+            }
+            
+           
+       
+            $queryBuilder = $queryBuilder->get();
+
+      $pdf = PDF::loadView('boardexam::reports.boardList-report', compact('queryBuilder','from', 'to','department','type','topnotcherQuery') );
+        $pdf->setPaper('legal', 'portrait');
         $pdf->save(storage_path().'_filename.pdf');
 
         return $pdf->stream('project_'.time().'.pdf');
@@ -230,7 +213,8 @@ class BoardExamController extends Controller
      public function topnotchers(){
         return view('boardexam::topnotcher');
     }
-     public function topnotcher_dtb(){     $topnotcher = Topnotcher::join('board_exam','board_exam.id','boardexam_id')->get();
+     public function topnotcher_dtb(){     
+         $topnotcher = Topnotcher::join('board_exam','board_exam.id','boardexam_id')->orderBy('board_exam.id','desc')->get();
           
          return DataTables::of($topnotcher)
          ->addColumn('exam_date', function($programs) {
@@ -248,9 +232,12 @@ class BoardExamController extends Controller
         $rank = $request->select2;
         $from = $request->mindate; //min
         $to = $request->maxdate; //max
-
+        $topsummary = $request->summary;
+        
+        
         $queryBuilder = DB::table('topnotchers')->join('board_exam','board_exam.id','boardexam_id');
-            
+        
+        
             if($from && $to){
                 $queryBuilder = $queryBuilder->whereBetween('exam_date', [$from, $to]);
             }
@@ -260,10 +247,22 @@ class BoardExamController extends Controller
             if($rank){
                 $queryBuilder = $queryBuilder->where('rank', $rank);
             }
+            
+            if($topsummary != ""){
+            $C = count($topsummary);
+            for($i=0; $i < $C; $i++)
+             {
+                 $var1 = $topsummary[$i];
+                 if($var1 == 'BT'){
+                    $queryBuilder = $queryBuilder->where('rank', $rank);
+                   }
+           }
+        }
+            $licensure_exam = $queryBuilder->pluck('licensure_exam')->unique();
             $queryBuilder = $queryBuilder->get();
 
-      $pdf = PDF::loadView('boardexam::reports.topnotcher-report', compact('queryBuilder','from', 'to','department','exam','rank') );
-        $pdf->setPaper('legal', 'landscape');
+      $pdf = PDF::loadView('boardexam::reports.topnotcher-report', compact('queryBuilder','from', 'to','department','exam','rank','licensure_exam') );
+        $pdf->setPaper('legal', 'portrait');
         $pdf->save(storage_path().'_filename.pdf');
 
         return $pdf->stream('project_'.time().'.pdf');

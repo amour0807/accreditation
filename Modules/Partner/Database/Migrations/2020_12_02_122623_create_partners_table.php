@@ -18,11 +18,10 @@ class CreatePartnersTable extends Migration
             $table->string('company_name');
             $table->string('scope');
             $table->string('classification');
-            $table->string('nature_partnership')->nullable();
             $table->string('from');
             $table->string('to')->nullable();
             $table->string('status');
-            $table->string('supporting_doc')->nullable();
+            $table->string('supporting_doc');
             $table->timestamps();
         });
     }

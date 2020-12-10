@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::group(['prefix' => 'boardexam', 'middleware' => 'is_admin'], function() {
     Route::get('/boardExam', 'BoardExamController@index')->name('boardExam');
     Route::post('/addBoardExam', 'BoardExamController@addBoardExam')->name('addBoardExam');
@@ -18,7 +17,7 @@ Route::group(['prefix' => 'boardexam', 'middleware' => 'is_admin'], function() {
  	Route::get('/boardDetail/{id}', 'BoardExamController@boardDetail')->name('boardDetail');
  	Route::post('/boardfilterReport', 'BoardExamController@boardfilterReport')->name('boardfilterReport');
  	Route::get('/boardHistory/{id}', 'BoardExamController@boardHistory')->name('boardHistory');
- 	Route::get('/boardHistory_dtb', 'BoardExamController@boardHistory_dtb')->name('boardHistory_dtb');
+ 	Route::get('/boardHistory_dtb/{id}', 'BoardExamController@boardHistory_dtb')->name('boardHistory_dtb');
  	Route::post('/bHistoryfilterReport', 'BoardExamController@bHistoryfilterReport')->name('bHistoryfilterReport');
 
  	//topnotchers

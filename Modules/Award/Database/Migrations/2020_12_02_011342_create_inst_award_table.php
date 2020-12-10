@@ -16,6 +16,7 @@ class CreateInstAwardTable extends Migration
         Schema::create('inst_award', function (Blueprint $table) {
             $table->id();
             $table->string('award');
+            $table->string('scope');
             $table->date('from')->nullable();;
             $table->date('to')->nullable();;
             $table->string('venue')->nullable();;

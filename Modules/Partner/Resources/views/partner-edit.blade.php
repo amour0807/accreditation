@@ -96,7 +96,7 @@
             </div>
             <div class="col-md-6">
                 <label><span class="text-danger"></span>Nature of Partner</label>
-                <input type="text" class="form-control" name="nature"  value="{{$pr->nature_partner}}" >
+                <!-- <input type="text" class="form-control" name="nature"  value="{{$pr->nature_partner}}" > -->
             </div>
           </div>
           <div class="row form-group">

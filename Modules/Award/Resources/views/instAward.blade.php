@@ -46,6 +46,11 @@
       <div id="filters1">   
       </div>
     </div>
+    <div class="col-md-4 ">
+      <label >Scope</label>
+      <div id="filters2">   
+      </div>
+    </div>
     </div>
   <div class="row col">
     <div class="col-md-6 ">
@@ -64,7 +69,8 @@
     <table id="instawardtable" class="display compact cell-border" style="table-layout: fixed">
 		    <thead>
 	            <tr>
-	            	<th>Award Title</th>
+                <th>Award Title</th>
+                <th>Scope</th>
 	            	<th>Valid From</th>
                 <th>Valid To</th>
 	            	<th>Venue</th>
@@ -93,6 +99,18 @@
               <label><span class="text-danger">*</span>Title of Award</label>
 		        	<input type="text" class="form-control" name="award" placeholder="" required>
           </div>
+          <div class= "row form-group"> 
+		        <label><span class="text-danger">*</span>Scope:</label>
+					<select name="scope" class="form-control small" required>
+					  <option disabled selected value> -- --  </option>
+					  <option value="School">School</option>
+					  <option value="Institutional">Institutional</option>
+					  <option value="Local">Local</option>
+					  <option value="Regional">Regional</option>
+					  <option value="National">National</option>
+					  <option value="International">International</option>
+					</select>
+					</div>
           <div class="row form-group">
             <div class="col-md-6">
                 <label><span class="text-danger"></span>From</label>
@@ -162,7 +180,7 @@
     function( settings, data, dataIndex ) {
         var from = Date.parse($('#from').val());
         var to = Date.parse($('#to').val());
-        var age = Date.parse( data[2] ) || 0; 
+        var age = Date.parse( data[3] ) || 0; 
         if ( ( isNaN( from ) && isNaN( to ) ) ||
              ( isNaN( from ) && age <= to ) ||
              ( from <= age   && isNaN( to ) ) ||
@@ -194,6 +212,7 @@
           
           "columns": [
               { "data": "award" },
+              { "data": "scope" },
               { "data": "from" },
               { "data": "to" },
               { "data": "venue" },
@@ -209,7 +228,7 @@
                 $('.buttons-excel').click(); 
              })
 
-              this.api().columns([0]).every( function () {
+              this.api().columns([0,1]).every( function () {
                   var column = this;
                   count++;
                   $('<div id="lalagyan'+count+'"></div>')

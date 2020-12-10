@@ -80,6 +80,7 @@
             <th>UB Overall<br>Passsing<br>Percentage</th>
             <th>National<br>Passsing<br>Percentage</th>
             <th>Topnotchers</th>
+            <th>School Rank</th>
           </tr>
           <tr>
             <th></th>
@@ -92,6 +93,7 @@
             <th>Failed</th>
             <th>Con</th>
             <th>Total</th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -111,7 +113,8 @@
    var dataTable = $('#history_table').DataTable( {
           "scrollX" : true,
           "processing" : true,
-          "ajax": "{{route('boardHistory_dtb')}}",
+          "bSort" : false,
+          "ajax": "{{route('boardHistory_dtb', $exam)}}",
 
            dom: 'Blfrtip',
           lengthMenu: [
@@ -134,8 +137,13 @@
               { "data": "total_cond" },
               { "data": "total_total" },
               { "data": "overall_percentage" },
-              { "data": "national_percent" },
+              { "data":  null , 
+           "render" : function ( data, type, full ) { 
+              return full['national_percent']+'%';}
+              
+              },
               { "data": "topnotcher" },
+              { "data": "school_rank" },
           ],
 
           initComplete: function () {

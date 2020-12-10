@@ -75,6 +75,21 @@
               <label><span class="text-danger">*</span>Title of Award</label>
               <input type="text" class="form-control" name="award" value="{{$ia->award}}" required>
           </div>
+          <div class=" row form-group">
+        <label  class="col-sm-3 col-form-label">Scope:</label>
+        <div  class="col-sm-7">
+           <select id="scope" name="scope" class="form-control small" required >
+            
+            <option value="School" <?=$ia->scope == 'School' ? ' selected="selected"' : '';?>>School</option>
+            <option value="Institutional" <?=$ia->scope == 'Institutional' ? ' selected="selected"' : '';?>>Institutional</option>
+            <option value="Local" <?=$ia->scope == 'Local' ? ' selected="selected"' : '';?>>Local</option>
+            <option value="Regional" <?=$ia->scope == 'Regional' ? ' selected="selected"' : '';?>>Regional</option>
+            <option value="National" <?=$ia->scope == 'National' ? ' selected="selected"' : '';?>>National</option>
+            <option value="International" <?=$ia->scope == 'International' ? ' selected="selected"' : '';?>>International</option>
+           
+          </select>
+        </div>
+    </div>
           <div class="row form-group">
             <div class="col-md-6">
                 <label><span class="text-danger"></span>From</label>

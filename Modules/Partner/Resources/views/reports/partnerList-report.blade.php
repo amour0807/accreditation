@@ -91,7 +91,7 @@
 <br>
 <div class="row">	
 <div>
-	<center><h3>{{$exam}}</h3></center>
+	<center><h3>Lists of University Partners</h3></center>
 </div>
 <div>
 	<?php 
@@ -99,30 +99,14 @@
 			echo '<span class="filters" ><strong>From:</strong> '.date('M, d Y', strtotime($from)).'<strong>&nbsp;&nbsp;&nbsp;To:&nbsp;&nbsp;</strong> '.date('M, d Y', strtotime($to)).'</span><br>';
 	 ?>
 	</div>
-	 <table id="history_table"  class="display compact cell-border" style="text-align: center;">
+	 <table id="partnerList_table"  class="display compact cell-border" style="text-align: center;">
         <thead>
           <tr>
-            <th>Date Taken</th>
-            <th colspan="4"><center>First Takers</center></th>
-            <th>UB Passsing<br>Percentage<br>(First Takers)</th>
-            <th colspan="4"><center>Total No. of Takers</center></th>
-            <th>UB Overall<br>Passsing<br>Percentage</th>
-            <th>National<br>Passsing<br>Percentage</th>
-          </tr>
-          <tr>
-            <th></th>
-            <th>Passed</th>
-            <th>Failed</th>
-            <th>Con</th>
-            <th>Total</th>
-            <th></th>
-            <th>Passed</th>
-            <th>Failed</th>
-            <th>Con</th>
-            <th>Total</th>
-            <th></th>
-            <th></th>
-          </tr>
+            <th>Name of Partner</th>
+            <th>Scope</th>
+            <th>Classification</th>
+            <th>Validity</th>
+           </tr>
         </thead>
          <tbody>
 
@@ -131,47 +115,20 @@
 			foreach ($queryBuilder as $q) {
 				$count++;
 				echo '<tr>';
-					if($q->exam_date != ""){
-						$exam = date('M. d, Y', strtotime($q->exam_date));
-					  }else{
-					  	$exam = "";
-					  }
 				echo '
-					  	<td>'.$exam.'</td>';
+					  	<td>'.$q->company_name.'</td>';
 
 				echo '
-					  	<td>'.$q->ftaker_passed.'</td>';
+					  	<td>'.$q->scope.'</td>';
 					  
-				echo '
-					  	<td>'.$q->ftaker_failed.'</td>';
-					  
-				echo '
-					  	<td>'.$q->ftaker_cond.'</td>';
-				$sum1 = $q->ftaker_passed+$q->ftaker_failed+$q->ftaker_cond;
-				$percent1 = ( $q->ftaker_passed / $sum1)*100;
-				echo '
-					  	<td>'.$sum1.'</td>';
-                  
-				echo '
-					 	<td>'.round($percent1, 2).'%'.'</td>';
+				 echo '<td>'.$q->classification.
+				
+				'</td>';
+				 $from = date('M. d, Y', strtotime($q->from));
+				 $to = date('M. d, Y', strtotime($q->to));
 
+				 echo '<td>'.$from.' - '.$to.'</td>';
 				echo '
-					  	<td>'.$q->total_passed.'</td>';
-					  
-				echo '
-					  	<td>'.$q->total_failed.'</td>';
-					  
-				echo '
-					  	<td>'.$q->total_cond.'</td>';
-				$sum2 = $q->total_passed+$q->total_failed+$q->total_cond;
-				$percent2 = ($q->total_passed/$sum2)*100;
-				echo '
-					  	<td>'.$sum2.'</td>';
-				echo '
-					  	<td>'.round($percent2, 2).'%'.'</td>';
-					  
-				echo '
-					  	<td>'.$q->national_percent.'%'.'</td>
 					  </tr>';
 			}
 		 ?>

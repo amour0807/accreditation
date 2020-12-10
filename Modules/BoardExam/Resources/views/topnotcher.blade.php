@@ -32,6 +32,10 @@
     @csrf 
      <div class="row">
       <div class="col-md-8">
+      <input type="checkbox"  name="summary[]" value="SBT">
+        <label >Summary of Board Topnotchers</label>
+       <input type="checkbox"  name="summary[]" value="STS">
+        <label >Summary of Top Schools</label>
       </div>
      <div class="col-md-4">
       <div class="float-right">
@@ -42,7 +46,7 @@
     </div>
  <div class="row">
       <div class="col-md-6">
-         <strong>Sort by:</strong>
+         <strong>Sort by Board of Topnotchers:</strong>
       </div>
       <div class="col-md-6">
         <strong>Examination:</strong>
@@ -72,7 +76,6 @@
   </div>
 </form>
 <hr>
-
       <table id="topnotcher_table"  class="display compact cell-border" style="width:100%">
         <thead class="thead">
               <tr>
@@ -83,8 +86,6 @@
               </tr>
         </thead>   
     </table>
-
-
   <script type="text/javascript">
  $('.alert').hide();
    

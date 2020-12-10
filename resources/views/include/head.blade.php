@@ -10,7 +10,7 @@
         
         <link rel="stylesheet" href="{{ asset('bootstrap-4.5.3-dist/css/bootstrap.min.css') }}" >
         <link rel="stylesheet" type="text/css" href="{{asset('css/jquery.dataTables.min.css')}}">
-        <link href="{{asset('css/general.css')}}" rel="stylesheet">
+        <link href="{{asset('css/style.css')}}" rel="stylesheet">
 
         <!-- font awesom -->
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
@@ -209,6 +209,9 @@
           legend {
               padding: 2px;
               font-size: 13px;    
+          }
+          input, select{
+            background-color: none;
           }
 
           /* Header */

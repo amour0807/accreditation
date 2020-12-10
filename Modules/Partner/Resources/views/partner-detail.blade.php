@@ -8,9 +8,8 @@
        <h2><strong>Company Partners<span></strong></h2>
       </div>
       <div class="col-md-3">
-        <button type="button" onclick="Edit();" id="btnEdit" class="btn btn-primary float-right" >Edit</button>
-        <button type="button" onclick="Edit();" id="btnCancel" class="btn btn-warning float-right" hidden>Cancel</button>
-        <button type="button" onclick="Renew();" id="btnRenew" class="btn btn-info float-right">Renew</button>
+        <input type="button" onclick="Edit();" id="btnEdit" class="btn btn-primary float-right" value="Edit"></input>
+        <input type="button" onclick="Renew();" id="btnRenew" class="btn btn-info float-right" value="Renew"></input>
       </div>
       <div class="col-md-4">
       </div>
@@ -47,21 +46,16 @@
         $extension = end($explodeImage);
         
         if(in_array($extension, $imageExtensions)){  ?>
-            <img src="{{asset('moa/'.$pr->supporting_doc)}}" style="height:150px;width:150px;">
+            <img src="{{asset('moa/'.$pr->supporting_doc)}}" style="height:220px;width:220px;border: 1px solid gray;">
         <?php }else { ?>
-          <img src="{{asset('images/pdf.png')}}" style="height:150px;width:150px;">
+          <img src="{{asset('images/pdf.png')}}" style="height:220px;width:220px;border: 1px solid gray;">
          <?php }?>
      </a>
-       <a class="btn btn-danger deleteDocu" fileId="{{$pr->id}}" style="color: white">Remove Document</a> <br>
       @endif
       </div>
-      <div class="col-md-8"><br><br>
+      <div class="col-md-8" style="padding: 20px;"><br>
         <h5>{{$pr->company_name}}<br><small>{{$pr->nature_partnership}}</small></h5>
-      </div>
-    </div>
-    <br>
-    <div class="row">
-       <div class=" col-md-12">
+         <div class=" col-md-12">
         <label  class="col-sm-3 col-form-label">Scope:</label>
         <label  class="col-sm-7 col-form-label">{{$pr->scope}}</label>
        </div>
@@ -75,6 +69,10 @@
         <label  class="col-sm-3 col-form-label">Status:</label>
         <label  class="col-sm-7 col-form-label">{{$pr->status}}</label>
        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
        <div class="row col-md-12">
         <div  class="col-sm-3 col-form-label"><label>Classification:</label></div>
         <div  class="col-sm-8 col-form-label">{{$pr->classification}}<br>
@@ -114,23 +112,51 @@
           @endif
         </div>
        </div>
+       <div class="row col-md-12">
+        <div  class="col-sm-3 col-form-label"><label>Nature of Partnership:</label></div>
+        <div  class="col-sm-8 col-form-label">
+                <div class="row col-md-12">
+                @foreach($pr->partner_nature as $pn)
+                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
+                      <ul>
+                        <li>{{$pn->nature}}</li>
+                      </ul>
+                </div>
+                  <?php $rowCount++; ?>
+                 
+                @if($rowCount % $numOfCols == 0) 
+                </div><div class="row col-md-12">
+                @endif
+                @endforeach
+              </div>
+        </div>
       </div>
+    </div>
   </div>
 </div> <!-- closing view -->
-<div id="forEdit">
-  <form action="{{route('updatePartner')}}" method="post" enctype="multipart/form-data" autocomplete="off" >
+<div id="forEdit"><!--{{route('updatePartner')}}-->
+  <form action="" method="post" enctype="multipart/form-data" autocomplete="off" >
                                             {{ csrf_field() }}
   <input type="text"  name="partnerID" value="{{$pr->id}}" hidden>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-md-4">
-          @if($pr->supporting_doc == "")
-        <div > No Supporting Document</div>
-        @else
-        <a href="{{asset('moa/'.$pr->supporting_doc)}}"> 
-        <img src="{{asset('moa/'.$pr->supporting_doc)}}" style="height:150px;width:150px;"></a>
-         <a class="btn btn-danger deleteDocu" fileId="{{$pr->id}}" style="color: white">Remove Document</a> <br>
-        @endif
+      <div class="col-md-4">
+        @if($pr->supporting_doc == "")
+      <div > No Supporting Document</div>
+      @else
+      <a href="{{asset('moa/'.$pr->supporting_doc)}}" target="_blank;"> 
+      <?php  $imageExtensions = ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief','jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd'];
+
+        $explodeImage = explode('.', 'moa/'.$pr->supporting_doc);
+        $extension = end($explodeImage);
+        
+        if(in_array($extension, $imageExtensions)){  ?>
+            <img src="{{asset('moa/'.$pr->supporting_doc)}}" style="height:220px;width:220px; border: 1px solid gray;">
+        <?php }else { ?>
+          <img src="{{asset('images/pdf.png')}}" style="height:220px;width:220px;border: 1px solid gray;">
+         <?php }?>
+     </a>
+      @endif
         <div class="form-group">
               <i class="fas fa-upload">Update Document</i>
               <input type="text"  id="award_cert" name="award_cert" class="form-control" value="{{$pr->supporting_doc}}" hidden>
@@ -140,12 +166,10 @@
              </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" style="padding: 20px;">
            <div class="row form-group">
                   <label><span class="text-danger">*</span>Name of Partner</label>
-                  <input type="text" class="form-control" name="partner" value="{{$pr->company_name}}" required><br>
-                <label><span class="text-danger"></span>Nature of Partner</label>
-                <input type="text" class="form-control" name="nature"  value="{{$pr->nature_partnership}}" >
+                  <input type="text" class="form-control" name="partner" value="{{$pr->company_name}}" required>
             </div>
           <div class="row col-md-12">
               <div  class="col-md-3">
@@ -177,21 +201,9 @@
                 </div>
             </div>
          </div>
-         <div class="row col-md-12">
-          <div  class="col-md-3">
-            <label><span class="text-danger"></span>Status:</label>
-          </div>
-            <div class="col-md-9">
-                 <select name="status" class="form-control small" required>
-                  <option value="Active" <?=$pr->scope == 'Active' ? ' selected="selected"' : '';?>>Active</option>
-                  <option value="Inactive" <?=$pr->scope == 'Inactive' ? ' selected="selected"' : '';?>>Inactive</option>
-                </select>
-            </div>
-         </div>
         </div>
       </div>
       <div class="row">
-         
          <div class="row col-md-12">
           <div  class="col-md-3">
             <label><span class="text-danger"></span>Classification:</label>
@@ -248,7 +260,58 @@
           </fieldset>
         </div>
       </div>
-        </div>
+      </div>
+      <div class="row form-group">
+      <?php 
+          $true = '';   //Define first blank the variable
+          foreach($pr->partner_nature as $pn) { 
+            $array[] = $pn->nature;
+          } 
+          ?>
+            <legend>Nature of Partnership</legend>
+          <div class="row col-md-12">
+                <div class="col-md-4">
+                <input type="checkbox"  name="nature[]" value="Faculty Dev't" <?php $array == "Faculty Dev't" ? ' checked="checked"' : '';?>>
+                    <label >Faculty Dev't</label>
+              </div>
+              <div class="col-md-4">
+                <input type="checkbox"  name="nature[]" value="Staff Dev't">
+                    <label >Staff Dev't</label>
+              </div>
+              <div class="col-md-4">
+                <input type="checkbox"  name="nature[]" value="Student Dev't">
+                    <label >Student Dev't</label>
+              </div>
+          </div>
+          <div class="row col-md-12">
+              <div class="col-md-4">
+                <input type="checkbox"  name="nature[]" value="Research">
+                    <label >Research</label>
+              </div>
+              <div class="col-md-4">
+                <input type="checkbox"  name="nature[]" value="ECOS">
+                    <label >ECOS</label>
+              </div>
+              <div class="col-md-4">
+                <input type="checkbox" id="others" onclick="otherNature()"  name="nature[]" value="Others">
+                    <label >Others</label>
+              </div>
+          </div>
+      </div>
+          <div class="row form-group" id="naturegrp" style="display: none;">
+            <div class="row col-md-12">
+              <div class="col-md-8">
+                <label><span class="text-danger"></span>Others</label>
+                <input type="hidden" class="form-control" value="1" id="total_nature">
+                <input type="text" class="form-control" name="nature[]">
+                <div id="new_nature"></div>
+              </div>
+              <div class="col-md-4"><br>
+                <a onclick="add()" class=" mdi mdi-plus-circle" style="font-size: 20px; color:red;"></a>
+                <a onclick="remove()" class=" mdi mdi-minus-circle" style="font-size: 20px; color:gray;"></a>
+              </div>
+            </div>
+          </div>
     </div>
     <div class="col-sm-12">
       <button type="submit" id="save" class="btn btn-primary float-right" >Save Changes</button>
@@ -263,51 +326,12 @@
       <div class="row col-md-12">
         <h5>{{$pr->company_name}}<br><small>{{$pr->nature_partnership}}</small></h5>
       </div>
-      <div class="row col-md-12">
-        <div  class="col-sm-3 col-form-label"><label>Classification:</label></div>
-        <div  class="col-sm-8 col-form-label">{{$pr->classification}}<br>
-          <?php
-            $numOfCols = 3;
-            $rowCount = 0;
-            $bootstrapColWidth = 12 / $numOfCols;
-          ?>
-         @if($pr->classification == "School")
-                <div class="row">
-                @foreach($partnerCS as $pcs)
-                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
-                      <ul>
-                        <li> {{$pcs->school_code}}</li>
-                      </ul>
-                </div>
-                  <?php $rowCount++; ?>
-                @if($rowCount % $numOfCols == 0) 
-                  </div><div class="row">
-                @endif
-                @endforeach
-              </div>
-          @elseif($pr->classification == "Program")
-                <div class="row">
-                @foreach($partnerCP as $pcp)
-                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
-                      <ul>
-                        <li> {{$pcp->acad_prog_code}}</li>
-                      </ul>
-                </div>
-                  <?php $rowCount++; ?>
-                @if($rowCount % $numOfCols == 0) 
-                  </div><div class="row">
-                @endif
-                @endforeach
-              </div>
-          @endif
-        </div>
-       </div>
        <hr>
       <div class="row">
         <div class="col-md-4">
         <div class="form-group">
               <i class="fas fa-upload">Upload Document</i>
-              <input type="file"  id="supporting_file" name="supporting_file" class="form-control" onchange="ViewSave('supporting_file');"><br>
+              <input type="file"  id="supporting_file" name="supporting_file" class="form-control" required><br>
               <div style="display:inline-block; vertical-align: middle;">
                <button type="submit" id="saveimage" class="btn btn-primary" hidden>Save Document</button>
              </div>
@@ -357,7 +381,9 @@
     </table>
     </div>
 </div>
-	<script type="text/javascript">
+
+<script type="text/javascript">
+
   $(document).ready(function(){
     var edit = document.getElementById("forEdit");
     var renew = document.getElementById("forRenew");
@@ -406,32 +432,66 @@
     var edit = document.getElementById("forEdit");
     var view = document.getElementById("forView");
     var renew = document.getElementById("forRenew");
+    var btnRenew = document.getElementById("btnRenew");
+    var btnEdit = document.getElementById("btnEdit");
         if (edit.style.display === "none") {
           edit.style.display = "block";
           view.style.display = "none";
           renew.style.display = "none";
-          document.getElementById("btnEdit").hidden;
-          document.getElementById("btnCancel").show;
+          btnEdit.value = "Cancel";
+          btnRenew.value = "Renew"
+          btnRenew.style.display = "block";
         } else{
           edit.style.display = "none";
           view.style.display = "block";
+          btnEdit.value = "Edit";
         }
     }
     function Renew(){
     var edit = document.getElementById("forEdit");
     var view = document.getElementById("forView");
     var renew = document.getElementById("forRenew");
+    var btnRenew = document.getElementById("btnRenew");
+    var btnEdit = document.getElementById("btnEdit");
         if (renew.style.display === "none") {
           edit.style.display = "none";
           view.style.display = "none";
           renew.style.display = "block";
+          btnRenew.value = "Cancel";
+          btnEdit.value = "Edit";
         } else{
           edit.style.display = "none";
           renew.style.display = "none";
           view.style.display = "block";
+          btnRenew.value = "Renew";
         }
     }
+    function otherNature() {
+      var checkBox = document.getElementById("others");
+      // Get the output text
+      var grp = document.getElementById("naturegrp");
 
+      // If the checkbox is checked, display the output text
+      if (checkBox.checked == true){
+        grp.style.display = "block";
+      } else {
+        grp.style.display = "none";
+      }
+    }
+    function add(){
+          var new_nature_no = parseInt($('#total_nature').val())+1;
+          var new_nature="<input type='text' class='form-control' name='nature[]' id='nature_"+new_nature_no+"'>";
+          
+          $('#new_nature').append(new_nature);
+          $('#total_nature').val(new_nature_no);
+        }
+        function remove(){
+          var last_nature_no = $('#total_nature').val();
+          if(last_nature_no>1){
+            $('#nature_'+last_nature_no).remove();
+            $('#total_nature').val(last_nature_no-1);
+          }
+        }
  var dataTable = $('#partner_history_table').DataTable( {
           "processing" : true,
           "serverSide" : true,

@@ -25,6 +25,7 @@ class CreateBoardExamTable extends Migration
             $table->integer('total_failed');
             $table->integer('total_cond');
             $table->string('type');
+            $table->integer('national_percent');
             $table->string('supporting_doc')->nullable();
             $table->timestamps();
         });

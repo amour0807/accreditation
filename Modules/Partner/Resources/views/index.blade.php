@@ -4,7 +4,7 @@
     <div class="block full"  style="margin-bottom: 10px;" >
     <div class="block-title" style="padding: 1px 3px 1px 3px;" id="datatable_wrapper">
        <h2><strong>Company Partners<span></strong></h2>
-       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">Add Partnership</button>
+        <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">Add Partnership</button>
         
     </div>
     @if ($message = Session::get('success'))
@@ -19,7 +19,8 @@
 
 </script>
 @endif
-  <form class="mb-4" action="" method="POST">
+
+  <form class="mb-4" action="{{route('partnerfilterReport')}}" method="POST">
     @csrf 
      <div class="row">
       <div class="col-md-8">
@@ -32,27 +33,45 @@
       </div>
     </div>
  <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-7">
          <strong>Sort by:</strong>
       </div>
-      <div class="col-md-6">
-        <strong>Range of Validity:</strong>
+      <div class="col-md-5">
+        <strong>Range of Award:</strong>
       </div>
     </div>
    <div class="form-group row">
-     <div class="row col">
-    <div class="col-md-6 ">
-      <label >Scope</label>
+     <div class="row col-md-7">
+    <div class="col-md-3 ">
+      <label >Name of Partner</label>
       <div id="filters1">   
       </div>
     </div>
-    <div class="col-md-6 ">
-      <label >Classification</label>
+    <div class="col-md-3 ">
+      <label >Status</label>
       <div id="filters2">   
       </div>
     </div>
+    <div class="col-md-3">
+      <label >School</label>
+      <select name="school" id="clarify" class="form-control" >
+      <option  selected value> -- --  </option>
+        @foreach($school as $sc)
+        <option value="{{$sc->school_code}}"> {{$sc->school_code}} </option>
+        @endforeach
+      </select>
     </div>
-  <div class="row col">
+    <div class="col-md-3 ">
+      <label >Program</label>
+      <select name="school" class="form-control" >
+      <option  selected value> -- --  </option>
+      @foreach($program as $p)
+        <option value="{{$p->acad_prog_code}}"> {{$p->acad_prog_code}} </option>
+        @endforeach
+      </select>
+    </div>
+    </div>
+  <div class="row col-md-5">
     <div class="col-md-6 ">
           <label>From </label>
           <input type="date" name="from" class="form-control" id="from">
@@ -69,134 +88,170 @@
     <table id="partner_table" class="display compact cell-border" style="table-layout: fixed">
 		    <thead>
 	            <tr>
-	            	<th>Name of Partner</th>
-	            	<th>Scope</th>
-                <th>Classification</th>
-	            	<th>Nature of <br>Partnership</th>
+                <th>Name of <br>Partner</th>
                 <th>From</th>
 	            	<th>To</th>
                 <th>Status</th>
                 <th>Supporting<br>Document</th>
                 <th>Action</th>
+	            	<th>Classification</th>
+                <th>Nature</th>
 	            </tr>
 		    </thead>   
 		</table>
     <!-- Modal -->
-	<div class="modal fade" id="addAwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Add Partnership</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-
-	       <form id="form" action="{{route('addPartner')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
-                                            {{ csrf_field() }}
-
-        <div class="modal-body">
-          <div class="row form-group">
-              <label><span class="text-danger">*</span>Name of Partner</label>
-		        	<input type="text" class="form-control" name="partner" placeholder="" required>
+    <div class="modal fade" id="addAwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Partnership</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <div class= "row form-group"> 
-            <div class="col-md-6">
-                <label><span class="text-danger">*</span>Scope:</label>
-                <select name="scope" class="form-control small" required>
+  
+           <form id="form" action="{{route('addPartner')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
+                                              {{ csrf_field() }}
+  
+          <div class="modal-body">
+            <div class="row form-group">
+                <label><span class="text-danger">*</span>Name of Partner</label>
+                <input type="text" class="form-control" name="partner" placeholder="" required>
+            </div>
+            <div class= "row form-group"> 
+              <div class="col-md-6">
+                  <label><span class="text-danger">*</span>Scope:</label>
+                  <select name="scope" class="form-control" required>
+                    <option disabled selected value> -- --  </option>
+                    <option value="Local">Local</option>
+                    <option value="Regional">Regional</option>
+                    <option value="National">National</option>
+                    <option value="International">International</option>
+                  </select>
+              </div>
+              <div class= "col-md-6"> 
+                <label><span class="text-danger">*</span>Classification:</label>
+                <select name="classification" class="form-control" onchange='CheckClas(this.value);' required>
                   <option disabled selected value> -- --  </option>
-                  <option value="Local">Local</option>
-                  <option value="Regional">Regional</option>
-                  <option value="National">National</option>
-                  <option value="International">International</option>
+                  <option value="Institutional">Institutional</option>
+                  <option value="School">School</option>
+                  <option value="Program">Program</option>
                 </select>
-            </div>
-            <div class= "col-md-6"> 
-              <label><span class="text-danger">*</span>Classification:</label>
-              <select name="classification" class="form-control small" onchange='CheckClas(this.value);' required>
-                <option disabled selected value> -- --  </option>
-                <option value="Institutional">Institutional</option>
-                <option value="School">School</option>
-                <option value="Program">Program</option>
-              </select>
-            </div>
-          </div>
-          <!-- For school and Program Classification -->
-          <?php
-            $numOfCols = 4;
-            $rowCount = 0;
-            $bootstrapColWidth = 12 / $numOfCols;
-          ?>
-         
-          <fieldset id="schoolc" style='display:none;'>
-            <legend>Schools</legend>
-                <div class="row">
-                @foreach($school as $sc)
-                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
-                      <input type="checkbox"  name="schoolc[]" value="{{$sc->id}}">
-                <label>{{$sc->school_code}}</label>
-                </div>
-                  <?php $rowCount++; ?>
-                @if($rowCount % $numOfCols == 0) 
-                  </div><div class="row">
-                @endif
-                @endforeach
               </div>
-          </fieldset>
-          <fieldset id="program" style='display:none;'>
-            <legend>Programs</legend>
-                <div class="row">
-                @foreach($program as $pr)
-                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
-                     <input type="checkbox"  name="programc[]" value="{{$pr->id}}">
-                    <label > {{$pr->acad_prog_code}}</label>
+            </div>
+            <!-- For school and Program Classification -->
+            <fieldset id="schoolcon" style='display:none;'>
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                    <label>Schools</label>
+                    <select id="list1" multiple="multiple" rows=2 class="form-control">
+                    @foreach($school as $sc)
+                        <option value="{{$sc->id}}">{{$sc->school_code}}</option>
+                    @endforeach
+                    </select>
+                    <br>
+                    <input id="button1" type="button" value="Select" class="form-control"/>
                 </div>
-                  <?php $rowCount++; ?>
-                @if($rowCount % $numOfCols == 0) 
-                  </div><div class="row">
-                @endif
-                @endforeach
+                <div class="col-md-6">
+                    <label>Selected</label>
+                    <select id="list2" name="schoolc[]" multiple="multiple" rows=2 class="form-control small">
+                        
+                    </select>
+                    <br>
+                    <input id="button2" type="button" value="Remove" class="form-control"/>
+                </div>
+            </div>
+            </fieldset>
+            <fieldset id="program" style='display:none;'>
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                  <label>Programs</label>
+                  <select id="lbprogram" multiple="multiple" rows=2 class="form-control">
+                  @foreach($program as $pr)
+                      <option value="{{$pr->id}}">{{$pr->acad_prog_code}}</option>
+                  @endforeach
+                  </select>
+                  <br>
+                  <input id="btnprogram" type="button" value="Select" class="form-control"/>
               </div>
-          </fieldset>
-            <!--  -->
-          <div class="row form-group">
-            <div class="col-md-6">
-                <label><span class="text-danger">*</span>From</label>
-                <input type="date" class="form-control" name="from" placeholder="" >
+              <div class="col-md-6">
+                  <label>Selected</label>
+                  <select id="lbpselect" name="programc[]" multiple="multiple" rows=2 class="form-control small">
+                      
+                  </select>
+                  <br>
+                  <input id="btnpselect" type="button" value="Remove" class="form-control"/>
+              </div>
             </div>
-            <div class="col-md-6">
-                <label><span class="text-danger"></span>To</label>
-                <input type="date" class="form-control" name="to" placeholder="" >
-            </div>
-          </div>
-          <div class="row form-group">
-            <div class="col-md-6">
-               <label><span class="text-danger">*</span>Status</label>
-               <select name="status" class="form-control small" required> 
-                <option disabled selected value> -- --  </option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label><span class="text-danger"></span>Nature of Partnership</label>
-                <input type="text" class="form-control" name="nature" placeholder="" >
-            </div>
-          </div>
-          <div class="row form-group">
-		        	<i class="fas fa-upload">Supporting Document</i>
-		        	<input type="file" name="supporting_doc" class="form-control">
-		        </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-		        <button type="submit" class="btn btn-info">Add Partner</button>
+            </fieldset>
             
-	      	<div>
-	      	</div>
-             </form>
-	    </div>
-	  </div>
-	</div>
+              <!--  -->
+            <div class="row form-group">
+              <div class="col-md-6">
+                  <label><span class="text-danger">*</span>From</label>
+                  <input type="date" class="form-control" name="from" placeholder="" >
+              </div>
+              <div class="col-md-6">
+                  <label><span class="text-danger"></span>To</label>
+                  <input type="date" class="form-control" name="to" placeholder="" >
+              </div>
+            </div>
+            <div class="row form-group">
+              <legend>Nature of Partnership</legend>
+                  <div class="col-md-2">
+                  <input type="checkbox"  name="nature[]" value="Faculty Dev't">
+                      <label >Faculty Dev't</label>
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox"  name="nature[]" value="Staff Dev't">
+                      <label >Staff Dev't</label>
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox"  name="nature[]" value="Student Dev't">
+                      <label >Student Dev't</label>
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox"  name="nature[]" value="Research">
+                      <label >Research</label>
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox"  name="nature[]" value="ECOS">
+                      <label >ECOS</label>
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" id="others" onclick="otherNature()"  name="nature[]" value="Others">
+                      <label >Others</label>
+                </div>
+            </div>
+            <div class="row form-group" id="naturegrp" style="display: none;">
+              <div class="row col-md-12">
+                <div class="col-md-8">
+                  <label><span class="text-danger"></span>Others</label>
+                  <input type="hidden" class="form-control" value="1" id="total_nature">
+                  <input type="text" class="form-control" name="nature[]">
+                  <div id="new_nature"></div>
+                </div>
+                <div class="col-md-4"><br>
+                  <a onclick="add()" class=" mdi mdi-plus-circle" style="font-size: 20px; color:red;"></a>
+                  <a onclick="remove()" class=" mdi mdi-minus-circle" style="font-size: 20px; color:gray;"></a>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="row form-group">
+                <i class="fas fa-upload">Supporting Document</i>
+                <input type="file" name="supporting_doc" class="form-control" required>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-info">Add Partner</button>
+              
+            <div>
+            </div>
+               </form>
+        </div>
+      </div>
+    </div>
 
 <!-- Add Another Modal -->
 <div class="modal fade " data-backdrop="static" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -217,57 +272,59 @@
   </div>
 </div>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 
-    $.ajaxSetup({
-	    headers: {
-	       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	    }
-    });
-
-     
     var token = $("input[name='_token']").val();
-
     var count = 0;
 
        $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
+        
         var from = Date.parse($('#from').val());
         var to = Date.parse($('#to').val());
-        var age = Date.parse( data[5] ) || 0; 
+        var age = Date.parse( data[2] ) || 0; 
         if ( ( isNaN( from ) && isNaN( to ) ) ||
              ( isNaN( from ) && age <= to ) ||
              ( from <= age   && isNaN( to ) ) ||
              ( from <= age   && age <= to ) )
         {
-            return true;
+          return true;
         }else{
           return false;
         }
         
+        
     }
 );
 
-    function CheckClas(val){
-     var school=document.getElementById('schoolc');
-     var program=document.getElementById('program');
-     if(val=='School'){
-       school.style.display='block';
-       program.style.display='none';
-     }else if (val=='Program'){
-       program.style.display='block';
-       school.style.display='none';
-      }else{
-        school.style.display='none';
-        program.style.display='none';
-      }
-    }
-
+$(function(){
+    $("#button1").click(function(){
+        $("#list1 > option:selected").each(function(){
+            $(this).remove().appendTo("#list2");
+        });
+    });
+    
+    $("#button2").click(function(){
+        $("#list2 > option:selected").each(function(){
+            $(this).remove().appendTo("#list1");
+        });
+    });
+    $("#btnprogram").click(function(){
+        $("#lbprogram > option:selected").each(function(){
+            $(this).remove().appendTo("#lbpselect");
+        });
+    });
+    
+    $("#btnpselect").click(function(){
+        $("#lbpselect > option:selected").each(function(){
+            $(this).remove().appendTo("#lbprogram");
+        });
+    });
+});
  var dataTable = $('#partner_table').DataTable( {
           "processing" : true,
-          "bSort" : false,
           "ajax": "{{route('partner_dtb')}}",
-
+          "bSort": false,
            dom: 'Blfrtip',
           lengthMenu: [
             [ 10, 25, 50, -1 ],
@@ -282,14 +339,15 @@
           
           "columns": [
               { "data": "company_name" },
-              { "data": "scope" },
-              { "data": "classification" },
-              { "data": "nature_partnership" },
               { "data": "from" },
               { "data": "to" },
               { "data": "status" },
               { "data": "supporting_doc" },
               { "data": "actions" },
+              { "data": "classification"
+              },
+              { "data": "nature"
+              },
           ],
 
           initComplete: function () {
@@ -299,7 +357,7 @@
                 $('.buttons-excel').click(); 
              })
 
-              this.api().columns([1,2]).every( function () {
+              this.api().columns([0,3]).every( function () {
                   var column = this;
                   count++;
                   $('<div id="lalagyan'+count+'"></div>')
@@ -325,13 +383,51 @@
 
         });
 
-
-     $('#from, #to').change(function () {
+     $('#from, #to, #clarify').change(function () {
                 dataTable.draw();
                     });
 
-	     //delete
-       $(document).on('click','.destroy',function(){
+  function CheckClas(val){
+     var school=document.getElementById('schoolcon');
+     var program=document.getElementById('program');
+     if(val=='School'){
+       school.style.display='block';
+       program.style.display='none';
+     }else if (val=='Program'){
+       program.style.display='block';
+       school.style.display='none';
+      }else{
+        school.style.display='none';
+        program.style.display='none';
+      }
+    }
+    function otherNature() {
+      var checkBox = document.getElementById("others");
+      // Get the output text
+      var grp = document.getElementById("naturegrp");
+
+      // If the checkbox is checked, display the output text
+      if (checkBox.checked == true){
+        grp.style.display = "block";
+      } else {
+        grp.style.display = "none";
+      }
+    }
+    function add(){
+          var new_nature_no = parseInt($('#total_nature').val())+1;
+          var new_nature="<input type='text' class='form-control' name='nature[]' id='nature_"+new_nature_no+"'>";
+          
+          $('#new_nature').append(new_nature);
+          $('#total_nature').val(new_nature_no);
+        }
+    function remove(){
+          var last_nature_no = $('#total_nature').val();
+          if(last_nature_no>1){
+            $('#nature_'+last_nature_no).remove();
+            $('#total_nature').val(last_nature_no-1);
+          }
+    }
+    $(document).on('click','.destroy',function(){
 	      var conf = confirm('This record will be deleted. Continue?');
 	      var id = $(this).attr('partnerid');
 
@@ -359,8 +455,5 @@
         });  
       }
     });
-
-
-       
     </script>
 @endsection

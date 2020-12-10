@@ -133,7 +133,7 @@
             <td class="total-me">{{$board->total_cond}}</td>
             <td id="ttotal"></td>
             <td id="tpercent"></td>
-            <td></td>
+            <td>{{$board->national_percent}}%</td>
           </tr>
         </tbody>
       </table>

@@ -4,7 +4,7 @@
     <div class="block full"  style="margin-bottom: 10px;" >
     <div class="block-title" style="padding: 1px 3px 1px 3px;" id="datatable_wrapper">
        <h2><strong>Licensure Examination<span></strong></h2>
-       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">New Record</button>
+       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">New Exam</button>
         
     </div>
     @if ($message = Session::get('success'))
@@ -69,6 +69,7 @@
                 <th>Type</th>
                 <th>Supporting <br>Document</th>
                 <th>Topnotcher/s</th>
+                <th>School Rank</th>
                 <th>Action</th>
               </tr>
         </thead>   
@@ -78,7 +79,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Record</h5>
+          <h5 class="modal-title" id="exampleModalLabel">New Exam</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -90,12 +91,17 @@
         <div class="modal-body">
           <div class="row form-group">
               <label><span class="text-danger">*</span>Licensure Examination</label>
-              <input type="text" class="form-control" name="exam" placeholder="" required>
+              <select name="exam" class="form-control" required>
+                <option disabled selected value> -- --  </option>
+                <option value="Architect">Architect</option>
+                <option value="Criminology">Criminology</option>
+                <option value="Nurse">Nurse</option>
+              </select>
           </div>
           <div class="row form-group">
              <div class="col-md-4">
-                <label><span class="text-danger"></span>Examination Type:</label>
-                <select name="exam_type" class="form-control small" required>
+                <label><span class="text-danger">*</span>Examination Type:</label>
+                <select name="exam_type" class="form-control" required>
                   <option disabled selected value> -- --  </option>
                   <option value="Local">Local</option>
                   <option value="Regional">Regional</option>
@@ -108,8 +114,8 @@
                 <input type="date" class="form-control" name="exam_date" required>
             </div>
             <div class="col-md-4">
-                <label><span class="text-danger"></span>School Rank</label>
-                <input type="number" class="form-control" name="school_rank"  min="0" max="100"placeholder="ex. 1" value="0">
+                <label><span class="text-danger">*</span>School Rank</label>
+                <input type="number" class="form-control" name="school_rank"  min="0" max="10"placeholder="ex. 1" value="0" required>
             </div>
           </div>
           <div class="row form-group">
@@ -124,13 +130,13 @@
               <label><span class="text-danger"></span>Rank</label>
               
               <input type="hidden" class="form-control" value="1" id="total_rank">
-              <input type="number" min="0" max="100" class="form-control" name="rank[]" placeholder="ex. 1">
+              <input type="number" min="0" max="10" class="form-control" name="rank[]" placeholder="ex. 1">
               <div id="new_rank"></div>
             </div>
-            <div class="col-md-2">
-              <a class="btn btn-info" onclick="add()">Add</a>
-              <a class="btn" onclick="remove()">remove</a>
-            </div>
+            <div class="col-md-2"><br>
+                  <a onclick="add()" class=" mdi mdi-plus-circle" style="font-size: 20px; color:red;"></a>
+                  <a onclick="remove()" class=" mdi mdi-minus-circle" style="font-size: 20px; color:gray;"></a>
+                </div>
           </div>
           <div class="row col-md-12">
             <fieldset class="row col-md-12">
@@ -153,7 +159,7 @@
               </div>
               <div class="col-md-3">
                 <label><span class="text-danger"></span>Percentage</label><br>
-                <span id="fpercent">0 %</span>
+                <span id="fpercent" value="0%"></span>
               </div>
               </fieldset>
           </div>
@@ -178,22 +184,24 @@
               </div>
               <div class="col-md-3">
                 <label><span class="text-danger"></span>Percentage</label><br>
-                <span id="tpercent">0</span>
+                <span id="tpercent" value="0%"></span>
               </div>
+              <label><span class="text-danger">*</span>National Passing Percentage</label><br>
+              <div class="row col-md-2">
+                
+                <input type="number" class="form-control" name="npasser" min="0" max="100" value="0" required>
+            </div>
               </fieldset>
           </div>
           <div class="row form-group">
-            <div class="col-md-9">
-              <i class="fas fa-upload">Supporting Document</i>
-              <input type="file" name="supporting_doc" class="form-control">
-            </div>
-            <div class="col-md-3">
-              <span id="npercent">0</span>
+           
+            <div class="col-md-9"><br>
+              <label><span class="text-danger">*</span><i class="fas fa-upload">Supporting Document</i></label><br>
+              <input type="file" name="supporting_doc" class="form-control" required>
             </div>
               
             </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-info">Add Licensure Examination</button>
             
           <div>
@@ -291,6 +299,7 @@ $.fn.dataTable.ext.search.push(
 
  var dataTable = $('#boardexam_table').DataTable( {
           "processing" : true,
+          "bSort" : false,
           "ajax": "{{route('boardexam_dtb')}}",
 
            dom: 'Blfrtip',
@@ -302,15 +311,18 @@ $.fn.dataTable.ext.search.push(
             'excelHtml5',
             ],
 
-          responsive: false,
-          "scrollX": false,
+          responsive: true,
+          "scrollX": true,
           
           "columns": [
               { "data": "licensure_exam" },
               { "data": "exam_date" },
-              { "data": "type" },
+              { "data": "type" ,
+                "visible": false,
+              },
               { "data": "supporting_doc" },
               { "data": "topnotcher" },
+              { "data": "school_rank" },
               { "data": "actions" },
           ],
 

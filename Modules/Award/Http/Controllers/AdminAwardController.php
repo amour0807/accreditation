@@ -135,6 +135,7 @@ class AdminAwardController extends Controller
        
         $instaward = InstAward::find($request->awardID);
         $instaward->award = $request->award;
+        $instaward->scope = $request->scope;
         $instaward->from = $request->from;
         $instaward->to = $request->to;
         $instaward->venue = $request->venue;
@@ -237,6 +238,7 @@ class AdminAwardController extends Controller
         $from = $request->from; //min
         $to = $request->to; //max
         $award = $request->select1;
+        $scope = $request->select2;
 
         $queryBuilder = DB::table('inst_award');
             
@@ -247,10 +249,13 @@ class AdminAwardController extends Controller
             if($award){
                 $queryBuilder =$queryBuilder->where('inst_award.award', $award);
             }
+            if($scope){
+                $queryBuilder =$queryBuilder->where('inst_award.scope', $scope);
+            }
 
             $queryBuilder = $queryBuilder->get();
 
-      $pdf = PDF::loadView('award::reports.instawards-report', compact('queryBuilder', 'instAward', 'award', 'department', 'from', 'to') );
+      $pdf = PDF::loadView('award::reports.instawards-report', compact('queryBuilder', 'instAward', 'award', 'department', 'from', 'to','scope') );
         $pdf->setPaper('legal', 'landscape');
         $pdf->save(storage_path().'_filename.pdf');
 
@@ -272,6 +277,7 @@ class AdminAwardController extends Controller
 
          $instAward = new InstAward;
          $instAward->award = $request->award;
+         $instAward->scope = $request->scope;
          $instAward->from = $request->from;
          $instAward->to = $request->to;
          $instAward->venue = $request->venue;

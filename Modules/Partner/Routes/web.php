@@ -21,5 +21,6 @@ Route::group(['prefix' => 'partner', 'middleware' => 'is_admin'], function() {
  	Route::post('/deletePartner', 'PartnerController@deletePartner')->name('deletePartner');
  	Route::get('/partnerEdit/{id}', 'PartnerController@partnerEdit')->name('partnerEdit');
  	Route::get('/partnerDetail/{id}', 'PartnerController@partnerDetail')->name('partnerDetail');
- 	Route::post('/updatePartner', 'PartnerController@updatePartner')->name('updatePartner');
+	Route::post('/updatePartner', 'PartnerController@updatePartner')->name('updatePartner');
+	Route::post('/partnerfilterReport', 'PartnerController@partnerfilterReport')->name('partnerfilterReport'); 
  });

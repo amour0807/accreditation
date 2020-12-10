@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Partner\Entities\PartnerClassification;
 use Modules\Partner\Entities\PartnerRenewal;
+use Modules\Partner\Entities\PartnerNature;
 use Modules\Partner\Entities\Partner;
 use Modules\Accreditation\Entities\AcadPrgrm;
 use Modules\Accreditation\Entities\School;
@@ -27,10 +28,10 @@ class PartnerController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
-    {
+    public function index(){
         $school = School::all();
         $program = AcadPrgrm::all();
+
         return view('partner::index', compact('school','program'));
     }
 
@@ -39,6 +40,44 @@ class PartnerController extends Controller
           $partner = Partner::orderBy('id','desc')->get();
 
          return DataTables::of($partner)
+                ->addColumn('classification', function($partner) {
+                    $classification = "";
+                if($partner->classification == "School"){
+                    $classification = Partner::join('partner_classifications','partner_classifications.partner_id', 'partners.id')
+                    ->join('schools','schools.id', 'partner_classifications.school_id')
+                    ->where('partners.id',$partner->id)
+                    ->pluck('school_code')->unique();
+
+                }elseif ($partner->classification == "Program"){
+                    $classification = Partner::join('partner_classifications','partner_classifications.partner_id', 'partners.id')
+                    ->join('acad_prgrms','acad_prgrms.id', 'partner_classifications.program_id')
+                    ->where('partners.id',$partner->id)
+                    ->pluck('acad_prog_code')->unique();
+                }
+                return $classification;
+            })
+                ->addColumn('nature', function($partner) {
+                   
+                    $nature = Partner::join('partner_nature','partner_nature.partner_id', 'partners.id')
+                    ->where('partners.id',$partner->id)
+                    ->pluck('nature')->unique();
+
+                return $nature;
+                })
+                ->addColumn('from', function($partner) {
+                    if(($partner->from) != "")
+                        $from = date('M. d, Y', strtotime($partner->from));
+                    else
+                        $from = "";
+                    return $from;
+                })
+                ->addColumn('to', function($partner) {
+                    if(($partner->from) != "")
+                        $to = date('M. d, Y', strtotime($partner->to));
+                    else
+                        $to = "";
+                    return $to;
+                })
              ->addColumn('supporting_doc', function($partner) {
                 if(empty($partner->supporting_doc)){
                     return 'None';
@@ -55,7 +94,7 @@ class PartnerController extends Controller
                         ';
             })
             
-            ->rawColumns(['actions','supporting_doc'])
+            ->rawColumns(['actions','supporting_doc','from','to','classification','nature'])
             ->make(true);
     }
     //history table for partner classification
@@ -106,10 +145,9 @@ class PartnerController extends Controller
          $partner->company_name = $request->partner;
          $partner->scope = $request->scope;
          $partner->classification = $request->classification;
-         $partner->nature_partnership = $request->nature;
          $partner->from = $request->from;
          $partner->to = $request->to;
-         $partner->status = $request->status;
+         $partner->status = "Active";
          $partner->supporting_doc = $supporting_doc_fileName;
          $partner->save();
 
@@ -127,7 +165,7 @@ class PartnerController extends Controller
         // save also to partner_classification Table
         if($request->classification == "School"){
            $school = $request->schoolc;
-
+        
             $N = count($school);
             for($i=0; $i < $N; $i++)
             {
@@ -154,7 +192,19 @@ class PartnerController extends Controller
             }
          }
 
-
+         // saved to nature table
+         $nature = $request->nature;
+         $C = count($nature);
+         for($i=0; $i < $C; $i++)
+         {
+              $partnernature = new PartnerNature;
+              $var1 = $nature[$i];
+              if($var1 != 'Others' && $var1 != ""){
+                $partnernature->partner_id = $partner_id;
+                $partnernature->nature = $var1;
+                $partnernature->save();
+                }
+        }
 
          return back()->with('success_modal', 5);
      }
@@ -196,7 +246,8 @@ class PartnerController extends Controller
      }
 
     public function partnerDetail($id){
-        $partnerR = Partner::where('id', $id)->get();
+        $partnerR = Partner::with('partner_nature')
+        ->where('id', $id)->get();
         $partnerCP = PartnerClassification::join('acad_prgrms', 'acad_prgrms.id', 'partner_classifications.program_id')
         ->where('partner_id', $id)
         ->get();//for academic programs partnership
@@ -204,15 +255,34 @@ class PartnerController extends Controller
          $partnerCS = PartnerClassification::join('schools', 'schools.id', 'partner_classifications.school_id')
         ->where('partner_id', $id)
         ->get();//for school partnership
-
+        
         $school = School::all();
         $program = AcadPrgrm::all();
 
         return view('partner::partner-detail', compact('partnerR','partnerCP','partnerCS','school','program'));
     }
+    public function partnerfilterReport(Request $request){
+        $department = School::where('id', auth()->user()->school_id)->first();
+        $from = $request->mindate; //min
+        $to = $request->maxdate; //max
+        $partnerCS = PartnerClassification::join('schools', 'schools.id', 'partner_classifications.school_id')
+        ->get();//for school partnership
 
-    public function updatePartner(Request $request)
-    {
+        $queryBuilder = DB::table('partners')
+        ->join('partner_classifications','partner_classifications.partner_id','partners.id');
+            
+            if($from && $to){
+                $queryBuilder = $queryBuilder->whereBetween('to', [$from, $to]);
+            }
+            $queryBuilder = $queryBuilder->get();
+
+      $pdf = PDF::loadView('partner::reports.partnerList-report', compact('queryBuilder','from', 'to','department','partnerCS') );
+        $pdf->setPaper('legal', 'landscape');
+        $pdf->save(storage_path().'_filename.pdf');
+
+        return $pdf->stream('project_'.time().'.pdf');
+    }
+    public function updatePartner(Request $request){
         $id = $request->partnerID;
           $request->validate([
              'supporting_doc' => 'nullable|mimes:jpeg,png,pdf|max:2048',
@@ -242,60 +312,9 @@ class PartnerController extends Controller
 
         return redirect()->route('partnerDetail',$id)->with('success', 'Record Updated');
     }
-      public function deletePartner(Request $request)
-    {
+    public function deletePartner(Request $request){
         $partner = Partner::find($request->id);
         $partner->delete();
        
-    }
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('partner::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('partner::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    }  
 }
