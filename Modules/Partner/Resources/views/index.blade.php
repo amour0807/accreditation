@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<<<<<<< HEAD
 <div class="col-md-12 col-sm-12 ">
 	<div class="x_panel">
     <div class="x_title">
@@ -10,6 +11,74 @@
       </a>
         @endif
       <div class="clearfix"></div>
+=======
+    <hr style="margin: 0 0 0 0;">
+    <div class="block full"  style="margin-bottom: 10px;" >
+    <div class="block-title" style="padding: 1px 3px 1px 3px;" id="datatable_wrapper">
+       <h2><strong>Company Partners<span></strong></h2>
+       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">Add Partnership</button>
+        
+    </div>
+    @if ($message = Session::get('success'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+@if(!empty(Session::get('success_modal')) && Session::get('success_modal') == 5)
+<script>
+      $('#success-modal').modal('show');
+
+</script>
+@endif
+<<<<<<< HEAD
+  <form class="mb-4" action="#" method="POST">
+=======
+  <form class="mb-4" action="" method="POST">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+    @csrf 
+     <div class="row">
+      <div class="col-md-8">
+      </div>
+     <div class="col-md-4">
+      <div class="float-right">
+<<<<<<< HEAD
+        <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
+=======
+        <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+          <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
+      </div><br><br>
+      </div>
+    </div>
+ <div class="row">
+      <div class="col-md-6">
+         <strong>Sort by:</strong>
+      </div>
+      <div class="col-md-6">
+        <strong>Range of Validity:</strong>
+      </div>
+    </div>
+   <div class="form-group row">
+     <div class="row col">
+    <div class="col-md-6 ">
+<<<<<<< HEAD
+      <label >Name of Partners</label>
+=======
+      <label >Scope</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+      <div id="filters1">   
+      </div>
+    </div>
+    <div class="col-md-6 ">
+<<<<<<< HEAD
+      <label >Scope</label>
+=======
+      <label >Classification</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+      <div id="filters2">   
+      </div>
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
     </div>
        
 <form class="mb-4" action="{{route('partnerfilterReport')}}" target="_blank" method="POST">
@@ -104,7 +173,10 @@
                 <th>From</th>
 	            	<th>To</th>
                 <th>Status</th>
+<<<<<<< HEAD
+=======
                 <th>Supporting<br>Document</th>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
                 <th>Action</th>
 	            	<th>Classification</th>
                 <th>Nature</th>
@@ -154,6 +226,7 @@
                 </select>
               </div>
             </div>
+<<<<<<< HEAD
             <!-- For school and Program Classification -->
             <fieldset id="schoolcon" style='display:none;'>
             <div class="row col-md-12">
@@ -174,6 +247,57 @@
                     </select>
                     <br>
                     <input id="button2" type="button" value="Remove" class="form-control"/>
+=======
+            <div class= "col-md-6"> 
+              <label><span class="text-danger">*</span>Classification:</label>
+              <select name="classification" class="form-control small" onchange='CheckClas(this.value);' required>
+                <option disabled selected value> -- --  </option>
+                <option value="Institutional">Institutional</option>
+                <option value="School">School</option>
+                <option value="Program">Program</option>
+              </select>
+            </div>
+          </div>
+          <!-- For school and Program Classification -->
+          <?php
+            $numOfCols = 4;
+            $rowCount = 0;
+            $bootstrapColWidth = 12 / $numOfCols;
+          ?>
+         
+          <fieldset id="schoolc" style='display:none;'>
+            <legend>Schools</legend>
+                <div class="row">
+                @foreach($school as $sc)
+                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
+<<<<<<< HEAD
+                      <input type="checkbox" id="{{$sc->id}}" name="schoolc[]" value="{{$sc->id}}">
+                <label for="{{$sc->id}}"> {{$sc->school_code}}</label>
+=======
+                      <input type="checkbox"  name="schoolc[]" value="{{$sc->id}}">
+                <label>{{$sc->school_code}}</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+                </div>
+                  <?php $rowCount++; ?>
+                @if($rowCount % $numOfCols == 0) 
+                  </div><div class="row">
+                @endif
+                @endforeach
+              </div>
+          </fieldset>
+          <fieldset id="program" style='display:none;'>
+            <legend>Programs</legend>
+                <div class="row">
+                @foreach($program as $pr)
+                <div class="col-md-<?php echo $bootstrapColWidth; ?>">
+<<<<<<< HEAD
+                     <input type="checkbox" id="{{$pr->id}}" name="programc[]" value="{{$pr->id}}">
+                    <label for="{{$pr->id}}"> {{$pr->acad_prog_code}}</label>
+=======
+                     <input type="checkbox"  name="programc[]" value="{{$pr->id}}">
+                    <label > {{$pr->acad_prog_code}}</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
                 </div>
             </div>
             <span id="spnErrorSchool" class="error text-danger" style="display: none;">*Please select at-least one School.</span>
@@ -355,6 +479,7 @@ Swal.fire({
 
       $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
+<<<<<<< HEAD
         var min = $('#from').val()
 			max = $('#to').val()
 			dfrom = data[1].split(' ')
@@ -364,6 +489,19 @@ Swal.fire({
              ( isNaN( min ) && dfrom[1] <= max ) ||
              ( min <= dfrom[2] && isNaN( max ) ) ||
              ( min <= dfrom[2] && dto[2] <= max ) )
+=======
+        var from = Date.parse($('#from').val());
+        var to = Date.parse($('#to').val());
+<<<<<<< HEAD
+        var age = Date.parse( data[2] ) || 0; 
+=======
+        var age = Date.parse( data[5] ) || 0; 
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+        if ( ( isNaN( from ) && isNaN( to ) ) ||
+             ( isNaN( from ) && age <= to ) ||
+             ( from <= age   && isNaN( to ) ) ||
+             ( from <= age   && age <= to ) )
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
         {
             return true;
         }else{
@@ -395,6 +533,14 @@ $.fn.dataTable.ext.search.push(
 );
  var dataTable = $('#partner_table').DataTable( {
           "processing" : true,
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+          "serverSide" : true,
+=======
+          "bSort" : false,
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
           "ajax": "{{route('partner_dtb')}}",
           "bSort": false,
            dom: 'Blfrtip',
@@ -415,7 +561,10 @@ $.fn.dataTable.ext.search.push(
               { "data": "company_name" },
               { "data": "from" },
               { "data": "to" },
+<<<<<<< HEAD
+=======
               { "data": "status" },
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
               { "data": "supporting_doc" },
               { "data": "actions" },
               { "data": "classification",
@@ -425,6 +574,45 @@ $.fn.dataTable.ext.search.push(
               "visible": false,
               },
           ],
+<<<<<<< HEAD
+=======
+
+          initComplete: function () {
+            var $buttons = $('.dt-buttons').hide();
+            $('.dataTables_length').show();
+             $('#exportLink').on('click', function() {
+                $('.buttons-excel').click(); 
+             })
+
+<<<<<<< HEAD
+              this.api().columns([0]).every( function () {
+=======
+              this.api().columns([1,2]).every( function () {
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+                  var column = this;
+                  count++;
+                  $('<div id="lalagyan'+count+'"></div>')
+                      .appendTo( "#filters"+count );
+
+                  var select = $('<select class="form-control" name="select'+count+'"><option value="">All</option></select>')
+                      .appendTo( "#lalagyan"+count )
+                      .on( 'change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                              $(this).val()
+                          );
+   
+                          column
+                              .search( val ? '^'+val+'$' : '', true, false )
+                              .draw();
+                      } );
+   
+                  column.data().unique().sort().each( function ( d, j ) {
+                      select.append( '<option value="'+d+'">'+d+'</option>' )
+                  } );
+              } );
+          },
+
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
         });
 
      $('#from, #to, #clarify, #status, #partner').change(function () {

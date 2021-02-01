@@ -6,8 +6,14 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Partner\Entities\PartnerClassification;
+<<<<<<< HEAD
+=======
 use Modules\Partner\Entities\PartnerRenewal;
+<<<<<<< HEAD
 use Modules\Partner\Entities\PartnerNature;
+=======
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
 use Modules\Partner\Entities\Partner;
 use Modules\Accreditation\Entities\AcadPrgrm;
 use Modules\Accreditation\Entities\School;
@@ -38,6 +44,20 @@ class PartnerController extends Controller
         return view('partner::index', compact('school','program','partner'));
     }
 
+<<<<<<< HEAD
+    /**
+     * Show the form for creating a new resource.
+     * @return Renderable
+     */
+    public function partner_dtb(){
+      
+          $partner = Partner::all();
+
+         return DataTables::of($partner)
+            ->addColumn('actions', function($partner) {
+                    return '
+                        <a class="btn btn-secondary btn-sm" href="'.route("partnerEdit", $partner->id).'"><i class="far fa-edit"></i>
+=======
     public function partner_dtb(){
       
           $partner = PartnerRenewal::join('partners','partners.id','partner_renewal.partner_id')
@@ -95,8 +115,13 @@ class PartnerController extends Controller
             ->addColumn('actions', function($partner) {
                 if(auth()->user()->hasPermission('delete-partner')){
                     return '
+<<<<<<< HEAD
                         <a class="btn btn-secondary btn-sm" href="'.route("partnerDetail", $partner->id).'"><i class="fa fa-eye"></i>
                         </a> <a class="btn btn-secondary btn-sm" href="'.route("partnerHistory", $partner->id).'"><i class="fa fa-history" aria-hidden="true"></i>
+=======
+                        <a class="btn btn-secondary btn-sm" href="'.route("partnerDetail", $partner->id).'"><i class="far fa-eye"></i>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
                         </a>
                         <button class="btn btn-danger btn-sm destroy" partnerid="'.$partner->id.'"><i class="fa fa-trash"></i>
                         </button>
@@ -111,7 +136,14 @@ class PartnerController extends Controller
                 }
             })
             
+<<<<<<< HEAD
             ->rawColumns(['actions','supporting_doc','from','to','classification','nature'])
+=======
+<<<<<<< HEAD
+            ->rawColumns(['actions'])
+=======
+            ->rawColumns(['actions','supporting_doc'])
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
             ->make(true);
     }
     //history table for partner classification
@@ -143,6 +175,7 @@ class PartnerController extends Controller
         })
             
             ->rawColumns(['from','to','supporting_doc'])
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
             ->make(true);
     }
     public function addPartner(Request $request){
@@ -183,6 +216,10 @@ class PartnerController extends Controller
          $partner->supporting_doc = $supporting_doc_fileName;
          $partner->save();
 
+<<<<<<< HEAD
+        $id = $partner->id;
+
+=======
          $partner_id = $partner->id;
          // save also to renewal_table
          $renewal = new PartnerRenewal;
@@ -195,6 +232,7 @@ class PartnerController extends Controller
          $rid = $renewal->id;
 
         // save also to partner_classification Table
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
         if($request->classification == "School"){
            $school = $request->schoolc;
         
@@ -203,10 +241,18 @@ class PartnerController extends Controller
             {
                 $partnerC = new PartnerClassification;
                  $var1 = $school[$i];
+<<<<<<< HEAD
+                 $partnerC->partner_id = $id;
+                 $partnerC->school_id = $var1;
+=======
                  $partnerC->partner_id = $partner_id;
                  $partnerC->school_id = $var1;
                  $partnerC->renewal_id = $rid;
+<<<<<<< HEAD
                  $partnerC->is_updated = 0;
+=======
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
                  $partnerC->save();
             }
         }
@@ -218,14 +264,23 @@ class PartnerController extends Controller
             {
                 $programC = new PartnerClassification;
                  $var1 = $program[$i];
+<<<<<<< HEAD
+                 $programC->partner_id = $id;
+                 $programC->program_id = $var1;
+=======
                  $programC->partner_id = $partner_id;
                  $programC->program_id = $var1;
                  $programC->renewal_id = $rid;
+<<<<<<< HEAD
                  $programC->is_updated = 0;
+=======
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
                  $programC->save();
             }
          }
 
+<<<<<<< HEAD
          // saved to nature table
          $nature = $request->nature;
          $C = count($nature);
@@ -252,6 +307,27 @@ class PartnerController extends Controller
         ]);
      }
 
+=======
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+         return back()->with('success_modal', 5);
+     }
+
+     public function partnerEdit($id){
+        $partner = Partner::where('id', $id)->get();
+        $partnerC = PartnerClassification::all();
+        $school = School::all();
+        $program = AcadPrgrm::all();
+
+        return view('partner::partner-edit', compact('partner','partnerC','school','program'));
+    }
+<<<<<<< HEAD
+
+=======
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
     public function renewPartner(Request $request){
         $request->validate([
              'supporting_doc' => 'nullable|mimes:jpeg,png,pdf|max:2048',
@@ -377,6 +453,17 @@ class PartnerController extends Controller
             $partner->supporting_doc = $partner->supporting_doc;
         }
         $partner->save();
+<<<<<<< HEAD
+=======
+
+        return redirect()->route('partnerDetail',$id)->with('success', 'Record Updated');
+    }
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+      public function deletePartner(Request $request)
+    {
+        $partner = Partner::find($request->id);
+        $partner->delete();
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
        
          // save also to partner_classification Table
          $oldRenewalID = 0;

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<<<<<<< HEAD
 
 <div class="col-md-12 col-sm-12 ">
 	<div class="x_panel">
@@ -102,6 +103,19 @@
           <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fa fa-file-pdf-o"></i></button>
       </div><br><br>
       </div>
+=======
+    <hr style="margin: 0 0 0 0;">
+    <div class="block full"  style="margin-bottom: 10px;" >
+    <div class="block-title" style="padding: 1px 3px 1px 3px;" id="datatable_wrapper">
+<<<<<<< HEAD
+       <h2><strong>Institutional Awards And Recognition<span></strong></h2>
+       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">Add Award</button>
+=======
+       <h2><strong>Licensure Examination<span></strong></h2>
+       <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addAwardModal">New Record</button>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+        
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
     </div>
   </form>
   </div>
@@ -124,6 +138,7 @@
       $('#success-modal').modal('show');
 </script>
 @endif
+<<<<<<< HEAD
 @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.
@@ -152,6 +167,110 @@
                 <th style="width: 10%;">Top<br>notcher/s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                 <th style="width: 10%;">School<br> Rank</th>
                 <th style="width: 20%;" nowrap>Action</th>
+=======
+<<<<<<< HEAD
+  <form class="mb-4" action="{{route('instawardfilterReport')}}" method="POST">
+=======
+  <form class="mb-4" action="{{route('boardfilterReport')}}" method="POST">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+    @csrf 
+     <div class="row">
+      <div class="col-md-8">
+      </div>
+     <div class="col-md-4">
+      <div class="float-right">
+<<<<<<< HEAD
+        <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
+=======
+        <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+          <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
+      </div><br><br>
+      </div>
+    </div>
+ <div class="row">
+      <div class="col-md-6">
+         <strong>Sort by:</strong>
+      </div>
+      <div class="col-md-6">
+<<<<<<< HEAD
+        <strong>Range of Award:</strong>
+=======
+        <strong>Examination:</strong>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+      </div>
+    </div>
+   <div class="form-group row">
+     <div class="row col">
+    <div class="col-md-4 ">
+<<<<<<< HEAD
+      <label >Award</label>
+=======
+      <label >Type:</label>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+      <div id="filters1">   
+      </div>
+    </div>
+    </div>
+  <div class="row col">
+    <div class="col-md-6 ">
+          <label>From </label>
+<<<<<<< HEAD
+          <input type="date" name="from" class="form-control" id="from">
+  </div>
+  <div class="col-md-6">
+     <label>To</label>
+          <input type="date" name="to" class="form-control" id="to">
+=======
+          <input type="date" name="mindate" class="form-control" id="mindate">
+  </div>
+  <div class="col-md-6">
+     <label>To</label>
+          <input type="date" name="maxdate" class="form-control" id="maxdate">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+   </div>
+  </div>
+  </div>
+</form>
+<hr>
+    <!-- Table showing awards -->
+<<<<<<< HEAD
+    <table id="instawardtable" class="display compact cell-border" style="table-layout: fixed">
+		    <thead>
+	            <tr>
+	            	<th>Award Title</th>
+	            	<th>Valid From</th>
+                <th>Valid To</th>
+	            	<th>Venue</th>
+                <th>Award <br>Giving Body</th>
+	            	<th>Supporting <br>Document</th>
+                    <th>Action</th>
+	            </tr>
+		    </thead>   
+		</table>
+    <!-- Modal -->
+	<div class="modal fade" id="addAwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Add Institutional Awards And Recognitions</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+
+	       <form id="form" action="{{route('addInstAward')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
+=======
+    <table id="boardexam_table" class="display compact cell-border" style="table-layout: fixed">
+        <thead>
+              <tr>
+                <th>Licensure Examination</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Supporting <br>Document</th>
+                <th>Topnotcher/s</th>
+                <th>Action</th>
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
               </tr>
         </thead>   
     </table>
@@ -167,6 +286,7 @@
           </button>
         </div>
 
+<<<<<<< HEAD
          <form action="{{route('addBoardExam')}}" method="post" enctype="multipart/form-data" autocomplete="off" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
           {{ csrf_field() }}
           
@@ -194,6 +314,53 @@
                 <option>Teachers - Secondary Level </option>
                 <option>Teachers - Elementary Level </option>
                     </select>
+=======
+         <form id="form" action="{{route('addBoardExam')}}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+                                            {{ csrf_field() }}
+
+        <div class="modal-body">
+          <div class="row form-group">
+<<<<<<< HEAD
+              <label><span class="text-danger">*</span>Title of Award</label>
+		        	<input type="text" class="form-control" name="award" placeholder="" required>
+          </div>
+          <div class="row form-group">
+            <div class="col-md-6">
+                <label><span class="text-danger"></span>From</label>
+                <input type="date" class="form-control" name="from" placeholder="" >
+            </div>
+            <div class="col-md-6">
+                <label><span class="text-danger"></span>To</label>
+                <input type="date" class="form-control" name="to" placeholder="" >
+            </div>
+          </div>
+          <div class="row form-group">
+              <label><span class="text-danger"></span>Venue</label>
+		        	<input type="text" class="form-control" name="venue" placeholder="" >
+          </div>
+          <div class="row form-group">
+              <label><span class="text-danger">*</span>Award Giving Body</label>
+		        	<input type="text" class="form-control" name="award_gb" placeholder="" required>
+          </div>
+          <div class="row form-group">
+		        	<i class="fas fa-upload">Supporting Document</i>
+		        	<input type="file" name="supporting_doc" class="form-control">
+		        </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-info">Add Award</button>
+            
+	      	<div>
+	      	</div>
+             </form>
+	    </div>
+	  </div>
+	</div>
+=======
+              <label><span class="text-danger">*</span>Licensure Examination</label>
+              <input type="text" class="form-control" name="exam" placeholder="" required>
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
           </div>
           <div class="row form-group">
             <div class="col-md-4">
@@ -330,14 +497,58 @@
       </div>
     </div>
   </div>
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 
     </div>
         </div>
       </div>
     </div>
   </div>
+<<<<<<< HEAD
 @endsection
 @section('scripts')
+=======
+</div>
+
+<<<<<<< HEAD
+	<script type="text/javascript">
+
+    $.ajaxSetup({
+	    headers: {
+	       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+    });
+
+     
+=======
+  <script type="text/javascript">
+
+  function calculateSum() {
+
+    var sum = 0;
+    var fpassed = document.getElementById("fpassed").value;
+
+    $(".ftaker").each(function() {
+
+      if(!isNaN(this.value)) {
+        sum += parseFloat(this.value);
+      }
+
+    });
+    var fpercent = (fpassed/sum)*100;
+    //.toFixed() method will roundoff the final sum to 2 decimal places
+    $("#ftotal").html(sum);
+    $("#fpercent").html(fpercent.toFixed(2)+"%");
+
+
+    var total = 0;
+    var tpassed = document.getElementById("tpassed").value;
+    $(".ttaker").each(function() {
+
+      if(!isNaN(this.value)) {
+        total += parseFloat(this.value);
+      }
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
 
 @if(\Session::has('success'))
 <script>
@@ -393,11 +604,13 @@ for (var i = 30; i > 0; i--) {
       }
     });
 
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
     var token = $("input[name='_token']").val();
 
     var count = 0;
     $('#min').each(function() {
 
+<<<<<<< HEAD
       var year = (new Date()).getFullYear();
       year -= 30;
       for (var i = 30; i > 0; i--) {
@@ -418,6 +631,20 @@ for (var i = 30; i > 0; i--) {
       })
 // DaATA TABLES SEARCH
     $.fn.dataTable.ext.search.push(
+=======
+<<<<<<< HEAD
+       $.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var from = Date.parse($('#from').val());
+        var to = Date.parse($('#to').val());
+        var age = Date.parse( data[2] ) || 0; 
+        if ( ( isNaN( from ) && isNaN( to ) ) ||
+             ( isNaN( from ) && age <= to ) ||
+             ( from <= age   && isNaN( to ) ) ||
+             ( from <= age   && age <= to ) )
+=======
+$.fn.dataTable.ext.search.push(
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
     function( settings, data, dataIndex ) {
         var min = $('#min').val();
         var max = $('#max').val();
@@ -426,13 +653,25 @@ for (var i = 30; i > 0; i--) {
              ( isNaN( min ) && age <= max ) ||
              ( min <= age   && isNaN( max ) ) ||
              ( min <= age   && age <= max ) )
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
         {
           return true;
         }else{
         	return false;
         }
     }
+<<<<<<< HEAD
 ); 
+=======
+);
+
+<<<<<<< HEAD
+ var dataTable = $('#instawardtable').DataTable( {
+          "processing" : true,
+          "serverSide" : true,
+          "ajax": "{{route('instaward_dtb',1)}}",
+=======
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
 
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
@@ -469,6 +708,7 @@ $.fn.dataTable.ext.search.push(
           "bSort" : false,
           "ordering": false,
           "ajax": "{{route('boardexam_dtb')}}",
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
 
            dom: 'Blfrtip',
           lengthMenu: [
@@ -487,14 +727,26 @@ $.fn.dataTable.ext.search.push(
           responsive: true,
           
           "columns": [
+<<<<<<< HEAD
+              { "data": "award" },
+              { "data": "from" },
+              { "data": "to" },
+              { "data": "venue" },
+              { "data": "award_giving_body" },
+              { "data": "dsupporting_doc" },
+=======
               { "data": "licensure_exam" },
               { "data": "exam_month" },
               { "data": "exam_year" },
               { "data": "supporting_doc" },
               { "data": "topnotcher" },
+<<<<<<< HEAD
               { "data": "name" ,
 					      "visible": false},
               { "data": "school_rank" },
+=======
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
               { "data": "actions" },
           ],
 
@@ -507,7 +759,22 @@ $.fn.dataTable.ext.search.push(
           },
         });
 
+<<<<<<< HEAD
  $('#min, #max, #examtype, #examonth, #examyear').change(function () {
+=======
+<<<<<<< HEAD
+
+     $('#from, #to').change(function () {
+                dataTable.draw();
+                    });
+
+	     //delete
+       $(document).on('click','.destroy',function(){
+	      var conf = confirm('This record will be deleted. Continue?');
+	      var id = $(this).attr('instAwardID');
+=======
+ $('#mindate, #maxdate').change(function () {
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
                 dataTable.draw();
             });
 
@@ -533,6 +800,7 @@ $.fn.dataTable.ext.search.push(
           }
         }
 
+<<<<<<< HEAD
       
     $(document).on('click','.destroy',function(){
 	var id = $(this).attr('awardid');
@@ -553,6 +821,22 @@ $.fn.dataTable.ext.search.push(
 				id:id,
 				_token:token
 			  },
+=======
+       //delete
+       $(document).on('click','.destroy',function(){
+        var conf = confirm('This record will be deleted. Continue?');
+        var id = $(this).attr('instAwardID');
+>>>>>>> eeeb735244370291262bd2262e98a6d4ad489a41
+
+      if(conf){
+        $.ajax({
+          url:"{{route('deleteInstAward')}}",
+          method:"POST",
+          data:{
+            id:id,
+            _token:token
+          },
+>>>>>>> d471564580cde705a1746260414ac2aa14452cf2
           success:function(data){
             Swal.fire(
             'Deleted!',
