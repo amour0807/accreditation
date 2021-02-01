@@ -1,0 +1,13 @@
+{
+    "name": "AlumniDatabase",
+    "alias": "alumnidatabase",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\AlumniDatabase\\Providers\\AlumniDatabaseServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,0 +1,13 @@
+{
+    "name": "QuantitativeReport",
+    "alias": "quantitativereport",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\QuantitativeReport\\Providers\\QuantitativeReportServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,55 +1,47 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Academic Programs<span></strong></h2>
-         <a class="btn btn btn-info float-right " data-toggle="modal" data-target="#add_acadProg">
-       Add Academic Program
-    </a>
+<div class="col-md-12 col-sm-12 " >
+	<div class="x_panel" >
+    <div class="x_title">
+      <h2>Academic Programs </h2>
+      @if(Auth::user()->hasPermission('create-school'))
+      <a class="btn btn-app float-right" data-toggle="modal" data-target="#add_acadProg" >
+        <i class="fa fa-plus-square-o"></i> Add Academic Program
+      </a>
+      @endif
+      <div class="clearfix"></div>
     </div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  @if ($message = Session::get('error'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-    <br>
-
-<form class="mb-4" action="{{route('filterReport')}}" method="POST">
-@csrf 
-<!-- checking for the controller if to include current->yes -->
-<input type="hidden" name="reportType" value="notHistory">
-
-  <div class="form-group row">
-    <div class="col-md-1"> <strong>Sort by:</strong>
-      <label >School</label></div>
-    <div class="col-md-3 ">
-      <div id="filters1">
+  <form class="mb-4" action="{{route('acadprogReport')}}" method="POST" target="_blank" >
+    @csrf 
+    <input type="hidden" name="reportType" value="notHistory">
+    
+      <div class="form-group row" >
+        <div class="col-md-1"> <strong>Sort by:</strong>
+          <label >School</label></div>
+        <div class="col-md-3 ">
+          <div id="filters1">
+          </div>
+        </div>
+        
+     <div class="col-md-4">
+      <div class="float-right">
+        <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="download excel" ><i class="fa fa-file-excel-o"></i></a>
+          <button type="submit" class="btn btn-outline-danger btn-sm edit" title="view pdf" id="addBtn"><i class="fa fa-file-pdf-o"></i></button>
+      </div><br><br>
       </div>
-    </div>
+      </div>
+    </form>
   </div>
-</form>
-<hr>
-
-      <table id="acadprogram_table"  class="display compact cell-border" style="width:100%">
-        <thead class="thead">
-              <tr>
+</div>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
+          <div class="table-responsive">
+            <table id="acadprogram_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+              <thead>
+              <tr class="headings">
                 <th>School</th>
                 <th>Program Code</th>
                 <th>Program Description</th>
@@ -57,6 +49,7 @@
               </tr>
         </thead>   
     </table>
+          </div>
 
     <div class="modal fade" id="editAcadProg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -95,6 +88,7 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
+              <label><span class="text-danger"> * Required Fields</span></label><br>
             <label><span class="text-danger">*</span>Department:</label>
               <select id="mydropbox" class="form-control" onchange="copyValue()" required>
                 <option disabled selected value> -- --  </option>
@@ -105,13 +99,26 @@
         </div>
 
       <input type="textbox" id="school_id" name="school_id" hidden />
-            <div class="form-group">
-              <label>Program Code</label>
-            <input type="text" class="form-control" name="acad_prog_code" required class="form-control">
+            <div class="row form-group">
+              <div class="col-md-6 col-sm-6">
+                <label><span class="text-danger">*</span>Program Code</label>
+                <input type="text" class="form-control" name="acad_prog_code" required class="form-control">
+              </div>
+              <div class="col-md-6 col-sm-6">
+                <label><span class="text-danger">*</span>Status</label>
+                <select class="form-control" name="status" required>
+                  <option disabled selected value> -- --  </option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Closed">Closed</option>
+                  
+                </select>
+              </div>
+              
             </div>
 
-            <div class="form-group">
-              <label>Program Description</label>
+            <div class="row form-group">
+              <label><span class="text-danger">*</span>Program Description</label>
             <input type="text" class="form-control" name="acad_prog" required class="form-control">
             </div>
             
@@ -124,165 +131,184 @@
     </div>
   </div>
 </div>
-
-  <script type="text/javascript">
- $('.alert').hide();
-    //add
-      $( "#add_acadProg_form" ).submit(function( event ) {
-          event.preventDefault();
-        
+@endsection
+@section('scripts')
+<script type="text/javascript">
+  $('.alert').hide();
+     //add
+       $( "#add_acadProg_form" ).submit(function( event ) {
+           event.preventDefault();
+           $.ajax({
+                    type: 'POST',
+             url:"{{route('addAcadProg')}}",
+             data:$("#add_acadProg_form").serialize(),
+                    dataType: 'JSON',
+                    success: function (results) {
+                        if (results.success === true) {
+               $("#add_acadProg_form")[0].reset();
+               $('#add_acadProg').modal('hide');
+                            dataTable.ajax.reload();
+                            swal.fire("Done!", results.message, "success");
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+                });
+       }); 
+ function copyValue(){
+ 
+    var dropboxvalue = document.getElementById('mydropbox').value;
+    document.getElementById('school_id').value = dropboxvalue;
+ 
+ }
+ 
+      $.ajaxSetup({
+       headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+       }
+     });
+     
+     var token = $("input[name='_token']").val();
+ 
+    var count = 0;
+ 
+ 
+    // program table
+ 
+         var dataTable= $('#acadprogram_table').DataTable( {
+           "ajax": "{{route('acadprogram_dtb')}}",
+           responsive: true,
+          		"ordering": false,
+                dom: 'Blfrtip',
+              lengthMenu: [
+              [ 10, 25, 50, -1 ],
+              [ '10', '25', '50', 'Show all' ]
+            ],
+            buttons: [
+                    {
+                      extend: 'excelHtml5',
+                      title: 'List of Academic Programs'
+                  },
+                  ],
+           "columns": [
+               { "data": "school_code"},
+               { "data": "acad_prog_code" },
+               { "data": "acad_prog"},
+               { "data": "actions"},
+           ],
+ 
+           initComplete: function () {var $buttons = $('.dt-buttons').hide();
+              $('.dataTables_length').show();
+              $('#exportLink').on('click', function() {
+                $('.buttons-excel').click(); 
+              })
+               this.api().columns([0,2]).every( function () {
+                   var column = this;
+                   count++;
+                   $('<div id="lalagyan'+count+'"></div>')
+                       .appendTo( "#filters"+count );
+ 
+                   var select = $('<select class="form-control" name="select'+count+'"><option value="">All</option></select>')
+                       .appendTo( "#lalagyan"+count )
+                       .on( 'change', function () {
+                           var val = $.fn.dataTable.util.escapeRegex(
+                               $(this).val()
+                           );
+    
+                           column
+                               .search( val ? '^'+val+'$' : '', true, false )
+                               .draw();
+                       } );
+    
+                   column.data().unique().sort().each( function ( d, j ) {
+                       select.append( '<option value="'+d+'">'+d+'</option>' )
+                   } );
+               } );
+           },
+ 
+     
+         });
+       
+       //delete
+        $(document).on('click','.destroy',function(){
+         var id = $(this).attr('programid');
+         Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
           $.ajax({
-            url:"{{route('addAcadProg')}}",
-            method:"POST",
-            data:$("#add_acadProg_form").serialize(),
-            success:function(data){
-              $("#add_acadProg_form")[0].reset();
-              $('#add_acadProg').modal('hide');
-              dataTable.ajax.reload();
-              $('.alert').append('<div class="alert alert-success alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record added!</span> </div>');
-              $('.alert').show();
-              $(".alert").delay(4000).fadeOut(500);
-              setTimeout(function(){
-                $('#alertMessage').remove();
-              }, 5000);
-            }
-                
-          }); 
-      }); 
-function copyValue(){
-
-   var dropboxvalue = document.getElementById('mydropbox').value;
-   document.getElementById('school_id').value = dropboxvalue;
-
-}
-
-     $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    
-    var token = $("input[name='_token']").val();
-
-   var count = 0;
-
-
-   // program table
-
-        var dataTable= $('#acadprogram_table').DataTable( {
-          "scrollX": true,
-          "ajax": "{{route('acadprogram_dtb')}}",
-          responsive: true,
-
-          "columns": [
-              { "data": "school_code"},
-              { "data": "acad_prog_code" },
-              { "data": "acad_prog"},
-              { "data": "actions"},
-          ],
-
-          initComplete: function () {
-              this.api().columns([0,2]).every( function () {
-                  var column = this;
-                  count++;
-                  $('<div id="lalagyan'+count+'"></div>')
-                      .appendTo( "#filters"+count );
-
-                  var select = $('<select class="form-control" name="select'+count+'"><option value="">All</option></select>')
-                      .appendTo( "#lalagyan"+count )
-                      .on( 'change', function () {
-                          var val = $.fn.dataTable.util.escapeRegex(
-                              $(this).val()
-                          );
-   
-                          column
-                              .search( val ? '^'+val+'$' : '', true, false )
-                              .draw();
-                      } );
-   
-                  column.data().unique().sort().each( function ( d, j ) {
-                      select.append( '<option value="'+d+'">'+d+'</option>' )
-                  } );
-              } );
-          },
-
-    
-        });
-      
-      //delete
-       $(document).on('click','.destroy',function(){
-        var conf = confirm('This record will be deleted. Continue?');
-        var id = $(this).attr('programid');
-
-      if(conf){
-        $.ajax({
-          url:"{{route('deleteAcadProg')}}",
+           url:"{{route('deleteAcadProg')}}",
           method:"POST",
-          data:{
-            id:id,
-            _token:token
-          },
+           data:{
+             id:id,
+             _token:token
+           },
           success:function(data){
-            dataTable.ajax.reload();
-            $('.alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record deleted!</span> </div>');
-            $('.alert').show();
-            $(".alert").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          ) 
+          dataTable.ajax.reload();
           },
           error: function(jqxhr, status, exception) {
-             alert('Record not deleted. There are records associated with this Accreditation Status');
+            Swal.fire(
+            'Cannot be Deleted!',
+            'Record not deleted. There are records associated with this Record',
+            'error'
+          )
          }
-
-        });  
-      }
-    });
-
-       //show edit form
-      $(document).on('click','.edit',function(){
-          var id = $(this).attr('programid');
-
-          $.ajax({
-            url:"{{route('editAcadProg')}}",
-            method:"POST",
-            data:{
-              id:id,
-              _token:token
-            },
-            success:function(data){
-              $('#editAcadProg').modal('show');
-              $('#editBody').html(data);
-             
-            }   
-          });  
-        });
-
-        //Implement edit
-      $( "#edit_acadprog_form" ).submit(function( event ) {
-          event.preventDefault();
-        
-          $.ajax({
-            url:"{{route('updateAcadProg')}}",
-            method:"POST",
-            data:$("#edit_acadprog_form").serialize(),
-            success:function(data){
-              $("#edit_acadprog_form")[0].reset();
-              $('#editAcadProg').modal('hide');
-              dataTable.ajax.reload();
-              $('.alert').append('<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record updated!</span> </div>');
-              $('.alert').show();
-              $(".alert").delay(4000).fadeOut(500);
-              setTimeout(function(){
-                $('#alertMessage').remove();
-              }, 5000);
-            }
-                
-          }); 
-      });
-     
+        }); 
+        }
+  });
+     });
+ 
+        //show edit form
+       $(document).on('click','.edit',function(){
+           var id = $(this).attr('programid');
+ 
+           $.ajax({
+             url:"{{route('editAcadProg')}}",
+             method:"POST",
+             data:{
+               id:id,
+               _token:token
+             },
+             success:function(data){
+               $('#editAcadProg').modal('show');
+               $('#editBody').html(data);
+              
+             }   
+           });  
+         });
+ 
+         //Implement edit
+       $( "#edit_acadprog_form" ).submit(function( event ) {
+           event.preventDefault();
+           $.ajax({
+             url:"{{route('updateAcadProg')}}",
+          method:"POST",
+             data:$("#edit_acadprog_form").serialize(),
+          success: function (results) {
+                        if (results.success === true) {
+               $("#edit_acadprog_form")[0].reset();
+               $('#editAcadProg').modal('hide');
+                            swal.fire("Done!", results.message, "success");
+                            dataTable.ajax.reload();
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+        }); 
+       });
       
-
-    </script>
-
+       
+ 
+     </script>
 @endsection

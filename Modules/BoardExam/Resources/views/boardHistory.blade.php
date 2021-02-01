@@ -1,25 +1,24 @@
 @extends('layouts.app')
 @section('content')
-    <hr style="margin: 0 0 0 0; ">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Licensure Exam Details</strong>
-       </h2>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+    <div class="x_title">
+      <h2><a href="{{ route('boardExam') }}" class="fa fa-angle-double-left" >&nbsp;&nbsp;Licensure Exam Details</a></h2>
+     
+      <div class="clearfix"></div>
     </div>
-  <div class="alert"></div>
-  @if(Session::has('message'))
-    <div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
-      {{ Session::get('message') }}
-                <button type="button" class="close" data-dismiss="alert">×</button>
-    </div> 
-    @endif
-    @if(Session::has('red'))
+    <form class="mb-4" action="{{route('bHistoryfilterReport')}}" method="POST">
+      @csrf 
       
-    <div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
-      {{ Session::get('red') }}
-                <button type="button" class="close" data-dismiss="alert">×</button>
-    </div> 
-  @endif
+      <input type="text" value="{{$exam}}" name="licensure" hidden>
+          <div class="float-right">
+              <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fa fa-file-excel-o"></i></a>
+                <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fa fa-file-pdf-o"></i></button>
+            </div>
+  </form>
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
   @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.
@@ -34,56 +33,23 @@
             </div>
         @endif
 
-@if (session('success'))
-     <div class="alert alert-info alert-block">
-            <strong>{{ session('success') }}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-     
-@endif
-  <form class="mb-4" action="{{route('bHistoryfilterReport')}}" method="POST">
-    @csrf 
-    
-<input type="text" name="licensure" value="{{$exam}}" hidden>
- <div class="row">
-        <strong>Examination:</strong>
-    </div>
-   <div class="form-group row" >
-     <div class="row col-md-8">
-      <div class="col-md-6 ">
-          <label>From </label>
-          <input type="date" name="mindate" class="form-control" id="mindate">
-      </div>
-      <div class="col-md-6">
-         <label>To</label>
-              <input type="date" name="maxdate" class="form-control" id="maxdate">
-       </div>
-    </div>
-      <div class="row col-md-4">
-        <div class="float-right">
-            <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></a>
-              <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
-          </div>
-      </div>
-  </div>
-</form>
-    <hr>
-      <table id="history_table"  class="display compact cell-border" style="text-align: center;">
-        <thead>
-          <tr>
-            <th>Date Taken</th>
+        <h6><center>{{$exam}}</center></h6>
+<div class="table-responsive">
+  <table id="history_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+       <thead>
+         <tr class="headings" style="font-size: 11px">
+            <th colspan="2">Date Taken</th>
             <th colspan="4"><center>First Takers</center></th>
             <th>UB Passsing<br>Percentage<br>(First Takers)</th>
             <th colspan="4"><center>Total No. of Takers</center></th>
-            <th>UB Overall<br>Passsing<br>Percentage</th>
+            <th >UB Overall<br>Passsing<br>Percentage</th>
             <th>National<br>Passsing<br>Percentage</th>
-            <th>Topnotchers</th>
+            <th>Top<br>notchers</th>
             <th>School Rank</th>
           </tr>
           <tr>
-            <th></th>
+            <th>Month</th>
+            <th>Year</th>
             <th>Passed</th>
             <th>Failed</th>
             <th>Con</th>
@@ -100,6 +66,14 @@
           </tr>
         </thead>
       </table>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+@section('scripts')
 <script type="text/javascript">
 
     $.ajaxSetup({
@@ -111,7 +85,6 @@
     var token = $("input[name='_token']").val();
 
    var dataTable = $('#history_table').DataTable( {
-          "scrollX" : true,
           "processing" : true,
           "bSort" : false,
           "ajax": "{{route('boardHistory_dtb', $exam)}}",
@@ -119,14 +92,22 @@
            dom: 'Blfrtip',
           lengthMenu: [
             [ 10, 25, 50, -1 ],
-            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+            [ '10', '25', '50', 'Show all' ]
         ],
         buttons: [
-            'excelHtml5',
+              {
+                extend: 'excelHtml5',
+                title: 'Licensure_history'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Licensure_history'
+            }
             ],
 
           "columns": [
-              { "data": "exam_date" },
+              { "data": "exam_month" },
+              { "data": "exam_year" },
               { "data": "ftaker_passed" },
               { "data": "ftaker_failed" },
               { "data": "ftaker_cond" },

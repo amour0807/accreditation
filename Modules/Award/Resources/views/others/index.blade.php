@@ -1,78 +1,17 @@
 @extends('layouts.app')
 @section('content')
-@section('additional')
-<style type="text/css">
-	table tr td {
-	overflow-x: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-
-	}
-	table tr th {
-		width: 9%;
-	}
-
-</style>
-
-<script type="text/javascript">
-    var token = $("input[name='_token']").val();
-
-function CheckAward(val){
- var element=document.getElementById('others2');
- if(val=='others2')
-   element.style.display='block';
- else
-   element.style.display='none';
-}
-</script>	
-@endsection
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
- <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Student's Award<span>{{$school->school_name}}</strong></h2>
-       	 <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addStudentAwardModal">Add Award</button>
-    </div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-@if(!empty(Session::get('success_modal')) && Session::get('success_modal') == 5)
-	<script>
-	$(function() {
-		$('#success-modal').modal({backdrop: 'static', keyboard: false})  
-	    $('#success-modal').modal('show');
-
-	});
-	</script>
-@endif
- <form class="mb-4" action="{{route('userawardfilterReport')}}" method="POST">
-    @csrf 
-    <div class="row">
-    	<div class="col-md-8">
-    	</div>
-     <div class="col-md-4">
-     	<div class="float-right">
-       <div class="actionPart" >
-        <div class="actionSelect">
-            
-        </div>
-    </div>
-    <button id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fas fa-file-excel"></i></button>
-      <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fas fa-file-pdf"></i></button>
-  </div><br><br>
-      </div>
-    </div>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+    <div class="x_title">
+  <h2>Student's Award</h2>
+  @if(Auth::user()->hasPermission('create-student'))
+  <a class="btn btn-app float-right" data-toggle="modal"  data-target="#addStudentAwardModal">
+    <i class="fa fa-plus-square-o"></i> Add Award
+  </a>
+    @endif
+  <div class="clearfix"></div>
+</div> <form class="mb-4" action="{{route('userawardfilterReport')}}" target='_blank' method="POST">
+	@csrf 
 
  <div class="row">
       <div class="col-md-6">
@@ -99,24 +38,64 @@ function CheckAward(val){
     </div>
      </div>
   <div class="row col">
-    <div class="col-md-6 ">
-          <label>From </label>
-          <input type="date" name="from" class="form-control small" id="from">
-  </div>
-  <div class="col-md-6">
-     <label>To</label>
-          <input type="date" name="to" class="form-control small" id="to">
-   </div>
+		<div class="col-6 col-md-6">
+			<label>From </label>
+			<select  class="form-control" name="min" id="min">
+				<option>All</option>
+			</select>
+		</div>
+		<div class="col-6 col-md-6">
+		<label>To</label>
+		<select  class="form-control" name="max" id="max">
+				<option>All</option>
+			</select>
+	</div>
   </div>
   </div>
       
-</form><hr>
+    <div class="row">
+    	<div class="col-md-8">
+    	</div>
+     <div class="col-md-4">
+     	<div class="float-right">
+       <div class="actionPart" >
+        <div class="actionSelect">
+        </div>
+    </div>
+    <a id="exportLink" class="btn btn-outline-success btn-sm edit " target="_blank" title="view excel" ><i class="fa fa-file-excel-o"></i></a>
+      <button type="submit" class="btn btn-outline-danger btn-sm edit " target="_blank" title="view pdf" id="addBtn"><i class="fa fa-file-pdf-o"></i></button>
+  </div><br><br>
+      </div>
+    </div>
+</form>
+	</div>
+</div>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
+
+@if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        @endif
 
     <!-- Table showing awards -->
-
-    <table id="awardtable" class="display compact cell-border" style="width:100%; table-layout: fixed;">
-		    <thead class="thead">
-	            <tr>
+	<div class="table-responsive">
+		<table id="awardtable"  class="table table-striped jambo_table bulk_action" style="width: 100%;">
+			 <thead>
+			   <tr class="headings">
+				   
 	            	<th>Name</th>
 	            	<th>Program</th>
 	            	<th>Scope</th>
@@ -132,6 +111,7 @@ function CheckAward(val){
 	            </tr>
 		    </thead>   
 		</table>
+	</div>
     
 	<!-- end table -->
 
@@ -147,7 +127,9 @@ function CheckAward(val){
 	      </div>
 
 	       <form id="form" action="{{ route('addStudentAward') }}" method="post" enctype="multipart/form-data" autocomplete="off" id="studentForm" class="form-horizontal form-bordered" style="padding: 0px 8px 0px 16px;">
-                                            {{ csrf_field() }}
+											{{ csrf_field() }}
+			
+			<span class="text-danger">* Required Fields</span><br>
           	  <div class="modal-body">
 		      	 <div class="form-group">
 		    	<div class="row form-group">
@@ -166,9 +148,9 @@ function CheckAward(val){
 		        </div>
 		    </div>
 		    	<div class="form-group">
-		        	<label><span class="text-danger">*</span>{{$school->school_code}} Program:</label>
+		        	<label><span class="text-danger">*</span>@if(!Auth::user()->hasRole('admin')){{$school->school_code}}@endif Program:</label>
 
-					<select class="form-control small" name="acad_prgram_id" >
+					<select class="form-control small" name="acad_prgram_id" required>
 						 <option disabled selected value> -- --  </option>
 						@foreach($acad_prog as $aw)
 					 	 <option value = '{{ $aw->a_id }}'> {{ $aw->acad_prog }}  </option>
@@ -185,7 +167,6 @@ function CheckAward(val){
 					  <option value="School">School</option>
 					  <option value="Institutional">Institutional</option>
 					  <option value="Local">Local</option>
-					  <option value="Regional">Regional</option>
 					  <option value="National">National</option>
 					  <option value="International">International</option>
 					</select>
@@ -222,7 +203,7 @@ function CheckAward(val){
 					<div class="col-md-4">
 		        	<label><span class="text-danger">*</span>Award / Recognition /Achivement:</label>
 
-					<select class="form-control small" name="award" onchange='CheckAward(this.value);'>
+					<select class="form-control small" name="award" onchange='CheckAward(this.value);' required>
 					  <option disabled selected value> -- --  </option>
 					  <option value="First Place">First Place</option>
 					  <option value="Second Place">Second Place</option>
@@ -256,7 +237,7 @@ function CheckAward(val){
 		        	<input type="date" class="form-control small" name="date" placeholder="" required>
 		        </div>
 		        <div class="col-md-4 form-group">
-		        	<i class="fas fa-upload">Certificate</i>
+		        	<i class="fa fa-upload">Certificate</i>
 		        	<input type="file" name="award_cert" class="form-control">
 		        </div>
 		      </div>
@@ -290,135 +271,216 @@ function CheckAward(val){
     </div>
   </div>
 </div>
-	<script type="text/javascript">
+			  </div>
+		  </div>
+	  </div>
+	</div>
+</div>
+@endsection
+@section('scripts')
+@if(\Session::has('success'))
+<script>
+Swal.fire({
+  title: 'Successfully saved!',
+  text: "Add another record?",
+  icon: 'success',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes',
+  cancelButtonText: 'Back to List'
+}).then((result) => {
+  if (result.isConfirmed) {
+	$('#addStudentAwardModal').modal('show');
+  }
+})
+</script>
+  @elseif(\Session::has('error'))
+  <script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Something went wrong!',
+    footer: "<a>Back</a>"
+  }) 
+  </script>
+  @endif
+<script type="text/javascript">
 
-
-    $.ajaxSetup({
-	    headers: {
-	       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	    }
-    });
-    
-    var token = $("input[name='_token']").val();
-	 
-  var count = 0;
-
-       $.fn.dataTable.ext.search.push(
-    function( settings, data, dataIndex ) {
-        var from = Date.parse($('#from').val());
-        var to = Date.parse($('#to').val());
-        var age = Date.parse( data[8] ) || 0; 
-        if ( ( isNaN( from ) && isNaN( to ) ) ||
-             ( isNaN( from ) && age <= to ) ||
-             ( from <= age   && isNaN( to ) ) ||
-             ( from <= age   && age <= to ) )
-        {
-            return true;
-        }else{
-          return false;
-        }
-        
-    }
-);
-      var dataTable= $('#awardtable').DataTable( {
-	        "ajax": "{{route('userAward_dtb', $school->id)}}", //view
-	        responsive: false,
-        	"scrollX": false,
-            dom: 'Blfrtip',
-          lengthMenu: [
-            [ 10, 25, 50, -1 ],
-            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-        ],
-        buttons: [
-            'excelHtml5',
-            ],
-
-	        "columns": [
-	            { "data": null , 
-			     "render" : function ( data, type, full ) { 
-			        return full['first_name']+', '+full['middle_initial']+'. '+full['last_name'];}
-			      },
-	            { "data": "acad_prog_code" },
-	            { "data": "scope" },
-	            { "data": "category" },
-	            { "data": "award" },
-	            { "data": "classification" },
-	            { "data": "title_competitions" },
-	            { "data": "award_giving_body" },
-	            { "data": "date_awarded" },
-	            { "data": "venue" },
-
-	            { "data": "actions" },
-
-	        ],
-	        initComplete: function () {
-
-            var $buttons = $('.dt-buttons').hide();
-            $('.dataTables_length').show();
-             $('#exportLink').on('click', function() {
-                $('.buttons-excel').click(); 
-             })
-
-              this.api().columns([2,3]).every( function () {
-                  var column = this;
-                  count++;
-                  $('<div id="lalagyan'+count+'"></div>')
-                      .appendTo( "#filters"+count );
-
-                  var select = $('<select class="form-control small" name="select'+count+'"><option value="">All</option></select>')
-                      .appendTo( "#lalagyan"+count )
-                      .on( 'change', function () {
-                          var val = $.fn.dataTable.util.escapeRegex(
-                              $(this).val()
-                          );
-   
-                          column
-                              .search( val ? '^'+val+'$' : '', true, false )
-                              .draw();
-                      } );
-   
-                  column.data().unique().sort().each( function ( d, j ) {
-                      select.append( '<option value="'+d+'">'+d+'</option>' )
-                  } );
-              } );
-          },
-        	});
-
-
-		$('#from, #to').change(function () {
-                dataTable.draw();
-                    });
-		
+	function CheckAward(val){
+	 var element=document.getElementById('others2');
+	 if(val=='others2')
+	   element.style.display='block';
+	 else
+	   element.style.display='none';
+	}
 	
-	     //delete
-             $(document).on('click','.destroy',function(){
-	      var conf = confirm('This record will be deleted. Continue?');
-	      var id = $(this).attr('awardid');
+		$.ajaxSetup({
+			headers: {
+			   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		var token = $("input[name='_token']").val();
+	  	var count = 0;
+		  
+	$('#min').each(function() {
 
-      if(conf){
-        $.ajax({
-          url:"{{route('deleteAward')}}",
-          method:"POST",
-          data:{
-            id:id,
-            _token:token
-          },
+		var year = (new Date()).getFullYear();
+		year -= 30;
+		for (var i = 30; i > 0; i--) {
+
+			$(this).append('<option value="' + (year + i) + '">' + (year + i) + '</option>');
+		}
+	})
+	$('#max').each(function() {
+
+		var year = (new Date()).getFullYear();
+		year += 4;
+		year -= 30;
+		for (var i = 30; i > 0; i--) {
+
+			$(this).append('<option value="' + (year + i) + '">' + (year + i) + '</option>');
+		}
+	})
+		   $.fn.dataTable.ext.search.push(
+		function( settings, data, dataIndex ) { 
+			var from = $('#min').val()
+			    to = $('#max').val()
+			    dates = data[8].split(' '); 
+			if ( ( isNaN( from ) && isNaN( to ) ) ||
+				 ( isNaN( from ) && dates[2] <= to ) ||
+				 ( from <= dates[2]   && isNaN( to ) ) ||
+				 ( from <= dates[2]   && dates[2] <= to ) )
+			{
+				return true;
+			}else{
+			  return false;
+			}
+			
+		}
+	);
+		  var dataTable= $('#awardtable').DataTable( {
+				"ajax": "{{route('userAward_dtb')}}", //view
+				responsive: true,
+          		"ordering": false,
+			    dom: 'Blfrtip',
+			  lengthMenu: [
+				[ 10, 25, 50, -1 ],
+				[ '10', '25', '50', 'Show all' ]
+			],
+			buttons: [
+               {
+                extend: 'excelHtml5',
+                title: 'Student Awards'
+            },
+            ],
+	
+				"columns": [
+					{ "data": null , 
+					 "render" : function ( data, type, full ) { 
+						 if(full['middle_initial'] != "")
+						return full['first_name']+' '+full['middle_initial']+'. '+full['last_name'];
+						else
+						return full['first_name']+' '+full['last_name'];
+						}
+					  },
+					{ "data": "acad_prog_code" ,
+					"visible": false,},
+					{ "data": "scope" ,
+					"visible": false,},
+					{ "data": "category",
+					"visible": false, },
+					{ "data": "award"},
+					{ "data": "classification" ,
+					"visible": false,},
+					{ "data": "title_competitions" },
+					{ "data": "award_giving_body" },
+					{ "data": "date_awarded" },
+					{ "data": "venue" ,
+					"visible": false,},
+					{ "data": "actions" },
+	
+				],
+				initComplete: function () {
+	
+				var $buttons = $('.dt-buttons').hide();
+				$('.dataTables_length').show();
+				 $('#exportLink').on('click', function() {
+					$('.buttons-excel').click(); 
+				 })
+	
+				  this.api().columns([2,3]).every( function () {
+					  var column = this;
+					  count++;
+					  $('<div id="lalagyan'+count+'"></div>')
+						  .appendTo( "#filters"+count );
+	
+					  var select = $('<select class="form-control small" name="select'+count+'"><option value="">All</option></select>')
+						  .appendTo( "#lalagyan"+count )
+						  .on( 'change', function () {
+							  var val = $.fn.dataTable.util.escapeRegex(
+								  $(this).val()
+							  );
+	   
+							  column
+								  .search( val ? '^'+val+'$' : '', true, false )
+								  .draw();
+						  } );
+	   
+					  column.data().unique().sort().each( function ( d, j ) {
+						  select.append( '<option value="'+d+'">'+d+'</option>' )
+					  } );
+				  } );
+			  },
+				});
+	
+	
+			$('#min, #max').change(function () {
+					dataTable.draw();
+						});
+			
+		//delete
+$(document).on('click','.destroy',function(){
+	var id = $(this).attr('awardid');
+		Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+			  url:"{{route('deleteAward')}}",
+			  method:"POST",
+			  data:{
+				id:id,
+				_token:token
+			  },
           success:function(data){
-            dataTable.ajax.reload();
-            $('.alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record deleted!</span> </div>');
-            $('.alert').show();
-            $(".alert").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          ) 
+          dataTable.ajax.reload();
           },
           error: function(jqxhr, status, exception) {
-             alert('Record not deleted.');
+            Swal.fire(
+            'Cannot be Deleted!',
+            'this record still has a task. Please delete it all then delete this project.',
+            'error'
+          )
          }
 
-        });  
-      }
-    });
-
-</script>
+        }); 
+         
+        }
+      })
+		});
+	
+	</script>
 @endsection

@@ -1,46 +1,30 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>School Departments<span></strong></h2>
-         <a class="btn btn-info float-right " data-toggle="modal" data-target="#add_department">
-           Add department
-         </a>
-    </div>
-  <div class="alert"></div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  @if ($message = Session::get('error'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-    <br>
-
-<table id="schooldept_table" class="display compact cell-border" style="width:100%">
-  <thead>
-    <tr>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+    <div class="x_title">
+  <h2>School Departments</h2>
+  @if(Auth::user()->hasPermission('create-school'))
+  <a class="btn btn-app float-right" data-toggle="modal" data-target="#add_department">
+    <i class="fa fa-plus-square-o"></i> Add department
+  </a>
+    @endif
+  <div class="clearfix"></div>
+</div>
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
+            <div class="table-responsive">
+   <table id="schooldept_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+        <thead>
+          <tr class="headings">
       <th>Code</th>
       <th>School Name</th>
       <th>Actions</th>
     </tr>
   </thead>   
 </table>
+</div>
 
 <!-- Add Modal -->
 <div class="modal fade" id="add_department" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -55,12 +39,13 @@
 		        </button>
 		      </div>
 		      <div class="modal-body">
+            <label><span class="text-danger"> * Required Fields</span></label>
             <div class="form-group">
-              <label>School Code</label>
+              <label><span class="text-danger">*</span></label>School Code</label>
             <input type="text" class="form-control" name="school_code" required class="form-control">
             </div>
             <div class="form-group">
-              <label>School Name</label>
+              <label><span class="text-danger">*</span>School Name</label>
             <input type="text" class="form-control" name="school_name" required class="form-control">
             </div>
 		        
@@ -88,7 +73,6 @@
 		        </button>
 		      </div>
 		      <div class="modal-body" id="editBody">
-		        
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -99,60 +83,71 @@
   </div>
 </div>
 
+@endsection
+@section('scripts')
 <script type="text/javascript">
 
-    $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    
-    var token = $("input[name='_token']").val();
+  $.ajaxSetup({
+    headers: {
+       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  
 
 
-   // program table
+ // program table
 
-        var dataTable= $('#schooldept_table').DataTable( {
-          "scrollX": true,
-          
-          "ajax": "{{route('school_dept_dtb')}}",
-         
+      var dataTable= $('#schooldept_table').DataTable( {
+        "ordering": false,
+        "ajax": "{{route('school_dept_dtb')}}",
 
-          "columns": [
-              { "data": "school_code" },
-              { "data": "school_name" },
-              { "data": "actions" },
-          ],
-        
-        
-          });
+        "columns": [
+            { "data": "school_code" },
+            { "data": "school_name" },
+            { "data": "actions" },
+        ],
+      
+      
+        });
 $('.alert').hide();
-    //add
-	    $( "#add_schooldept_form" ).submit(function( event ) {
-	        event.preventDefault();
-	      
-	        $.ajax({
-	          url:"{{route('addSchoolForm')}}",
-	          method:"POST",
-	          data:$("#add_schooldept_form").serialize(),
-	          success:function(data){
-	            $("#add_schooldept_form")[0].reset();
-	            $('#add_department').modal('hide');
-	            dataTable.ajax.reload();
-	           
-	          }, error: function(jqxhr, status, exception) {
-             alert('Duplicate School Code');
-         }
-	              
-	        }); 
-	    }); 
-	    //delete
-       $(document).on('click','.destroy',function(){
-	      var conf = confirm('This record will be deleted. Continue?');
-	      var id = $(this).attr('schoolid');
-
-      if(conf){
+  //add
+    $( "#add_schooldept_form" ).submit(function( event ) {
+        event.preventDefault();
         $.ajax({
+                    type: 'POST',
+                    url: "{{route('addSchoolForm')}}",
+                    data:$("#add_schooldept_form").serialize(),
+                    dataType: 'JSON',
+                    success: function (results) {
+                        if (results.success === true) {
+                          $("#add_schooldept_form")[0].reset();
+                          $('#add_department').modal('hide');
+                          dataTable.ajax.reload();
+                            swal.fire("Done!", results.message, "success");
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+                });
+
+    }); 
+    
+  var token = $("input[name='_token']").val();
+    //delete
+     $(document).on('click','.destroy',function(){
+      var id = $(this).attr('schoolid');
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        
+        if (result.isConfirmed) {
+          $.ajax({
           url:"{{route('deleteSchoolDept')}}",
           method:"POST",
           data:{
@@ -160,64 +155,65 @@ $('.alert').hide();
             _token:token
           },
           success:function(data){
-            dataTable.ajax.reload();
-            $('.alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record deleted!</span> </div>');
-            $('.alert').show();
-            $(".alert").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
+            
+          dataTable.ajax.reload();
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          ) 
           },
           error: function(jqxhr, status, exception) {
-             alert('Record not deleted. There are records associated with this Accreditation Status');
+            Swal.fire(
+            'Cannot be Deleted!',
+            'Record not deleted. There are records associated with this Record',
+            'error'
+          )
          }
+        }); 
+        }
+      })
+  });
 
+     //show edit form
+    $(document).on('click','.edit',function(){
+        var id = $(this).attr('schoolid');
+
+        $.ajax({
+          url:"{{route('editSchoolDept')}}",
+          method:"POST",
+          data:{
+            id:id,
+            _token:token
+          },
+          success:function(data){
+            $('#editDepartment').modal('show');
+            $('#editBody').html(data);
+           
+          }   
         });  
-      }
-    });
+      });
 
-       //show edit form
-  		$(document).on('click','.edit',function(){
-          var id = $(this).attr('schoolid');
+      //Implement edit
 
-          $.ajax({
-            url:"{{route('editSchoolDept')}}",
-            method:"POST",
-            data:{
-              id:id,
-              _token:token
-            },
-            success:function(data){
-              $('#editDepartment').modal('show');
-              $('#editBody').html(data);
-             
-            }   
-          });  
-        });
+    $( "#edit_schooldept_form" ).submit(function( event ) {
+        event.preventDefault();
+        $.ajax({
+          url:"{{route('updateSchoolDept')}}",
+          method:"POST",
+          data:$("#edit_schooldept_form").serialize(),
+          success: function (results) {
+                        if (results.success === true) {
+                          $("#edit_schooldept_form")[0].reset();
+                          $('#editDepartment').modal('hide');
+                            swal.fire("Done!", results.message, "success");
+                            dataTable.ajax.reload();
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+        }); 
+    }); 
 
-        //Implement edit
-
-	    $( "#edit_schooldept_form" ).submit(function( event ) {
-	        event.preventDefault();
-	      
-	        $.ajax({
-	          url:"{{route('updateSchoolDept')}}",
-	          method:"POST",
-	          data:$("#edit_schooldept_form").serialize(),
-	          success:function(data){
-	            $("#edit_schooldept_form")[0].reset();
-	            $('#editDepartment').modal('hide');
-	            dataTable.ajax.reload();
-	            $('.alert').append('<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record updated!</span> </div>');
-	            $('.alert').show();
-	            $(".alert").delay(4000).fadeOut(500);
-	            setTimeout(function(){
-	              $('#alertMessage').remove();
-	            }, 5000);
-	          }
-	              
-	        }); 
-	    }); 
-
-    </script>
+  </script>
 @endsection

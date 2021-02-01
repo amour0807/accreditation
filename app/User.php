@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\HasRolesAndPermissions;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -9,12 +10,14 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasRolesAndPermissions; // Our new trait
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    protected $guard = 'staff';
     protected $fillable = [
         'name', 'email', 'password',
     ];

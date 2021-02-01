@@ -1,122 +1,90 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Accreditation Reports<span></strong></h2>
-    </div>
-  <div class="alert"></div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  @if ($message = Session::get('error'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
 
-<form class="mb-4" action="{{route('filterReport')}}" method="POST">
-@csrf 
-<!-- checking for the controller if to include current->yes -->
-<input type="hidden" name="reportType" value="notHistory">
-
-	<strong>Sort by:</strong>
-	<div class="form-group row">
-		<div class="col-md-3 ">
-			<label >School</label>
-			<div id="filters1">
-				
-			</div>
-			
-		</div>
-		<div class="col-md-3 ">
-			<label>Accreditation Level</label>
-			<div id="filters2">
-				
-			</div>
-		</div>
-		<div class="col-md-3 ">
-			<label>Accreditation Category</label>
-			<select class="form-control" id="accredStat" name="accredStat">
-				<option value="">All</option>
-				<option value="Active">Active</option>
-				<option value="Expired">Expired</option>
-			</select>
-		</div>
-		<div class="col-md-3 ">
-			<label>Visitation year</label>
-			<select  class="form-control" id="dropdownYear" name="visitYear">
-				<option value="">All</option>
-			</select>
-			<!-- <select class="form-control">
-				<option>asdasd</option>
-			</select> -->
-		</div>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
+			  <form class="mb-4" action="{{route('filterReport')}}" target="_blank" method="POST">
+			  @csrf 
+			  <!-- checking for the controller if to include current->yes -->
+			  <input type="hidden" name="reportType" value="notHistory">
+			  
+				  <strong>Sort by:</strong>
+				  <div class="form-group row">
+					  
+					  @if(Auth::user()->hasRole('admin'))
+					  <div class="col-md-2 col-sm-6">
+						  <label >Schools</label>
+						  <div id="filters1">
+						  </div>
+					  </div>
+					  
+					  @endif
+					  <div class="col-md-4 col-sm-6">
+						  <label>Accreditation Level</label>
+						  <div id="filters2">
+							  
+						  </div>
+					  </div>
+					  <div class="col-md-3 col-sm-6">
+						  <label>Accreditation Category</label>
+						  <select class="form-control" id="accredStat" name="accredStat">
+							  <option value="">All</option>
+							  <option value="Active">Active</option>
+							  <option value="Expired">Expired</option>
+						  </select>
+					  </div>
+					  <div class="col-md-3 col-sm-6">
+						  <label>Visitation year</label>
+						  <select  class="form-control" id="dropdownYear" name="visitYear">
+							  <option value="">All</option>
+						  </select>
+					  </div>
+				  </div>
+				  <div class="form-group row">
+							  <label class="col-3">Range of Validity: </label>
+							  
+									<div class="col-md-4 col-12">
+										<div class="col-6 col-md-6">
+											<label>From </label>
+											<select  class="form-control" name="min" id="min">
+												<option>All</option>
+											</select>
+										</div>
+										<div class="col-6 col-md-6">
+										<label>To</label>
+										<select  class="form-control" name="max" id="max">
+												<option>All</option>
+											</select>
+									</div>
+									</div>
+				  </div>
+			  
+			  
+			  
+				  <div class="row d-flex justify-content-center mt-2">
+					<div class="col-md-8">
+					   <button type="submit" class="btn btn-outline-danger col-md-12 " id="addBtn"  >Export as PDF</button>
+					</div>
+				  </div>
+			  </form>
+			  </div>
+		  </div>
+	  </div>
 	</div>
-
-
-<!-- 	<div class="form-group row">
-		
-				
-				<label class="col-3">Range of Visitation: </label>
-				<div class="col-3">
-					<input type="date" name="" class="form-control">
-				</div>
-				<div class="col-3 ">
-					<input type="date" name="" class="form-control">
-				</div>
-
-
-			
-		
-	</div> -->
-
-	<div class="form-group row">
-				<label class="col-3">Range of Validity: </label>
-				<div class="col-3">
-					<input type="date" name="min" class="form-control" id="min">
-				</div>
-				<div class="col-3 ">
-					<input type="date" name="max" class="form-control" id="max">
-				</div>
-	</div>
-
-
-
-	<div class="row d-flex justify-content-center mt-2">
-      <div class="col-md-8">
-         <button type="submit" class="btn btn-outline-danger col-md-12 " id="addBtn"  >Export as PDF</button>
-      </div>
-    </div>
-</form>
-
-
-                      
-                            
-                        
-
-<!-- end test -->
-
-
-
-
+</div>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
 <div class="mr-3">
-    	<table id="program_report_table" class="display compact cell-border" style="width:100%">
-		    <thead class="thead">
-	            <tr>
+	<div class="table-responsive">
+		<table id="program_report_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+		  <thead>
+			<tr class="headings">
 	            	<th>School</th>
 	            	<th>Program</th>
 	            	<th>Accreditation Status</th>
@@ -132,12 +100,16 @@
 	            </tr>
 		    </thead>   
 		</table>
-    </div>
-
-
-
-
-	<script type="text/javascript">
+	</div>
+	</div>
+			  </div>
+		  </div>
+	  </div>
+	</div>
+</div>
+@endsection
+@section('scripts')
+<script type="text/javascript">
 
     $.ajaxSetup({
 	    headers: {
@@ -148,26 +120,26 @@
     var token = $("input[name='_token']").val();
 
    var count = 0;
+   $('#min').each(function() {
 
-   //Date
-        var date = new Date();
+		var year = (new Date()).getFullYear();
+		year -= 30;
+		for (var i = 30; i > 0; i--) {
+		
+			$(this).append('<option value="' + (year + i) + '">' + (year + i) + '</option>');
+		}
+	})
+	$('#max').each(function() {
 
-          var newd      = date.toLocaleDateString();
-          var month     = date.getMonth()+1;
-          var date1     = date.getDate();
-          var year      = date.getFullYear();
-          
-          if(month <10){
-            month = '0'+month;
-
-          }if(date1 <10){
-            date1 = '0'+date1;
-          }
+		var year = (new Date()).getFullYear();
+		year += 4;
+		year -= 30;
+		for (var i = 30; i > 0; i--) {
+		
+			$(this).append('<option value="' + (year + i) + '">' + (year + i) + '</option>');
+		}
+	})
   
-        var newDate = year+'-'+month+'-'+date1;
-                var count = 0;
-
-
 //Datatable
 $('#dropdownYear').each(function() {
 
@@ -182,7 +154,23 @@ $('#dropdownYear').each(function() {
 })
 
 
+ //Date
+	var date = new Date();
 
+	var newd      = date.toLocaleDateString();
+	var month     = date.getMonth()+1;
+	var date1     = date.getDate();
+	var year      = date.getFullYear();
+
+	if(month <10){
+	month = '0'+month;
+
+	}if(date1 <10){
+	date1 = '0'+date1;
+	}
+
+	var newDate = year+'-'+month+'-'+date1;
+		var count = 0;
 
 /* Custom filtering function which will search data in column four between two values */
 $.fn.dataTable.ext.search.push(
@@ -220,14 +208,15 @@ $.fn.dataTable.ext.search.push(
 
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
-        var min = Date.parse($('#min').val());
-        var max = Date.parse($('#max').val());
-        var age = Date.parse( data[6] ) || 0; // use data for the age column
- 
+        var min = $('#min').val()
+			max = $('#max').val()
+			dfrom = data[5].split(' ')
+			dto = data[6].split(' ');
+
         if ( ( isNaN( min ) && isNaN( max ) ) ||
-             ( isNaN( min ) && age <= max ) ||
-             ( min <= age   && isNaN( max ) ) ||
-             ( min <= age   && age <= max ) )
+             ( isNaN( min ) && dfrom[1] <= max ) ||
+             ( min <= dfrom[1] && isNaN( max ) ) ||
+             ( min <= dfrom[1] && dto[1] <= max ) )
         {
             return true;
         }else{
@@ -241,7 +230,7 @@ $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
         var yearSelect = $('#dropdownYear').val();
 
-        var years = data[3] || 0; // use data for the age column
+        var years = data[3] || 0; 
         var d = new Date( years );
 
         var yearVisit = d.getFullYear();
@@ -275,7 +264,8 @@ $.fn.dataTable.ext.search.push(
    // program table
 
         var dataTable= $('#program_report_table').DataTable( {
-        	"scrollX": true,
+			responsive: true,
+			"ordering": false,
 	        "ajax": "{{route('program_report_dtb')}}",
 	        "columns": [
 	            { "data": "school" },
@@ -315,32 +305,6 @@ $.fn.dataTable.ext.search.push(
 	                } );
 	            } );
 	        },
-
-	        // initComplete: function () {
-	        //     this.api().columns([5]).every( function () {
-	        //         var column = this;
-	        //         count++;
-	      
-	        //         $('<div id="lalagyan3"></div>')
-	        //             .appendTo( "#filters3" );
-
-	        //         var select = $('<select class="form-control" name="select3"><option value="">All</option></select>')
-	        //             .appendTo( "#lalagyan3" )
-	        //             .on( 'change', function () {
-	        //                 var val = $.fn.dataTable.util.escapeRegex(
-	        //                     $(this).val()
-	        //                 );
-	 
-	        //                 column
-	        //                     .search( val ? '^'+val+'$' : '', true, false )
-	        //                     .draw();
-	        //             } );
-	 
-	        //         column.data().unique().sort().each( function ( d, j ) {
-	        //             select.append( '<option value="'+d+'">'+d+'</option>' )
-	        //         } );
-	        //     } );
-	        // },
 	      
         });
 

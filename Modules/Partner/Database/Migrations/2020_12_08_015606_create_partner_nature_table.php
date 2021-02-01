@@ -18,6 +18,7 @@ class CreatePartnerNatureTable extends Migration
             $table->bigInteger('partner_id')->unsigned();
             $table->foreign('partner_id')->references('id')->on('partners');
             $table->string('nature');
+            $table->boolean('is_updated');
             $table->timestamps();
         });
     }

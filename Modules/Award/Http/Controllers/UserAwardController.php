@@ -2,25 +2,18 @@
 
 namespace Modules\Award\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 use Modules\Accreditation\Entities\AcadPrgrm;
-use Modules\Accreditation\Entities\AccredStat;
-use Modules\Accreditation\Entities\PrgrmAccred;
 use Modules\Accreditation\Entities\School;
 use Modules\Award\Entities\Award;
 use Yajra\Datatables\Datatables;
+use App\User;
 use DB;
 use Validator;
-use Illuminate\Support\Facades\Storage;
-
-use Illuminate\Support\Facades\File;
 
 use PDF;
-use PdfReport;
-use \Carbon\Carbon;
 use Session;
 
 
@@ -29,14 +22,18 @@ class UserAwardController extends Controller
 
     public function index()
     {
-        $acad_prog = AcadPrgrm::join('schools', 'schools.id', 'acad_prgrms.school_id')
-        ->where('school_id', auth()->user()->school_id)
-        ->select('*','acad_prgrms.id as a_id')
-        ->get();
+        $acad_prog = AcadPrgrm::join('schools', 'schools.id', 'acad_prgrms.school_id');
+        if(!auth()->user()->hasRole('admin')){
+            $acad_prog = $acad_prog->where('school_id', auth()->user()->school_id);
+        }
+        $acad_prog = $acad_prog->select('*','acad_prgrms.id as a_id');
+        $acad_prog = $acad_prog->get();
+
         $award = Award::all();
         $school = School::where('id', auth()->user()->school_id)->first();
-        
-        return view('award::others.index', compact('school','award','acad_prog'));
+        $user_role = DB::table('users_roles')->where('user_id',auth()->user()->id)->first();
+        $user = User::where('id',auth()->user()->id)->first();
+        return view('award::others.index', compact('school','award','acad_prog','user_role','user'));
     }
 
     public function getFullNameAttribute()
@@ -44,12 +41,19 @@ class UserAwardController extends Controller
         return "{$this->first_name} {$this->middle_initial} {$this->last_name}";
     }
     
-     public function userAward_dtb($id){
-        $awards = Award::join('acad_prgrms', 'acad_prgrms.id', 'awards.acad_prgram_id')
-        ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-        ->where('acad_prgrms.school_id', $id)
-        ->select('*','awards.id as a_id')
-        ->get();  
+     public function userAward_dtb(Request $request){
+         $id = auth()->user()->school_id;
+
+            $awards = Award::join('acad_prgrms', 'acad_prgrms.id', 'awards.acad_prgram_id')
+            ->join('schools', 'schools.id', 'acad_prgrms.school_id')
+            ->select('*','awards.id as a_id');
+            
+         if(!auth()->user()->hasRole('admin')){
+            $awards->where('acad_prgrms.school_id', $id);
+         }
+       
+        $awards->select('*', 'awards.id as a_id');
+        $awards->get(); 
         
          return DataTables::of($awards)
              ->addColumn('date_awarded', function($awards) {
@@ -64,13 +68,22 @@ class UserAwardController extends Controller
                 }else{
                     $award_cert = "WITH CERTIFICATE";
                 }
+                if(auth()->user()->hasRole('admin')){
                     return '
                         <a class="btn btn-info btn-sm" href="'.route("userAwardDetails", $awards->a_id).'">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
-                        <button class="btn btn-danger btn-sm destroy" title="Remove" awardid="'.$awards->a_id.'"><i class="far fa-trash-alt"></i>
+                        ';
+                }else{
+                    return '
+                        <a class="btn btn-info btn-sm" href="'.route("userAwardDetails", $awards->a_id).'">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm destroy" title="Remove" awardid="'.$awards->a_id.'"><i class="fa fa-trash"></i>
                         </button>
                         ';
+                }
+                    
             })
             ->addColumn('awardcert', function($awards) {
                 
@@ -110,12 +123,14 @@ class UserAwardController extends Controller
             ->join('schools', 'schools.id', 'acad_prgrms.school_id')
             ->where('awards.id', $id)
             ->select('*','awards.id as aw_id')
-            ->get();
-
-        $acad_prog = AcadPrgrm::join('schools', 'schools.id', 'acad_prgrms.school_id')
-        ->where('school_id', auth()->user()->school_id)
-        ->select('*','acad_prgrms.id as a_id')
-        ->get();
+            ->first();
+        
+        $acad_prog = AcadPrgrm::join('schools', 'schools.id', 'acad_prgrms.school_id');
+        if(!auth()->user()->hasRole('admin')){
+            $acad_prog = $acad_prog->where('school_id', auth()->user()->school_id);
+        }
+        $acad_prog = $acad_prog->select('*','acad_prgrms.id as a_id');
+        $acad_prog = $acad_prog->get();
 
         $school = School::where('id', auth()->user()->school_id)->first();
 
@@ -124,7 +139,7 @@ class UserAwardController extends Controller
 
     public function addStudentAward(Request $request){
        $request->validate([
-            'award_cert' => 'nullable|mimes:jpeg,png,pdf|max:2048',
+            'award_cert' => 'nullable|mimes:jpeg,png,pdf|max:10240',
             ]);
 
        $data = Validator::make($request->all(),[
@@ -183,7 +198,7 @@ class UserAwardController extends Controller
 
 
         $award->save();
-        return back()->with('success_modal', 5);
+        return back()->with('success', '');
     }
 
     public function updateStudentAward(Request $request)
@@ -192,8 +207,7 @@ class UserAwardController extends Controller
         $awards = $request->others1;
        else
         $awards = $request->award2;
-       
-       
+           
         $award = Award::find($request->awardID);
         $award->last_name = $request->last_name2;
         $award->middle_initial = $request->middle_i2;
@@ -220,7 +234,7 @@ class UserAwardController extends Controller
         
         $award->save();
 
-        return redirect()->route('userAwardDetails', $request->awardID)->with('success', 'Record Updated');
+        return redirect()->route('userAwardDetails', $request->awardID)->with('success','');
     }
     
      public function deleteAward(Request $request)
@@ -233,18 +247,24 @@ class UserAwardController extends Controller
     public function userawardfilterReport(Request $request)
     {
         $department = School::where('id', auth()->user()->school_id)->first();
-        $from = $request->from; //min
-        $to = $request->to; //max
+        $from = $request->min; 
+        $to = $request->max; 
         $scope = $request->select1;
         $category = $request->select2;
 
         $queryBuilder = DB::table('awards')
             ->join('acad_prgrms', 'acad_prgrms.id', 'awards.acad_prgram_id')
-            ->join('schools', 'schools.id', 'acad_prgrms.school_id')
-            ->where('schools.id', auth()->user()->school_id);
-
-            if($from && $to){
-                $queryBuilder = $queryBuilder->whereBetween('date_awarded', [$from, $to]);
+            ->join('schools', 'schools.id', 'acad_prgrms.school_id');
+            
+        
+            if(!auth()->user()->hasRole('admin')){
+                $queryBuilder->where('schools.id', auth()->user()->school_id);
+            }
+            if($from != 'All' && $to != 'All'){
+                $queryBuilder = $queryBuilder->where(function ($queryBuilder) use($from, $to){
+                    $queryBuilder->whereYear('date_awarded', '>=', $from)
+                        ->whereYear('date_awarded', '<=', $to);
+                });
             }
 
             if($scope){
@@ -254,7 +274,8 @@ class UserAwardController extends Controller
             if($category){
                 $queryBuilder =$queryBuilder->where('awards.category', $category);
             }
-
+            
+            $queryBuilder = $queryBuilder->orderBy('date_awarded','desc');
             $queryBuilder = $queryBuilder->get();
 
              $pdf = PDF::loadView('award::reports.useraward-report', compact('queryBuilder','scope', 'from', 'to', 'category', 'department'));
@@ -262,6 +283,7 @@ class UserAwardController extends Controller
         $pdf->save(storage_path().'_filename.pdf');
 
         return $pdf->stream('project_'.time().'.pdf');
+        // return view('award::reports.useraward-report', compact('queryBuilder','scope', 'from', 'to', 'category', 'department'));
     }
 
 }

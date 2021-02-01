@@ -1,5 +1,5 @@
 {
-    "name": "QAO",
+    "name": "Accreditation",
     "type": "project",
     "description": "QAO File Management System",
     "keywords": [
@@ -7,6 +7,7 @@
         "laravel"
     ],
     "license": "MIT",
+    
     "require": {
         "php": "^7.2.5",
         "barryvdh/laravel-dompdf": "^0.8.7",

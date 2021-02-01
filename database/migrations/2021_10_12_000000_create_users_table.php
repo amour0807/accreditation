@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('middle_initial')->nullable();
             $table->string('first_name');
-            $table->string('user_role');
             $table->string('username')->unique();
             $table->boolean('is_admin')->nullable();
             $table->string('password');

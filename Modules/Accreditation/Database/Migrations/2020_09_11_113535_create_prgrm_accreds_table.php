@@ -19,7 +19,7 @@ class CreatePrgrmAccredsTable extends Migration
             $table->foreign('accred_stat_id')->references('id')->on('accred_stats');
             $table->bigInteger('acad_prgrm_id')->unsigned();
             $table->foreign('acad_prgrm_id')->references('id')->on('acad_prgrms');
-            $table->date('visit_date_from');
+            $table->date('visit_date_from')->nullable();
             $table->date('visit_date_to')->nullable();
             $table->date('from');
             $table->date('to');
@@ -30,6 +30,7 @@ class CreatePrgrmAccredsTable extends Migration
 
             $table->string('faap_cert')->nullable();
             $table->string('remarks')->nullable();
+            $table->boolean('archived');
 
             $table->timestamps();
         });

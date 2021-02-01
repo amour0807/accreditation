@@ -1,20 +1,10 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Add an Accreditation<span></strong></h2>
-        
-    </div>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
      		@if (count($errors) > 0)
             <div class="alert alert-danger">
             	 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -26,7 +16,6 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-               
             </div>
         @endif
 
@@ -37,21 +26,8 @@
 	});
 	</script>
 @endif
-
-  <div class="alert"></div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  @if ($message = Session::get('error'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-    <br>
+	<br>
+	<label><span class="text-danger"> * Required Fields</span></label>
 <form  id="addAccredForm" method="POST" enctype="multipart/form-data" action="{{route('addAccred')}}">
     @csrf
 	<div class="form-group row">
@@ -81,7 +57,7 @@
 		    <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Accreditation Status</label>
 		    <div class="col-md-4">
 			    <select class="form-control form-control-sm" name="accredStat" required>
-			    	<option disabled selected value> </option>
+			    	<option disabled selected value>-- -- -- </option>
 			    @foreach ($accredStats as $accredStat)
 			      <option value="{{$accredStat->id}}">{{ $accredStat->accred_status }}</option>
 			    @endforeach
@@ -91,9 +67,9 @@
 	</div>
 
   <div class="form-group row">
-    <label class="col-md-2 col-form-label"><span class='text-danger'>*</span>Visit Date From</label>
+    <label class="col-md-2 col-form-label"><span class='text-danger'></span>Visit Date From</label>
     <div class="col-md-4">
-      <input class="form-control form-control-sm" type="date" name="visit_date" required value="{{Request::old('visit_date')}}">
+      <input class="form-control form-control-sm" type="date" name="visit_date" value="{{Request::old('visit_date')}}">
     </div>
 
     <label class="col-md-2 col-form-label">Visit Date To</label>
@@ -124,18 +100,20 @@
 
 	<hr>
    <div class="form-group row mt-4">
-   		<label class="col-md-2 col-form-label">FAAP Certificate</label>
+		   <label class="col-md-2 col-form-label">FAAP Certificate</label>
 	    <div class="col-md-4">
-	      <input type="file" name="faap_cert" class="form-control">
+		  <input type="file" name="faap_cert" class="form-control">
+		  <span class="small">Files accepted: jpeg,jpg, png, pdf </span>
 	    </div>
 	    @error('faap_cert')
     <div class=" alert-danger">{{ $message }}</div>
 @enderror
    </div>
    <div class="form-group row">
-   		<label class="col-md-2 col-form-label">PACOCUA Certificate</label>
+   		<label class="col-md-2 col-form-label">PACUCOA Certificate</label>
 	    <div class="col-md-4">
-	      <input type="file" name="pacucoa_cert" class="form-control">
+		  <input type="file" name="pacucoa_cert" class="form-control">
+		  <span class="small">Files accepted: jpeg,jpg, png, pdf </span>
 	    </div>
 	    @error('pacocua_cert')
     <div class=" alert-danger">{{ $message }}</div>
@@ -143,7 +121,8 @@
    </div><div class="form-group row">
    		<label class="col-md-2 col-form-label">Chairman's Report</label>
 	    <div class="col-md-4">
-	      <input type="file" name="pacucoa_report" class="form-control">
+		  <input type="file" name="pacucoa_report" class="form-control">
+		  <span class="small">Files accepted: jpeg,jpg, png, pdf </span>
 	    </div>
 	    @error('pacocua_report')
     <div class="alert-danger">{{ $message }}</div>
@@ -176,34 +155,65 @@
     </div>
   </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+@endsection
+@section('scripts')
+@if(\Session::has('success'))
+<script>
+Swal.fire({
+  title: 'Successfully saved!',
+  text: "Add another record?",
+  icon: 'success',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes',
+  cancelButtonText: 'Back to List'
+}).then((result) => {
+  if (!result.isConfirmed) {
+	window.location.href = "adminAcred_prog";
+  }
+})
+</script>
+  @elseif(\Session::has('error'))
+  <script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Something went wrong!',
+    footer: "<a>Back</a>"
+  }) 
+  </script>
+  @endif
+<script type="text/javascript">
+	$.ajaxSetup({
+		headers: {
+		   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
 	
-	<script type="text/javascript">
-		$.ajaxSetup({
-		    headers: {
-		       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		    }
-    	});
-    
-    	var token = $("input[name='_token']").val();
-		$(document).ready(function(){
+	var token = $("input[name='_token']").val();
+	$(document).ready(function(){
 
-		   $('#schoolchange').on('change',function(){
-		   		var id = $(this).val();
-		   		
-
-		   		$.ajax({
-		            url:"{{route('school_select')}}",
-		            method:"POST",
-		            data:{
-		              id:id,
-		              _token:token
-		            },
-		            success:function(data){
-		              $('#program_choice').html(data);
-		            }   
-		         }); 
-			});
-
+	   $('#schoolchange').on('change',function(){
+			   var id = $(this).val();
+			   $.ajax({
+				url:"{{route('school_select')}}",
+				method:"POST",
+				data:{
+				  id:id,
+				  _token:token
+				},
+				success:function(data){
+				  $('#program_choice').html(data);
+				}   
+			 }); 
 		});
-	</script>
+
+	});
+</script>
 @endsection

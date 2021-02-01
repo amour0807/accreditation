@@ -17,9 +17,10 @@ class CreateInstAwardTable extends Migration
             $table->id();
             $table->string('award');
             $table->string('scope');
-            $table->date('from')->nullable();;
-            $table->date('to')->nullable();;
-            $table->string('venue')->nullable();;
+            $table->date('date_issued')->nullable();
+            $table->date('from')->nullable();
+            $table->date('to')->nullable();
+          //  $table->string('venue')->nullable();;
             $table->string('award_giving_body');
             $table->string('supporting_doc')->nullable();
             $table->timestamps();

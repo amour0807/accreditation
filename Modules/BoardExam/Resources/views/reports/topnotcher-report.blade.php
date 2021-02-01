@@ -1,113 +1,123 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-	<style>
-            /** Define the margins of your page **/
-             @page {
-                margin: 20px 50px 50px 50px;
-            }
-            header {
-                position: fixed;
-                top: -60px;
-                left: 0px;
-                right: 0px;
-
-                text-align: center;
-                line-height: 35px;
-            }
-
-            footer {
-                position: fixed; 
-                bottom: -60px; 
-                left: 0px; 
-                right: 0px;
-                height: 50px; 
-
-                text-align: right;
-                line-height: 35px;
-            }
-            p, label{
-			    padding : 0;
-			    margin-top : 0;
-			    line-height : 20px;
-			}
-			table {
-			  border-collapse: collapse;
-			  width: 100%;
-			  table-layout:fixed;
-			}
-
-			table, th, td {
-			  border: 1px solid black;
-			  padding: 3px;
-			  font-size:15px;
-			  word-wrap:break-word;
-			}
-			.filters{
-				padding-right: 30px;
-			}
-			footer {
-	                position: fixed; 
-	                bottom: -60px; 
-	                left: 0px; 
-	                right: 0px;
-	                height: 50px; 
-	        }
-	        .sans{
-	        	font-family: Arial, Helvetica, sans-serif;
-
-	        }
-	        .column {
-			  float: left;
-			  width: 33.33%;/* Should be removed. Only for demonstration */
-			}
-
-			/* Clear floats after the columns */
-			.row:after {
-			  content: "";
-			  display: table;
-			  clear: both;
-			}
-        </style>
-</head>
-<body>
-          <br>
-            <center><img src="{{asset('images/ubname.png')}}" style="width:20%;margin-bottom: 0;">
-            	<p><b>{{$department->school_name}}</b><br>General Luna Rd., Baguio City, Philippines 2600</p>
-            </center>
-              <hr style="margin-top:0; margin-bottom:0;border:1px solid #000000;">
-              <div class="row">
-              	<div class="column">
-           	  	  <label style="font-size: 12px;">Telefax No.: (074) 619-0003</label>
-           		</div>
-           		<div class="column" style="text-align: center;"> 
-                  <label style=" font-size: 12px; ">Website:www.ubaguio.edu</label>
-           		</div>
-           		<div class="column" style="text-align: right;">
-               	  <label style="font-size: 12px;"> Email Address: registrar@ubaguio.edu</label>
-               	</div>
-           </div>
-<br>
+	<title>BOARD TOPNOTCHERS</title>
+@include('include.report_header')
+<main>
 <div class="row">	
 <div>
-	<center><h3>Universiy of Baguio Board Topnotchers
-	<?php if($from && $to)
-	echo '('.date('Y', strtotime($from)).' - '.date('Y', strtotime($to)).')';
-	?>
-	</h3></center>
-</div>
-<div>
 	<?php 
+	if($month)
+	echo '<span class="filters"><strong>Month:</strong> '.$month.'</span>';
+	   if($year)
+			echo '<span class="filters"><strong>Year:</strong> '.$year.'</span>';
 		if($rank)
-			echo '<span class="filters"><strong>Award:</strong> '.$rank.'</span>';
+			echo '<span class="filters"><strong>Rank:</strong> '.$rank.'</span>';	
 	 ?>
 	</div>
-	 <table id="history_table"  class="display compact cell-border" style="text-align: center;">
+	@if($var != "")
+	<?php $C = count($var); ?>
+	@for($i=0; $i < $C; $i++)
+	<?php $var1 = $var[$i];?>
+	<div>
+		<center><h3> @if($var1 == "SBT")
+			Summary of Board Topnotchers 
+			@elseif($var1 == "STS")
+			Summary of Top Schools 
+			@else
+			Universiy of Baguio Board Topnotchers 
+			@endif
+			@if($min != "All")({{$min}}-{{$max}})@endif
+			</h3></center>
+		</div>
+	@if($var1 == "SBT")
+	 <table  class="display compact cell-border" style="text-align: center;">
+        <thead>
+          <tr>
+            <th>Program</th>
+            <?php 
+				if($min != 'All'){	
+					$x = $min;
+					$y = $max;
+					for($x; $x <= $y; $x++){
+						echo '<th>'.$x.'</th>';
+					}
+				}
+			 ?>
+           </tr>
+        </thead>
+         <tbody>
+		<?php 
+		$queryBuilder = $queryBuilder->where('rank','>',0);
+          
+			foreach ($queryBuilder as $q) {
+				
+			$x =$min;
+			$y =$max;
+				echo '<tr>
+						  <td>'.$q->licensure_exam.'</td>';
+				for($x; $x <= $y; $x++){
+					if($q->exam_year == $x){
+					echo '<td> Rank '.$q->rank.'</th>';
+					}else{
+						echo '<td></td>';
+					}
+				}	
+				echo '
+					  </tr>';
+			}
+		 ?>
+		</tbody>
+	</table>
+	@elseif($var1 == "STS")
+	<table  class="display compact cell-border" style="text-align: center;">
+        <thead>
+          <tr>
+            <th>Program</th>
+            <?php 
+				if($min != 'All'){	
+					$x = $min;
+					$y = $max;
+					for($x; $x <= $y; $x++){
+						echo '<th>'.$x.'</th>';
+					}
+				}
+			 ?>
+           </tr>
+        </thead>
+         <tbody>
+		<?php 
+		$queryBuilder = $queryBuilder->where('school_rank','>',0);
+			foreach ($queryBuilder as $q) {
+				
+			$x =$min;
+			$y =$max;
+				echo '<tr>
+						  <td>'.$q->licensure_exam.'</td>';
+				for($x; $x <= $y; $x++){
+					if($q->exam_year == $x){
+					echo '<td> Rank '.$q->school_rank.'</th>';
+					}else{
+						echo '<td></td>';
+					}
+				}	
+				echo '
+					  </tr>';
+			}
+		 ?>
+		</tbody>
+	</table>
+@else
+		<table id="history_table"  class="display compact cell-border" style="text-align: center;">
 	 @foreach($licensure_exam as $le)
         <thead>
 			<tr>
-				<th colspan="3" style="text-align: left;">{{$le}}</th>
+				<?php 
+				if(!$rank || !$min){
+				 echo "<th colspan='3' style='text-align: left;'>$le</th>";
+				}else
+					echo "<th colspan='2' style='text-align: left;'>$le</th>";
+				?>
 			</tr>
           <tr>
 		  
@@ -129,17 +139,22 @@
 			foreach ($queryBuilder as $q) {
 				if($q->licensure_exam == $le){
 				$count++;
-				echo '<tr>';
-				
-				echo '
-					  	<td>'.$q->name.'</td>';
-						$examd = date('M. d, Y', strtotime($q->exam_date));
-
-				echo '
-					  	<td>'.$examd.'</td>';
+				echo '<tr>
+					  	<td>'.$q->name.'</td>
+						
+					  	<td>'.$q->exam_month.' '.$q->exam_year.'</td>';
+						
 					  
 				if(!$rank){
-				 echo '<td>'.$q->rank.'</td>';
+					if($q->rank == 1)
+						$sup = 'st';
+				elseif($q->rank == 2)
+						$sup = 'nd';
+					elseif($q->rank == 3)
+					$sup = 'rd';
+					else
+					$sup = 'th';
+				 echo '<td>'.$q->rank.'<sup>'.$sup.'</sup> Place </td>';
 						}
 				echo '
 					  </tr>';
@@ -149,17 +164,16 @@
 		</tbody>
 		@endforeach
 	</table>
+	@endif
+	@endfor
+	@endif
 	<div style="margin-top: 50px;">
-		<label>Generated by:<br>
-			{{auth()->user()->name}}<br>
+		<label>Generated by:<br><br>
+			{{auth()->user()->first_name}} @if(auth()->user()->middle_initial != null){{auth()->user()->middle_initial}}.@endif {{auth()->user()->last_name}}<br>
 			{{$department->school_name}}
 		</label>
 	</div>
 </div>
-
-
-<footer>
- <?php echo date('F, d Y') ?>
-</footer>
+</main>
 </body>
 </html>

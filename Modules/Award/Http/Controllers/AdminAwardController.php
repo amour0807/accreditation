@@ -24,24 +24,18 @@ use Session;
 
 class AdminAwardController extends Controller
 {
-
-    public function index()
-    {
-        $award = Award::all();
-        $school = School::where('id', auth()->user()->school_id)->first();
-        return view('award::index', compact('school','award'));
-    }
-
     public function instAward()
     {
+        $award = InstAward::all()->unique('award')->sortBy('award');
         // $instAward = DB::table('inst_award')->get();
-        return view('award::instAward');
+        return view('award::instAward',compact('award'));
     }
 
     public function award_dtb($id){
         $awards = Award::join('acad_prgrms', 'acad_prgrms.id', 'awards.acad_prgram_id')
         ->join('schools', 'schools.id', 'acad_prgrms.school_id')
         ->select('*','awards.id as a_id')
+        ->orderBy('awards.date_awarded','desc')
         ->get();   
          return DataTables::of($awards)
          ->addColumn('date_awarded', function($awards) {
@@ -53,9 +47,9 @@ class AdminAwardController extends Controller
         })
         ->addColumn('actions', function($awards) {
                     return '
-                        <button class="btn btn-secondary btn-sm edit" title="Edit" awardid="'.$awards->a_id.'"><i class="far fa-edit"></i>
+                        <button class="btn btn-secondary btn-sm edit" title="Edit" awardid="'.$awards->a_id.'"><i class="fa  fa-edit"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm destroy" title="Remove" awardid="'.$awards->a_id.'"><i class="far fa-trash-alt"></i>
+                        <button class="btn btn-danger btn-sm destroy" title="Remove" awardid="'.$awards->a_id.'"><i class="fa fa-trash"></i>
                         </button>
                         ';
             })
@@ -66,13 +60,13 @@ class AdminAwardController extends Controller
 
     public function instAwardEdit($id){
 
-        $instAward = InstAward::where('id', $id)->get();
+        $instAward = InstAward::where('id', $id)->first();
 
         return view('award::instaward-edit', compact('instAward'));
     }
 
     public function instaward_dtb($id){
-        $instAward = DB::table('inst_award')->get();
+        $instAward = DB::table('inst_award')->orderBy('date_issued','desc')->get();
 
          return DataTables::of($instAward)
          ->addColumn('dfrom', function($instAward) {
@@ -89,6 +83,13 @@ class AdminAwardController extends Controller
             $year=date("Y",$time);
 
             return $month_from.' '.$year_from.' - '.$month.' '.$year;
+        })
+        ->addColumn('date_issued', function($instAward) {
+            if(($instAward->date_issued) != "")
+                $to = date('M. d, Y', strtotime($instAward->date_issued));
+            else
+                $to = "";
+            return $to;
         })
          ->addColumn('from', function($instAward) {
             if(($instAward->from) != "")
@@ -108,37 +109,39 @@ class AdminAwardController extends Controller
             if(empty($instAward->supporting_doc)){
                 return 'None';
             }else{
-                return '<a class="btn " target="_blank" href="'.asset('certificates/'.$instAward->supporting_doc).'">View Document</a>';
+                return '<a target="_blank" href="'.asset('certificates/'.$instAward->supporting_doc).'">View</a>';
             }
         })
         ->addColumn('actions', function($instAward) {
-                    return '
+            if (auth()->user()->hasPermission('edit-instaward','delete-instaward')) {
+                return '
                     <a class="btn btn-info btn-sm" href="'.route("instAwardEdit", $instAward->id).'"> <i class="fa fa-edit" aria-hidden="true"></i>
                         </a>
-                        <button class="btn btn-danger btn-sm destroy" title="Remove" instAwardID="'.$instAward->id.'"><i class="far fa-trash-alt"></i>
+                        <button class="btn btn-danger btn-sm destroy" title="Remove" instAwardID="'.$instAward->id.'"><i class="fa fa-trash"></i>
                         </button>
                         ';
+            }
             })
+        
             
-            ->rawColumns(['actions','dfrom','dsupporting_doc'])
+            ->rawColumns(['actions','dfrom','dsupporting_doc','date_issued'])
             ->make(true);
     }
-     public function deleteInstAward(Request $request)
-    {
+     public function deleteInstAward(Request $request){
         $instAward = InstAward::find($request->id);
         $instAward->delete();
        
     }
 
-    public function updateInstAward(Request $request)
-    {
+    public function updateInstAward(Request $request){
        
         $instaward = InstAward::find($request->awardID);
         $instaward->award = $request->award;
         $instaward->scope = $request->scope;
+        $instaward->date_issued = $request->date_issued;
         $instaward->from = $request->from;
         $instaward->to = $request->to;
-        $instaward->venue = $request->venue;
+       // $instaward->venue = $request->venue;
         $instaward->award_giving_body = $request->award_gb;
         
 
@@ -154,7 +157,7 @@ class AdminAwardController extends Controller
         
         $instaward->save();
 
-        return redirect()->route('instAward')->with('success', 'Record Updated');
+        return redirect()->route('instAward')->with('success', '');
     }
     public function deleteDocu(Request $request){
         $instAward = InstAward::where('id', $request->fileId)->first();
@@ -230,26 +233,31 @@ class AdminAwardController extends Controller
         $pdf->save(storage_path().'_filename.pdf');
 
         return $pdf->stream('project_'.time().'.pdf');
+    // return view('award::reports.awards-report', compact('queryBuilder', 'school', 'scope', 'from', 'to', 'category', 'department') );
     }
 
     public function instawardfilterReport(Request $request){
         $department = School::where('id', auth()->user()->school_id)->first();
         $instAward = DB::table('inst_award')->get();
-        $from = $request->from; //min
-        $to = $request->to; //max
-        $award = $request->select1;
-        $scope = $request->select2;
+        $from = $request->min; //min
+        $to = $request->max; //max
+        $award = $request->award1;
+        $scope = $request->scope1;
 
         $queryBuilder = DB::table('inst_award');
             
-            if($from && $to){
-                $queryBuilder = $queryBuilder->whereBetween('to', [$from, $to]);
-            }
+        if($from != 'All' && $to != 'All'){
+            $queryBuilder = $queryBuilder->whereYear('from', $from)
+            ->where(function ($queryBuilder) use($from, $to){
+                $queryBuilder->whereYear('from', '>=', $from)
+                    ->whereYear('to', '<=', $to);
+            });
+        }
 
-            if($award){
+            if($award != 'All'){
                 $queryBuilder =$queryBuilder->where('inst_award.award', $award);
             }
-            if($scope){
+            if($scope != 'All'){
                 $queryBuilder =$queryBuilder->where('inst_award.scope', $scope);
             }
 
@@ -260,12 +268,25 @@ class AdminAwardController extends Controller
         $pdf->save(storage_path().'_filename.pdf');
 
         return $pdf->stream('project_'.time().'.pdf');
+     //return view('award::reports.instawards-report', compact('queryBuilder', 'instAward', 'award', 'department', 'from', 'to','scope') );
     }
 
     public function addInstAward(Request $request){
         $request->validate([
-             'supporting_doc' => 'nullable|mimes:jpeg,png,pdf|max:2048',
+             'supporting_doc' => 'nullable|mimes:jpeg,png,pdf|max:10240',
              ]);
+             $insaward = InstAward::all();
+             $success="";
+             foreach($insaward as $ac){
+                 if($ac->award == $request->award){
+                     $success = false;
+                     $message = "Duplicate entry!";
+                     return response()->json([
+                         'success' => $success,
+                         'message' => $message,
+                     ]);
+                 }
+             }
 
         $supporting_doc_fileName ="";
         if($request->hasFile('supporting_doc')){
@@ -278,14 +299,24 @@ class AdminAwardController extends Controller
          $instAward = new InstAward;
          $instAward->award = $request->award;
          $instAward->scope = $request->scope;
+         $instAward->date_issued = $request->date_issued;
          $instAward->from = $request->from;
          $instAward->to = $request->to;
-         $instAward->venue = $request->venue;
+        // $instAward->venue = $request->venue;
          $instAward->award_giving_body = $request->award_gb;
          $instAward->supporting_doc = $supporting_doc_fileName;
  
          $instAward->save();
-         return back()->with('success_modal', 5);
+         if (! $instAward->save()) {
+            throw new Exception('Error in saving data.');
+        } else {
+            $success = true;
+            $message = "Successfuly Saved!";
+        }
+         return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
      }
 
 }

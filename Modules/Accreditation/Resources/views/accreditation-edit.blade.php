@@ -1,33 +1,10 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>{{ $program->AcadPrgrm->acad_prog }} - {{ $program->AcadPrgrm->School->school_code }}<span></strong></h2>
-    </div>
-  <div class="alert"></div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  @if ($message = Session::get('error'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
 <form method="POST" action="{{ route('saveEdit') }}">
   @csrf
   <div class="form-group row">
@@ -46,9 +23,9 @@
     </div>
   </div>
   <div class="form-group row">
-    <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Visit Date From</label>
+    <label class="col-sm-2 col-form-label"><span class="text-danger"></span>Visit Date From</label>
     <div class="col-sm-4">
-      <input type="date" class="form-control" value="{{$program->visit_date_from}}" required name="visitFrom">
+      <input type="date" class="form-control" value="{{$program->visit_date_from}}"  name="visitFrom">
     </div>
 
     <label class="col-sm-2 col-form-label">Visit Date To</label>
@@ -85,4 +62,9 @@
     </div>
   </div>
 </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection

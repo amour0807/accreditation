@@ -1,21 +1,10 @@
 @extends('layouts.app')
 @section('content')
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-@if(Session::has('message'))
-<div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
-  {{ Session::get('message') }}
-            <button type="button" class="close" data-dismiss="alert">×</button>
-</div> 
-@endif
-@if(Session::has('red'))
-  
-<div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
-  {{ Session::get('red') }}
-            <button type="button" class="close" data-dismiss="alert">×</button>
-</div> 
-
-@endif
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
 
  @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -30,20 +19,10 @@
               </button>
             </div>
         @endif
-
-@if (session('success'))
-     <div class="alert alert-info alert-block">
-            <strong>{{ session('success') }}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-     
-@endif
 @foreach($award as $aw)
- <div class="block-title" style="padding: 1px 3px 1px 3px;">
-<h4  class="mb-3">{{ $aw->school_name }}</h4>
-<h5  class="mb-3">{{ $aw->acad_prog_code }}</h5>
+<div class="x_title">
+  <h2><small><a href="{{route('userStudentAward')}}" class="fa fa-angle-double-left" text="back">&nbsp;&nbsp;{{ $aw->school_name }}: {{ $aw->acad_prog_code }}</a></small></h2>
+<div class="clearfix"></div>
    </div>
 
   <div class="row">
@@ -51,13 +30,19 @@
       @if($aw->award_cert == "")
       <img src="{{asset('certificates/blank_cert.png')}}" style="height:200;width:300px;">
       @else
-      <img src="{{asset('certificates/'.$aw->award_cert)}}" style="height:200;width:300px;">
+       <a href="{{asset('certificates/'.$aw->award_cert)}}"> 
+      <img src="{{asset('certificates/'.$aw->award_cert)}}" style="height:200;width:300px;"></a>
       @endif
     </div>
     <div class="col-md-7">
      <div class=" row">
       <center>
-        <label style="font-size:14px;"><b>{{$aw->first_name}}, {{$aw->middle_initial}}, {{$aw->last_name}}<br>
+       
+        <label style="font-size:14px;"><b>{{$aw->first_name}} 
+          @if($aw->middle_initial != ""){{$aw->middle_initial}}.
+          @endif
+          {{$aw->last_name}}<br>
+          
         {{$aw->award}}<br>
         {{$aw->title_competitions}}</b></label><br>
       </center>
@@ -89,60 +74,39 @@
   </div>
    <div class=" row mt-4">
     <div class="col-sm-12">
+      @if(Auth::user()->hasPermission('edit-student'))
       <a class="btn btn-info mr-2" href="{{ route('userAwardEdit', $aw->aw_id)}}">Edit</a>
+      @endif
       <a class="btn btn-danger" href="{{ route('userStudentAward') }}"> Back</a>
     </div>
     </div>
   </div>
 @endforeach
-  <hr>
-
-<script type="text/javascript">
-
-
-    $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    
-    var token = $("input[name='_token']").val();
-
-
   
-
-    $(".alertOld").delay(4000).fadeOut(500);
-    setTimeout(function(){
-      $('#alertMessage').remove();
-    }, 5000);
-  //delete
-  $(document).on('click','.deleteCert',function(){
-      var conf = confirm('Are you sure you want to delete this record?');
-      var fileId = $(this).attr('fileId');
-      var type = $(this).attr('type');
-
-
-      if(conf){
-        $.ajax({
-          url:"{{route('userDeleteCert')}}",
-          method:"POST",
-          data:{
-            fileId:fileId,
-            type:type,
-            _token:token
-          },
-          success:function(data){
-          
-            location.reload();
-            $('.deleteAlert').append('<span id="alertMessage">Record deleted!</span>');
-            
-          },
-          error: function(jqxhr, status, exception) {
-             alert('this record still has a task. Please delete it all then delete this project.');
-         }
-
-        });  
-      }
-    }); 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+@section('scripts')
+@if(\Session::has('success'))
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Done!',
+  text: 'Successfully updated!',
+  timer: 1500
+})
 </script>
+  @elseif(\Session::has('error'))
+  <script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Something went wrong!',
+    footer: "<a>Back</a>"
+  }) 
+  </script>
+  @endif
 @endsection

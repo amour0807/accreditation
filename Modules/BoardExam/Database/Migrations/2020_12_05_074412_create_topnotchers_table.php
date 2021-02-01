@@ -19,6 +19,7 @@ class CreateTopnotchersTable extends Migration
             $table->foreign('boardexam_id')->references('id')->on('board_exam');
             $table->string('name');
             $table->integer('rank');
+            $table->bollean('is_updated');
             $table->timestamps();
         });
     }

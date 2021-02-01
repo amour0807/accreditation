@@ -1,165 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-	<style>
-            /** Define the margins of your page **/
-             @page {
-                margin: 50px 70px 70px 70px;
-            }
-            header {
-                position: fixed;
-                top: -60px;
-                left: 0px;
-                right: 0px;
-
-                text-align: center;
-                line-height: 35px;
-            }
-
-            footer {
-                position: fixed; 
-                bottom: -60px; 
-                left: 0px; 
-                right: 0px;
-                height: 50px; 
-
-                text-align: right;
-                line-height: 35px;
-            }
-            p, label{
-			    padding : 0;
-			    margin-top : 0;
-			    line-height : 20px;
-			}
-			table {
-			  border-collapse: collapse;
-			  width: 100%;
-			  table-layout:fixed;
-			}
-
-			table, th, td {
-			  border: 1px solid black;
-			  padding: 3px;
-			  font-size:15px;
-			  word-wrap:break-word;
-			}
-			.filters{
-				padding-right: 30px;
-			}
-			footer {
-	                position: fixed; 
-	                bottom: -60px; 
-	                left: 0px; 
-	                right: 0px;
-	                height: 50px; 
-	        }
-	        .sans{
-	        	font-family: Arial, Helvetica, sans-serif;
-
-	        }
-	        .column {
-			  float: left;
-			  width: 33.33%;/* Should be removed. Only for demonstration */
-			}
-
-			/* Clear floats after the columns */
-			.row:after {
-			  content: "";
-			  display: table;
-			  clear: both;
-			}
-        </style>
-</head>
-<body>
-          <br>
-            <center><img src="{{asset('images/ubname.png')}}" style="width:20%;margin-bottom: 0;">
-            	<p><b>{{$department->school_name}}</b><br>General Luna Rd., Baguio City, Philippines 2600</p>
-            </center>
-              <hr style="margin-top:0; margin-bottom:0;border:1px solid #000000;">
-              <div class="row">
-              	<div class="column">
-           	  	  <label style="font-size: 12px;">Telefax No.: (074) 619-0003</label>
-           		</div>
-           		<div class="column" style="text-align: center;"> 
-                  <label style=" font-size: 12px; ">Website:www.ubaguio.edu</label>
-           		</div>
-           		<div class="column" style="text-align: right;">
-               	  <label style="font-size: 12px;"> Email Address: registrar@ubaguio.edu</label>
-               	</div>
-           </div>
-<br>
+	<title>LISTS OF LICENSURE EXAMS</title>
+@include('include.report_header')
+<main>
 <div class="row">	
+	<center><h3>Lists of Licensure Exams @if($min != "All")({{$min}}-{{$max}})@endif</h3></center>
 <div>
-	<center><h3>Lists of Licensure Exams</h3></center>
-</div>
-<div>
-    <?php 
-        if($type)
-        echo '<span class="filters" ><strong>Type:</strong> '.$type.'';
-		if($from && $to)
-			echo '<span class="filters" ><strong>From:</strong> '.date('M, d Y', strtotime($from)).'<strong>&nbsp;&nbsp;&nbsp;To:&nbsp;&nbsp;</strong> '.date('M, d Y', strtotime($to)).'</span><br>';
+	<?php 
+	
+	if($month != "All" && $year != "All")
+	echo '<span class="filters" ><strong>Exam Month:</strong> '.$month.' '.$year.'</span><br>';
+		if($month != "All" && !$year != "All")
+			echo '<span class="filters" ><strong>Exam Month:</strong> '.$month.'</span><br>';
+		if($year != "All" && !$month != "All")
+			echo '<span class="filters" ><strong>Exam Year:</strong> '.$month.'</span><br>';
 	 ?>
 	</div>
-	 <table id="history_table"  class="display compact cell-border" style="text-align: center;">
+	 <table class="display compact cell-border" style="text-align: center;">
+	 @foreach($licensure_exam as $le)
         <thead>
+		<tr>
+				<th colspan="3" style="text-align: left;">{{$le}}</th>
+			</tr>
           <tr>
-            <th style="width: 2%"></th>
-            <?php 
-				if(!$type){
-					echo '<th style="width:19%">Licensure Exam</th>';
-				}
-			 ?>
-            <th style="width:19%">Examination Date</th>
-            <th style="width:19%">Type</th>
+		  
+			<th style="width:19%">Examination Date</th>
             <th style="width:19%" >Topnotchers</th>
-            <th style="width:19%" >School Rank</th>
-          </tr>
+			<th style="width:19%" >School Rank</th>
+		  </tr>
         </thead>
          <tbody>
 
 		<?php 
 			$count = 0;
 			foreach ($queryBuilder as $q) {
+				if($q->licensure_exam == $le){
 				$count++;
 				echo '<tr>
-                        <td>'.$count.'</td>';
-            if(!$type){
-				echo '<td>'.$q->licensure_exam.'</td>';
-						}
+						<td>'.$q->exam_month.' '.$q->exam_year.'</td>';
 
-					if($q->exam_date != ""){
-						$exam = date('M. d, Y', strtotime($q->exam_date));
-					  }else{
-					  	$exam = "";
-					  }
-				echo '
-                          <td>'.$exam.'</td>';
                           $countTopnotcher = $topnotcherQuery->
                           where('boardexam_id', $q->id)->
-                          count();
+						  count();
+						  if($countTopnotcher > 1)
+						$top = $topnotcherQuery->where('boardexam_id', $q->id)->get();
+						else
+						$top = $topnotcherQuery->where('boardexam_id', $q->id)->first();
 				echo '
-						<td>'.$q->type.'</td>';
-				echo '
-					  	<td>'.$countTopnotcher.'</td>';
-				echo '
-					  	<td>'.$q->school_rank.'</td>
-					  </tr>';
+						  <td>';
+							for($i=0; $i < $countTopnotcher; $i++){
+								echo ''.$top->name.'';
+							}
+				echo '</td> <td>';
+				if($q->school_rank != 0)
+					 echo''.$q->school_rank.'';
+				
+				echo '</td></tr>';
 			}
+		}
 		 ?>
 		</tbody>
+		@endforeach
 	</table>
 	<div style="margin-top: 50px;">
-		<label>Generated by:<br>
-			{{auth()->user()->name}}<br>
-			{{$department->school_name}}
+		<label>Generated by:<br><br>
+			{{auth()->user()->first_name}} @if(auth()->user()->middle_initial != null){{auth()->user()->middle_initial}}.@endif {{auth()->user()->last_name}}<br>
+			{{$department->school_name}}<br>
+		<?php
+	   			date_default_timezone_set('Asia/Hong_Kong');
+				echo '<label>'.date('M d,Y h:i:sa').'</label>';?>
+				</label>
 		</label>
 	</div>
 </div>
+</main>
 
-
-<footer>
- <?php echo date('F, d Y') ?>
-</footer>
 </body>
 </html>

@@ -17,7 +17,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/staff', 'Auth\LoginController@staffLogin')->name('staff');
+Route::get('/alumni', 'Auth\LoginController@alumniLogin')->name('alumni');
 
 Route::get('/logout', function () {
     return view('auth.logout');
 });
+

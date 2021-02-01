@@ -4,5 +4,7 @@
     "User": true,
     "Auth": true,
     "Partner": true,
-    "BoardExam": true
+    "BoardExam": true,
+    "QuantitativeReport": true,
+    "AlumniDatabase": true
 }

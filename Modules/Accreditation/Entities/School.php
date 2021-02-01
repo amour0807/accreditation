@@ -10,6 +10,14 @@ class School extends Model
 
     public function acadPrgrm()
     {
-        return $this->hasMany('Modules\Accreditation\Entities\acadPrgrm');
+        return $this->hasMany('Modules\Accreditation\Entities\AcadPrgrm');
+    }
+    public function schoolAward()
+    {
+        return $this->hasMany('Modules\Award\Entities\SchoolAward');
+    }
+    public function alumni()
+    {
+        return $this->belongsTo('App\Alumni');
     }
 }

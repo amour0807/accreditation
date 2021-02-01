@@ -18,6 +18,13 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+       if($guard == 'alumni' && Auth::guard($guard)->check()){
+           if(auth()->guard('alumni')->user()->user_role == 'graduate'){
+            return redirect()->route('alumniGraduate');
+           }else{
+            return redirect()->route('secretary');
+           }
+       }
         if (Auth::guard($guard)->check()) {
             return redirect(RouteServiceProvider::HOME);
         }

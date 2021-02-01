@@ -1,40 +1,21 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Accreditation Status<span></strong></h2>
-         <a class="btn btn-info float-right " data-toggle="modal" data-target="#add_status">
-         Add an accreditation status
-        </a>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+    <div class="x_title">
+      <h2> Accreditation Status </h2>
+      <a class="btn btn-app float-right" data-toggle="modal" data-target="#add_status">
+        <i class="fa fa-plus-square-o"></i> Add an accreditation status
+      </a>
+      <div class="clearfix"></div>
     </div>
-  <div class="alert"></div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-  @if ($message = Session::get('error'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
-    <br>
-<div style="width: 80%; margin-left: 10%;">
-  <table id="history_table"  class="display compact cell-border" style="table-layout: fixed; width: 100%;">
-    <thead>
-        <tr>
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
+          <div class="table-responsive">
+            <table id="history_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+              <thead>
+                <tr class="headings">
       <th>Accreditation Status</th>
       <th >Actions</th>
     </tr>
@@ -42,7 +23,7 @@
       <tbody>
       </tbody>
     </table> 
-</div>
+          </div>
    
 <!-- Add Modal -->
 <div class="modal fade" id="add_status" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -57,7 +38,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <label>Status Name</label>
+            <label><span class="text-danger">*</span></label>Status Name</label>
             <input type="text" name="accredStatus" required class="form-control">
           </div>
           <div class="modal-footer">
@@ -93,64 +74,72 @@
     </div>
   </div>
 </div>
-
+@endsection
+@section('scripts')
 <script type="text/javascript">
 
-    $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    
-    var token = $("input[name='_token']").val();
+  $.ajaxSetup({
+    headers: {
+       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  
+  var token = $("input[name='_token']").val();
 
 
-   // program table
+ // program table
 
-        var dataTable= $('#history_table').DataTable( {
-          "scrollX": true,
-          
-          "ajax": "{{route('accred_stat_dtb')}}",
-         
-
-          "columns": [
-              { "data": "accred_status" },
-              { "data": "actions" },
-          ],
+      var dataTable= $('#history_table').DataTable( {
+        "ordering": false,
+        "ajax": "{{route('accred_stat_dtb')}}",
         
-        
-          });
-$('.alert').hide();
-    //add
-      $( "#add_status_form" ).submit(function( event ) {
-          event.preventDefault();
-        
-          $.ajax({
-            url:"{{route('addStatus')}}",
-            method:"POST",
-            data:$("#add_status_form").serialize(),
-            success:function(data){
-              $("#add_status_form")[0].reset();
-              $('#add_status').modal('hide');
-              dataTable.ajax.reload();
-              $('.alert').append('<div class="alert alert-success alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record added!</span> </div>');
-              $('.alert').show();
-              $(".alert").delay(4000).fadeOut(500);
-              setTimeout(function(){
-                $('#alertMessage').remove();
-              }, 5000);
-            }
-                
-          }); 
-      }); 
+       
+
+        "columns": [
+            { "data": "accred_status" },
+            { "data": "actions" },
+        ],
       
-      //delete
-       $(document).on('click','.destroy',function(){
-        var conf = confirm('This record will be deleted. Continue?');
-        var id = $(this).attr('statusid');
-
-      if(conf){
+      
+        });
+$('.alert').hide();
+  //add
+    $( "#add_status_form" ).submit(function( event ) {
+        event.preventDefault();
         $.ajax({
+                    type: 'POST',
+                    url: "{{route('addStatus')}}",
+                    data:$("#add_status_form").serialize(),
+                    dataType: 'JSON',
+                    success: function (results) {
+                        if (results.success === true) {
+                            $("#add_status_form")[0].reset();
+                            $('#add_status').modal('hide');
+                            dataTable.ajax.reload();
+                            swal.fire("Done!", results.message, "success");
+                          
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+                });
+    }); 
+    
+    //delete
+     $(document).on('click','.destroy',function(){
+      var id = $(this).attr('statusid');
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
           url:"{{route('deleteStatus')}}",
           method:"POST",
           data:{
@@ -158,64 +147,67 @@ $('.alert').hide();
             _token:token
           },
           success:function(data){
-            dataTable.ajax.reload();
-            $('.alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record deleted!</span> </div>');
-            $('.alert').show();
-            $(".alert").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
+            
+          dataTable.ajax.reload();
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          ) 
           },
           error: function(jqxhr, status, exception) {
-             alert('Record not deleted. There are records associated with this Accreditation Status');
+            Swal.fire(
+            'Cannot be Deleted!',
+            'Record not deleted. There are records associated with this Record',
+            'error'
+          )
          }
+        }); 
+        }
+  });
+});
 
+     //show edit form
+    $(document).on('click','.edit',function(){
+        var id = $(this).attr('statusid');
+
+        $.ajax({
+          url:"{{route('editStatus')}}",
+          method:"POST",
+          data:{
+            id:id,
+            _token:token
+          },
+          success:function(data){
+            $('#editModal').modal('show');
+            $('#editBody').html(data);
+           
+          }   
         });  
-      }
-    });
+      });
 
-       //show edit form
-      $(document).on('click','.edit',function(){
-          var id = $(this).attr('statusid');
+      //Implement edit
 
-          $.ajax({
-            url:"{{route('editStatus')}}",
-            method:"POST",
-            data:{
-              id:id,
-              _token:token
-            },
-            success:function(data){
-              $('#editModal').modal('show');
-              $('#editBody').html(data);
-             
-            }   
-          });  
-        });
+    $( "#edit_status_form" ).submit(function( event ) {
+        event.preventDefault();
+      
+        $.ajax({
+          url:"{{route('updateStatus')}}",
+          method:"POST",
+          data:$("#edit_status_form").serialize(),
+          success: function (results) {
+                        if (results.success === true) {
+                          $("#edit_status_form")[0].reset();
+                          $('#editModal').modal('hide');
+                            dataTable.ajax.reload();
+                            swal.fire("Done!", results.message, "success");
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+        }); 
+    }); 
+  
 
-        //Implement edit
-
-      $( "#edit_status_form" ).submit(function( event ) {
-          event.preventDefault();
-        
-          $.ajax({
-            url:"{{route('updateStatus')}}",
-            method:"POST",
-            data:$("#edit_status_form").serialize(),
-            success:function(data){
-              $("#edit_status_form")[0].reset();
-              $('#editModal').modal('hide');
-              dataTable.ajax.reload();
-              $('.alert').append('<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert">×</button><span id="alertMessage">Record updated!</span> </div>');
-              $('.alert').show();
-              $(".alert").delay(4000).fadeOut(500);
-              setTimeout(function(){
-                $('#alertMessage').remove();
-              }, 5000);
-            }
-                
-          }); 
-      }); 
-
-    </script>
-@endsection
+  </script>
+  @endsection

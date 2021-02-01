@@ -1,35 +1,26 @@
 @extends('layouts.app')
 @section('content')
-@section('breadcrumb')
-<li class="breadcrumb-item">
-    <a class= 'link-blue' href="{{ url('home') }}">Dashboard</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Users</li>
-<li class="nav-item dropdown ml-auto">
-    <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false"></a>  
-</li>
-@endsection
-    <hr style="margin: 0 0 0 0;">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>{{ $program->AcadPrgrm->acad_prog }}<br>
-Accreditation History<span></strong></h2>
-    </div>
-<div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-</div> 
-    <br>
-
-      <table id="history_table" class="display compact cell-border" style="width:100%">
-          <thead>
-            <tr>
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+    <div class="x_title">
+  <h2><a href="{{route('adminAcred_prog')}}" class="fa fa-angle-double-left" text="back">&nbsp;&nbsp;{{ $program->AcadPrgrm->acad_prog }} Accreditation History </a></h2>
+ 
+  <div class="clearfix"></div>
+</div>
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
+          <div class="table-responsive">
+            <table id="history_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+              <thead>
+              <tr class="headings">
 
                   <th>Accreditation Status</th>
                   <th>Visit Date</th>
                   <th>Validity</th>
 
 
-                  <th>PACUCUA Certificate</th>
+                  <th>PACUCOA Certificate</th>
                   <th>FAAP Certificate</th>
                   <th>Chairman's Report</th>
 
@@ -40,49 +31,63 @@ Accreditation History<span></strong></h2>
             </tr>
           </thead>   
       </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+@endsection
+@section('scripts')
 <script type="text/javascript">
 
-    $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    
-    var token = $("input[name='_token']").val();
-   
+  $.ajaxSetup({
+    headers: {
+       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  
+  var token = $("input[name='_token']").val();
+ 
 $('.alertOld').hide();
 
 
-   // program table
+ // program table
 
-        var dataTable= $('#history_table').DataTable( {
-          "ajax": "{{route('history_dtb', $program->AcadPrgrm->id)}}",
-          responsive: true,
-          "scrollX": true,
-          "columns": [
-              { "data": "accred_stat" },
-              
-              { "data": "visit_date" },
-              { "data": "validity" },
-              { "data": "cert1" },
-              { "data": "cert2" },
-              { "data": "cert3" },
-              { "data": "remarks" },
-              { "data": "actions" },
-          ],
-          "columnDefs": [
-          { "width": '50pt', "targets": 7 }
-        ]
-          });
+      var dataTable= $('#history_table').DataTable( {
+        "ajax": "{{route('history_dtb', $program->AcadPrgrm->id)}}",
+        responsive: true,
+        "ordering": false,
+        "columns": [
+            { "data": "accred_stat" },
+            
+            { "data": "visit_date" },
+            { "data": "validity" },
+            { "data": "cert1" },
+            { "data": "cert2" },
+            { "data": "cert3" },
+            { "data": "remarks" },
+            { "data": "actions" },
+        ],
+        "columnDefs": [
+        { "width": '50pt', "targets": 7 }
+      ]
+        });
 
 
-        
-    $(document).on('click','.delete',function(){
-      var conf = confirm('Are you sure you want to delete this record?');
-      var id = $(this).attr('progid');
-
-      if(conf){
-        $.ajax({
+      
+  $(document).on('click','.delete',function(){
+    var id = $(this).attr('progid');
+    Swal.fire({
+        title: 'Are you sure ?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
           url:"{{route('deleteProg')}}",
           method:"POST",
           data:{
@@ -90,22 +95,27 @@ $('.alertOld').hide();
             _token:token
           },
           success:function(data){
-            dataTable.ajax.reload();
-            $('.alertOld').append('<span id="alertMessage">Record deleted!</span>');
-            $('.alertOld').show();
-            $(".alertOld").delay(4000).fadeOut(500);
-            setTimeout(function(){
-              $('#alertMessage').remove();
-            }, 5000);
+            Swal.fire(
+            'Deleted!',
+            'Record has been deleted.',
+            'success'
+            
+          ) 
+          dataTable.ajax.reload();
           },
           error: function(jqxhr, status, exception) {
-             alert('Record not deleted. There seems to be a problem. Please contact the administrator to resolve the issue.');
+            Swal.fire(
+            'Cannot be Deleted!',
+            'Record not deleted. There are records associated with this Record',
+            'error'
+          )
          }
 
-        });  
-      }
+        }); 
+         
+        }
+      })
     }); 
 
-    </script>
-
+  </script>
 @endsection

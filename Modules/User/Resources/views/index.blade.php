@@ -1,75 +1,56 @@
 @extends('layouts.app')
 @section('content')
-<style type="text/css">
-	/* Shadow */
-	.hvr-shadow {
+<div class="col-md-12 col-sm-12 ">
+  <div class="x_panel">
+    <div class="x_title">
+      <h2><small>User Accounts </small></h2>
+      <a class="btn btn-app float-right" href="{{route('addUser')}}">
+        <i class="fa fa-plus-square-o"></i> Add User
+      </a>
+      <div class="clearfix"></div>
+</div>
 
-	  -webkit-transform: perspective(1px) translateZ(0);
-	  transform: perspective(1px) translateZ(0);
-	  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-	  -webkit-transition-duration: 0.3s;
-	  transition-duration: 0.3s;
-	  -webkit-transition-property: box-shadow;
-	  transition-property: box-shadow;
-
-	}
-	.hvr-shadow:hover, .hvr-shadow:focus, .hvr-shadow:active {
-	  box-shadow: 0 12px 10px -10px rgba(0, 0, 0, 0.5);
-	}
-	.stretcged-link, a:hover{
-		  color: white;
-	}
-}
-</style>
-    <hr style="margin: 0 0 0 0;">
-          <div class="block full"  style="margin-bottom: 10px;" >
-         <div class="block-title" style="padding: 1px 3px 1px 3px;">
-         <h2><strong>User Accounts</strong></h2>
-          	<a class="btn btn-info float-right "  data-toggle="modal" data-target="#add_user">
-    Add users
-    </a>
-  </div>
-  <div class="alert"></div>
-  @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-    </div>
-  @endif
+<form class="mb-4" action="{{route('awardfilterReport')}}" method="POST">
+  @csrf 
+  
+    <strong>Sort by:</strong>
+    <div class="form-group row">
+      <div class="col-md-4 ">
+        <label >Department</label>
+        <div id="filters1">
+        </div>
+      </div>
+  
+      <div class="col-md-3 ">
+        <label>User Description</label>
+        <div id="filters2">
+          
+        </div>
+      </div>
+  
+      <div class="col-md-3 ">
+        <label>Status</label>
+        <div id="filters3">
+          
+        </div>
+      </div>
+     </div>
+     
+  </form>
+</div>
+</div>
    
- <form class="mb-4" action="{{route('awardfilterReport')}}" method="POST">
-@csrf 
-
-  <strong>Sort by:</strong>
-  <div class="form-group row">
-    <div class="col-md-4 ">
-      <label >Department</label>
-      <div id="filters1">
-      </div>
-    </div>
-
-    <div class="col-md-3 ">
-      <label>User Description</label>
-      <div id="filters2">
-        
-      </div>
-    </div>
-
-    <div class="col-md-3 ">
-      <label>Status</label>
-      <div id="filters3">
-        
-      </div>
-    </div>
-   </div>
-   
-</form>
-    
+      <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+          <div class="x_content">
+            <div class="row">
+              <div class="col-sm-12"> 
     <!-- Table showing school details -->
-    <div class=" pt-5">
-    	<table id="account_table" class="display compact cell-border" style="width:100%">
-		    <thead class="thead">
-	            <tr>
+    
+    <div class="table-responsive">
+      <table id="account_table" class="table table-striped jambo_table" style="table-layout: fixed; width: 100%;">
+           <thead>
+             <tr class="headings">
 	            	<th>Employee Name</th>
 	            	<th>Department</th>
 	            	<th>User Description</th>
@@ -80,126 +61,14 @@
 		    </thead>   
 		</table>
     </div>
-    
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+@section('scripts')
 	<!-- end table -->
-
-
-	<!-- Modal -->
-	<div class="modal fade" id="add_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Add a user</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <form  method="POST" id="addUserForm">
-         	@csrf
-		      <div class="modal-body">
-		      	<label>Default User Account:<br> Username: DepartmentCode_LastnameFirst Letter of First name<br> Password: ID Number</label><hr>
-		        <div class="form-group">
-		        	<label>Department</label>
-		        	 <select id="mydropbox" class="form-control" onchange="copyValue()">
-		        	 	 <option disabled selected value> -- --  </option>
-			            @foreach($school as $sc)
-			            <option value="{{$sc->id}}">{{$sc->school_name}}</option>
-			            @endforeach
-			          </select>
-		        </div>
-		        <input type="textbox" id="school_id" name="school_id" hidden/>
-		         <div class="form-group">
-		        	<label>ID Number</label>
-		        	<input type="text" class="form-control" name="id_num" required>
-		        </div>
-		        <div class="row form-group">
-		        	<div class="col-md-4"> 
-		        		<label>Last Name</label>
-		        		<input type="text" class="form-control" name="last_name" required> 
-		        	</div>
-		        	<div class="col-md-4"> 
-		        		<label>Middle Initial</label>
-		        		<input type="text" class="form-control" name="middle_i" required> 
-		        	</div>
-		        	<div class="col-md-4"> 
-		        		<label>First Name</label>
-		        		<input type="text" class="form-control" name="first_name" required> 
-		        	</div>
-		        	
-		        </div>
-		        <div class="form-group">
-		        	<label>User Description</label>
-		        	<select class="form-control"  name="user_role" onchange='CheckRole(this.value);'>
-					  <option disabled selected value> -- --  </option>
-					  <option value="Admin">Admin</option>
-					  <option value="others">Others</option>
-					</select>
-		        </div>
-		        <div class="form-group">
-		        	<input type="text" class="form-control" id="role" name="role"  style='display:none;'/>
-		        </div>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		        <button type="submit" class="btn btn-primary">Add User</button>
-	      	  </div>
-	      </form>
-	    </div>
-	  </div>
-	</div>
-
-<!-- EDIT MODAL -->
-<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <form method="post" action="{{ route('editUser') }}"  enctype="multipart/form-data" autocomplete="off" class="form-horizontal form-bordered">
-                                            {{ csrf_field() }}
-          	  <div class="modal-body">
-          	  	<div class="row form-group">
-          	  		<div class="col-md-4">
-          	  			<input class="form-control small" type="text" id="first_name">
-          	  		</div>
-          	  		<div class="col-md-4">
-          	  			<input class="form-control small" type="text" id="middle_i">
-          	  		</div>
-          	  		<div class="col-md-4">
-          	  			<input class="form-control small" type="text" id="last_name">
-          	  		</div>
-	          	  	<label id="department"></label>
-          	  </div>
-          	  	<div class="form-group">
-		        	 <div class="form-group">
-		        	<label>User Description</label>
-		        	<select class="form-control small" id="user_role" name="user_role" onchange='CheckRole(this.value);'>
-					  <option disabled selected value> -- --  </option>
-					  <option value="Admin">Admin</option>
-					  <option value="others1">Others</option>
-					</select>
-		        </div>
-		        <div class="form-group">
-		        	<input type="text" class="form-control" id="role1" name="role1"  style='display:none;'/>
-		        </div>
-		         <div class="form-group">
-		        	<label>Status</label>
-		        	<select class="form-control small" id="status" name="status">
-					  <option disabled selected value> -- --  </option>
-					  <option value="Active">Active</option>
-					  <option value="Inactive">Inactive</option>
-					</select>
-		        </div>
-		      </div>
-		  </div>
-             </form>
-	    </div>
-	  </div>
-	</div>
-
 	<script type="text/javascript">
 $.ajaxSetup({
 	    headers: {
@@ -237,12 +106,17 @@ function CheckRole(val){
 	        "ajax": "{{route('account_dtb', 1)}}", //view
 	        responsive: true,
         	"scrollX": true,   
+          "bSort": false,
 
 	        "columns": [
-	            { "data": null , 
-			     "render" : function ( data, type, full ) { 
-			        return full['first_name']+', '+full['middle_initial']+'. '+full['last_name'];}
-			      },
+            { "data": null , 
+            "render" : function ( data, type, full ) { 
+              if(full['middle_initial'] != "")
+              return full['first_name']+' '+full['middle_initial']+'. '+full['last_name'];
+              else
+              return full['first_name']+' '+full['last_name'];
+              }
+					  },
 	            { "data": "school_name" },
 	            { "data": "user_role" },
 	            { "data": "status" },

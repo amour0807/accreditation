@@ -26,6 +26,7 @@ class CreatePartnerClassificationsTable extends Migration
 
             $table->bigInteger('renewal_id')->unsigned();
             $table->foreign('renewal_id')->references('id')->on('partner_renewal');
+            $table->boolean('is_updated');
             $table->timestamps();
         });
     }

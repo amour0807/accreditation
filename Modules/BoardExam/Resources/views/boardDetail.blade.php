@@ -1,25 +1,19 @@
 @extends('layouts.app')
 @section('content')
-    <hr style="margin: 0 0 0 0; ">
-    <div class="block full"  style="margin-bottom: 10px;" >
-    <div class="block-title" style="padding: 1px 3px 1px 3px;">
-       <h2><strong>Licensure Exam Details</strong>
-       </h2>
-    </div>
-  <div class="alert"></div>
-  @if(Session::has('message'))
-    <div class="alert alertOld alert-info alert-dismissible fade show alertOld" role="alert">
-      {{ Session::get('message') }}
-                <button type="button" class="close" data-dismiss="alert">×</button>
-    </div> 
+<div class="col-md-12 col-sm-12 ">
+	<div class="x_panel">
+    <div class="x_title">
+  <h2> <a href="{{ route('boardExam') }}" class="fa fa-angle-double-left" >&nbsp;&nbsp;Licensure Exam Details </a></h2>
+  @if(Auth::user()->hasPermission('edit-board'))
+  <a class="btn btn-app float-right" href="{{route('boardEdit',$board->id)}}">
+    <i class="fa fa-plus-square-o"></i> Edit
+  </a>
     @endif
-    @if(Session::has('red'))
-      
-    <div class="alert alertOld alert-danger alert-dismissible fade show alertOld" role="alert">
-      {{ Session::get('red') }}
-                <button type="button" class="close" data-dismiss="alert">×</button>
-    </div> 
-  @endif
+  <div class="clearfix"></div>
+</div>
+	  <div class="x_content">
+		  <div class="row">
+			  <div class="col-sm-12">
   @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.
@@ -33,27 +27,17 @@
               </button>
             </div>
         @endif
-
-@if (session('success'))
-     <div class="alert alert-info alert-block">
-            <strong>{{ session('success') }}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-     
-@endif
     <br>
   <div class=" row">
       <div class="col-md-12">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4 col-sm-6 col-xs-6">
         @if($board->supporting_doc == "")
       <div > No Supporting Document</div>
       @else
 
       <a href="{{asset('board/'.$board->supporting_doc)}}" target="_blank;"> 
-      <?php  $imageExtensions = ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief','jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd'];
+      <?php  $imageExtensions = ['jpg', 'jpeg', 'png'];
 
         $explodeImage = explode('.', 'board/'.$board->supporting_doc);
         $extension = end($explodeImage);
@@ -67,40 +51,20 @@
       <!--  <a class="btn btn-danger deleteDocu" fileId="{{$board->id}}" style="color: white">Remove Document</a> <br> -->
       @endif
       </div>
-      <div class="col-md-4">
+      <div class="col-md-8 col-sm-6 col-xs-6">
         <h5>{{$board->licensure_exam}}<br><small>{{$board->type}}<br> 
-          <?php $exam = date('M. d, Y', strtotime($board->exam_date));  ?>
-       {{$exam}}
+         {{$board->exam_month}} {{$board->exam_year}}
+       <br>School Rank : {{$board->school_rank}}
         </small></h5>
       </div>
-      @if(!$topnotcher->isEmpty())
-      <div class="col-md-4">
-        <strong>Topnotchers:</strong>
-      <table class="display" style="width:100%">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Rank</th>
-          </tr>
-        </thead>
-        <tbody>
-           @foreach($topnotcher as $top)
-          <tr>
-            <td>{{$top->name}}</td>
-            <td>{{$top->rank}}</td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-      </div>
-      @endif
     </div>
     <br>
     <div class="row">
       <div class="col-md-12">
-      <table class="display table-bordered" style="width:100%" id="summary">
-        <thead>
-          <tr>
+        <div class="table-responsive" id="summary">
+          <table id="schooldept_table" class="table table-striped jambo_table bulk_action" style="width: 100%;">
+               <thead>
+                 <tr class="headings">
             <th colspan="4"><center>First Takers</center></th>
             <th>UB Passsing<br>Percentage<br>(First Takers)</th>
             <th colspan="4"><center>Total No. of Takers</center></th>
@@ -142,10 +106,65 @@
   </div>
   </div>
   <hr>
-
-
+  <div class="row col-md-12">
+    @if(!$topnotcher->isEmpty())
+      <strong>Topnotcher/s:</strong>
+    <table class="display" style="width:50%">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Rank</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php $count = 0; ?>
+        @foreach($topnotcher as $top)
+        <?php $count++;
+        echo '<tr>
+          <td>'.$count.'.</td>' ?>
+          <td>{{$top->name}}</td>
+          <td>{{$top->rank}}</td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
+    @endif
+    <div>
+  </div>
+  </div>
+    </div>
+        </div>
+      </div>
+      @endsection
+      @section('scripts')
+      @if(\Session::has('success'))
+      <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Done!',
+        text: 'Successfully Updated!',
+        timer: 1500
+      })
+      </script>
+        @elseif(\Session::has('error'))
+        <script>
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          footer: "<a>Back</a>"
+        }) 
+        </script>
+        @endif
 <script type="text/javascript">
-  $(document).ready(function(){
+
+$.ajaxSetup({
+      headers: {
+         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $(document).ready(function(){
      var tds = document.getElementById('summary').getElementsByTagName('td');
             var sum = 0;
             var total = 0;
@@ -170,11 +189,6 @@
              $('#tpercent').html(tpercent.toFixed(2)+"%");
 
 });
-    $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
     
     var token = $("input[name='_token']").val();
 

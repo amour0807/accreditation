@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-
 class LoginController extends Controller
 {
     /*
@@ -30,7 +28,8 @@ class LoginController extends Controller
    public function login(Request $request)
     {   
         $input = $request->all();
-   
+        if($request->role == "staff"){
+          
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required',
@@ -38,18 +37,52 @@ class LoginController extends Controller
    
         if(auth()->attempt(array('username' => $input['username'], 'password' => $input['password'])))
         {
-            if (auth()->user()->is_admin == 1) {
-                return redirect()->route('accredIndex');
+            if(auth()->user()->status == "For Log in"){
+                return redirect()->route('firstlogin');
             }else{
-                return redirect()->route('userAccredIndex');
+                return redirect()->route('accredIndex');
             }
         }else{
-            return redirect()->route('login')
+            return redirect()->route('staff')
                 ->withErrors([
             'username' => "Credentials doesnt match our record!",
         ]);
         }
+    }
+    
+    if($request->role = "alumni"){
+        $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+   
+        if(auth()->guard('alumni')->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        {
+            if(auth()->guard('alumni')->user()->user_role == "graduate"){
+                return redirect()->route('alumniGraduate');
+            }else{
+                if(auth()->guard('alumni')->user()->remarks == "For Log in"){
+                    return redirect()->route('firstloginAlumni');
+                }else{
+                    return redirect()->route('secretary');
+                }
+            }
+        }else{
+            return redirect()->route('alumni')
+                ->withErrors([
+            'email' => "Credentials doesnt match our record!",
+        ]);
+        }
+    }
           
+    }
+    public function staffLogin()
+    { 
+        return view('auth.staffLogin');
+    }
+    public function alumniLogin()
+    { 
+        return view('auth.alumniLogin');
     }
 
     /**
@@ -62,9 +95,6 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function username()
-    {
-        return 'username';
-    }
+   
 
 }

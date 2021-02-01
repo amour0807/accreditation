@@ -16,15 +16,15 @@ class isGuest
     public function handle($request, Closure $next)
     {
          //check if logged in
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+        // if (!Auth::guard('alumni')->check()) {
+        //     return redirect()->route('login');
+        // }
 
         //check user type
-        if(auth()->user()->is_admin == 0){
+        if(auth()->guard('alumni')->user()->user_role == 'graduate'){
             return $next($request);
         }
    
-        return redirect('home')->with('error',"You don't have permission to view this page.");
+        abort(404);
     }
 }

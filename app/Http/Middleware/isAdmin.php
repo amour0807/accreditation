@@ -15,16 +15,10 @@ class isAdmin
      */
     public function handle($request, Closure $next)
     {
-        //check if logged in
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
         //check user type
-        if(auth()->user()->is_admin == 1){
+        if(auth()->guard('alumni')->user()->user_role != 'graduate'){
             return $next($request);
-        }
-   
-        return redirect('home')->with('error',"You don't have permission to view this page.");
+        }   
+        abort(404);
     }
 }
